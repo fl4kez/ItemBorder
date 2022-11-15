@@ -1,0 +1,17 @@
+Rarity Borders shows the color of the item rarity around the item as a border.
+
+Calamity rarities should work fine now! (Special rarities with "Calamity Rarities Mod")
+
+Also works with magic storage!
+Boss Checklist should be compatible now too!
+
+Has some configurations for specific types of slots (chests,vanity,...)
+
+Should finally work fine for any slot (except the mods that have a custom ItemSlot drawing method)!
+
+---Still trying to implement borders for items laying around!
+
+Thank you guys:
+-GabeHasWon
+-Glasses-san
+-jopojelly

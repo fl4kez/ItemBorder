@@ -1,0 +1,20 @@
+Rarity Borders shows the color of the item rarity around the item as a border.
+
+Calamity rarities should work fine now! (Special rarities with "Calamity Rarities Mod")
+
+Also works with magic storage! (Some slots are bugged, sorry for that)
+
+Boss Checklist should be compatible now too!
+
+Has some configurations for specific types of slots (chests,vanity,...)
+
+Also fixed slots for bank slots, hat rack and mannequin.
+
+Fixed Fargo's tooltip bug.
+
+Thank you guys:
+-GabeHasWon
+-Glasses-san
+
+
+

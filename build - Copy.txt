@@ -1,0 +1,4 @@
+displayName = Rarity Borders
+author = hems
+version = 0.69
+weakReferences = CalamityRarities,MagicStorage,BossChecklist
