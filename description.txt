@@ -1,6 +1,6 @@
 Rarity Borders shows the color of the item rarity around the item as a border. Works with any slot like in as Boss Checklist or Magic Storage!
 
-Now with custom border support! (Read guide)
+Now with custom border support! [url=https://github.com/fl4kez/ItemBorder#readme](Read guide)[/url]
 
 Has some configurations for:
  - types of slots (chests,vanity,...) 
