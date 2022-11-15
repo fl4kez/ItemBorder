@@ -11,6 +11,9 @@ Should finally work fine for any slot (except the mods that have a custom ItemSl
 
 ---Still trying to implement borders for items laying around!
 
+-Github:
+https://github.com/fl4kez/ItemBorder
+
 Thank you guys:
 -GabeHasWon
 -Glasses-san

@@ -20,8 +20,8 @@ namespace ItemBorder
 
         [Header("Border")]
         [Label("Border type")]
-        [DefaultValue(4)]
-        [Range(0, 10)]
+        [DefaultValue(11)]
+        [Range(0, 11)]
         public int borderType;
 
         [Label("Border opacity %")]

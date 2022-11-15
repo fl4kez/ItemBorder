@@ -435,42 +435,24 @@ namespace ItemBorder
                     Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare);
                     trueSetColor *= borderOpacity;
 
+                    
                     //Main.NewText($"{trueSetColor}");
 
-                    float funnyScale = 1.5f * Main.inventoryScale;
+                    float correctScale = 1 * Main.inventoryScale;
                     
 
-                    spriteBatch.Draw(ModContent.Request<Texture2D>($"ItemBorder/assets/itemBorderWhite{actualBorderType}").Value,
-                        position: position + new Vector2(1.75f, 1.75f) + bossChecklistRecipeOffset + magicalStorageStationOffset,
-                        sourceRectangle: new Rectangle(0, 0, 32, 32),
+                    spriteBatch.Draw(ModContent.Request<Texture2D>($"ItemBorder/assets/border_new{actualBorderType}").Value,
+                        position: position,
+                        sourceRectangle: new Rectangle(0, 0, 52, 52),
                         color: trueSetColor,
                         rotation: 0f,
                         origin: Vector2.Zero,
-                        scale: funnyScale,
+                        scale: correctScale,
                         //((context == ItemSlot.Context.CraftingMaterial) ? ((Main.LocalPlayer.HeldItem == item)?0f:0.15f) : 0),
                         SpriteEffects.None,
                         layerDepth: 0f);
 
-                    //spriteBatch.End();
-                    //if(slot == 10 && Main.LocalPlayer.inventory[10] != item && context == ItemSlot.Context.InventoryItem)
-                    //if(context == ItemSlot.Context.GuideItem && slot == 0 && item != Main.LocalPlayer.inventory[0] && Main.guideItem == item)
-                    //{
-                    //    Main.NewText($"{item.Name} {slot} {context} {item.dye} {item.scale} Rare{item.rare}");
-                    //}
 
-                    //if (isMagicStorageSlot)
-                    //{
-                    //    Main.NewText($"{item.Name} {slot} {context} {item.dye} {item.scale} Rare{item.rare} {isMagicStorageSlot}");
-                    //}
-                    //if (item.Name == "Rotten Gourd" || item.Name == "Rot Gourd Relic")
-                    //{
-                    //    Main.NewText($"{item.Name} {slot} {context} {item.dye} {item.scale} Rare{item.rare}");
-                    //}
-                    //if(Main.LocalPlayer.HeldItem.Name == item.Name)
-                    //{
-                    //Main.NewText($"{scale} {frame.Size()} {item.ammo} {item.FitsAmmoSlot()} {item.createTile}");
-                    //Main.NewText($"{item.healLife} {item.healMana} {item.buffType} {item.potion}");
-                    //}
                 }
             }
         }

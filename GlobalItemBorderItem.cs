@@ -41,7 +41,7 @@ namespace ItemBorder
         //{
         //    //Item texture
         //    Texture2D value6 = TextureAssets.Item[item.type].Value;
-        //    if(item.Name == "Solar Flare Drill")
+        //    if (item.Name == "Solar Flare Drill")
         //    {
         //        Main.NewText($"position2:{position} rectangle2:{frame} num8*scale3:{scale} invScale:{Main.inventoryScale}");
         //    }
@@ -109,9 +109,9 @@ namespace ItemBorder
         //    Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare);
         //    trueSetColor *= ItemBorder.borderOpacity;
 
-        //    spriteBatch.Draw(ModContent.Request<Texture2D>($"ItemBorder/assets/itemBorderWhite{ItemBorder.borderType}").Value,
+        //    spriteBatch.Draw(ModContent.Request<Texture2D>($"ItemBorder/assets/border_new11").Value,
         //                position: positionReal,
-        //                sourceRectangle: new Rectangle(0, 0, 32, 32),
+        //                sourceRectangle: new Rectangle(0, 0, 52, 52),
         //                color: trueSetColor,
         //                rotation: 0f,
         //                origin: Vector2.Zero,
