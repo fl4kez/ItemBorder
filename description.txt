@@ -9,8 +9,7 @@ Has some configurations for:
 
 ---Still trying to implement borders for items laying around!
 
--Github:
-https://github.com/fl4kez/ItemBorder
+[url=https://github.com/fl4kez/ItemBorder]Github-Repo[/url]
 
 Thank you guys:
 -GabeHasWon
