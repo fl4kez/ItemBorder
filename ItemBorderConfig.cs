@@ -58,6 +58,7 @@ namespace ItemBorder
         [Label("Custom border")]
         [Increment(1)]
         [DefaultValue(-1)]
+        [Range(-1,1000)]
         public int customBorderType;
 
         /*[Label("Special item background color")]
