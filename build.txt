@@ -1,4 +1,4 @@
 displayName = Rarity Borders
 author = hems
-version = 1.5
+version = 1.51
 side = Client
