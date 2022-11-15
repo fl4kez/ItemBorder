@@ -15,4 +15,4 @@ Now also finally on Github is this **original** version of **Rarity Borders**!
 3. Add your **.png** borders to that folder **!(borders are sorted by name in-game)**
 4. Reload the **Rarity Borders** mod.
 5. Choose your custom border through the config.
-
+![folder structure](/guide/folderStructure.png)
