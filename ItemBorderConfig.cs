@@ -55,6 +55,11 @@ namespace ItemBorder
         [Label("Special items")]
         public List<ItemDefinition> specialItems = new List<ItemDefinition>();
 
+        [Label("Custom border")]
+        [Increment(1)]
+        [DefaultValue(-1)]
+        public int customBorderType;
+
         /*[Label("Special item background color")]
         [Tooltip("Set to 0 0 0 for rainbow")]
         public Color specialColor;*/
@@ -200,6 +205,7 @@ namespace ItemBorder
             //ItemBorder.itemDefinitions = specialItems;
             ItemBorder.itemDefinitions = specialItems.Select(x => x.Type).ToList();
             //ItemBorder.specialColor = specialColor;
+            ItemBorder.customBorder = customBorderType;
         }
         public override void OnLoaded()
         {
@@ -242,6 +248,7 @@ namespace ItemBorder
             //ItemBorder.itemDefinitions = specialItems;
             ItemBorder.itemDefinitions = specialItems.Select(x => x.Type).ToList();
             //ItemBorder.specialColor = specialColor;
+            ItemBorder.customBorder = customBorderType;
         }
         
 

@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Terraria.GameContent;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ItemBorder
 {
@@ -64,8 +65,46 @@ namespace ItemBorder
 
             On.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawHandle;
 
-        }
+            //CUSTOM BORDERS
+            if(!Directory.Exists($"{Main.SavePath}\\testAssets"))
+            {
+                Directory.CreateDirectory($"{Main.SavePath}\\testAssets");
+            }
 
+            customBorders = new List<Texture2D>();
+
+            DirectoryInfo di = new DirectoryInfo($"{Main.SavePath}\\testAssets");
+            FileInfo[] finfos = di.GetFiles("*.png", SearchOption.TopDirectoryOnly);
+            foreach (FileInfo fi in finfos)
+            {
+                using (var stream = fi.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    RunOnMainThread(() =>
+                    {
+                        Texture2D texture = Texture2D.FromStream(Main.graphics.GraphicsDevice, stream);
+                        if(texture.Width == 52 && texture.Height == 52)
+                            customBorders.Add(texture);
+                    });
+                    //customBorders.Add(texture);
+                }
+            }
+        }
+        public static void RunOnMainThread(Action action)
+        {
+            if (ReLogic.Content.AssetRepository.IsMainThread)
+            {
+                action();
+                return;
+            }
+            ManualResetEventSlim evt = new(false);
+            Main.QueueMainThreadAction(() =>
+            {
+                action();
+                evt.Set();
+            });
+            evt.Wait();
+        }
+        public List<Texture2D> customBorders;
         private void DrawHandle(On.Terraria.UI.ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
             int definedAsSpecial = itemDefinitions.FirstOrDefault(x => x == inv[slot].netID,0);
@@ -147,7 +186,7 @@ namespace ItemBorder
         internal static bool useForMannequinDye;
         internal static bool useWalls;
         internal static bool useMaterials;
-        internal static Color specialColor;
+        internal static int customBorder;
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(On.Terraria.UI.ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
@@ -155,7 +194,6 @@ namespace ItemBorder
             //CHECK FLAGS
             //bool[] flags = new[] {useForHotbar,useForLightPet,useForPet,useForMinecart,useForMount,useForGrapple,useForShop,useForDye,
             //useForVanityAccessory,useForAccessory,useForVanityArmor,useForArmor,useForTrash,useForCoin,useForAmmo,useForInventory,useForChests};
-
             switch (context)
             {
                 case 13:
@@ -363,97 +401,36 @@ namespace ItemBorder
 
                     int actualBorderType = borderType;
 
-                    float magicalStorageScale = 0;
-                    //if(usingMagicalStorage && slot == 10 && item != Main.LocalPlayer.inventory[10] && context == ItemSlot.Context.ChestItem)
-                    if (isMagicStorageSlot && context == ItemSlot.Context.ChestItem)
-                    {
-                        magicalStorageScale = 0.15f;
-                        //return;
-                    }
-
-                    float magicalStorageStation = 0;
-                    Vector2 magicalStorageStationOffset = Vector2.Zero;
-                    //if (usingMagicalStorage && slot == 10 && item != Main.LocalPlayer.inventory[10] && context == ItemSlot.Context.InventoryItem)
-                    if (isMagicStorageSlot && context == ItemSlot.Context.InventoryItem)
-                    {
-                        //magicalStorageStation = -0.45f;
-                        //magicalStorageStationOffset = new Vector2(-1f, -1f);
-                    }
-
-                    float bossChecklistScale = 0;
-                    if(context == ItemSlot.Context.EquipDye && item.dye <= 0 && slot == 0 && item != Main.LocalPlayer.inventory[0])
-                    {
-                        bossChecklistScale = 0.375f;
-                    }
-
-                    float bossChecklistRecipe = 0;
-                    Vector2 bossChecklistRecipeOffset = Vector2.Zero;
-                    if(context == ItemSlot.Context.GuideItem && slot == 0 && item != Main.LocalPlayer.inventory[0])
-                    {
-                        bossChecklistRecipe = 0.125f;
-                        //bossChecklistRecipeOffset = new Vector2(2f, 2f);
-                        //actualBorderType = 0;
-                    }
-
-                    float bossChecklistTile = 0;
-                    if(context == ItemSlot.Context.EquipArmorVanity && slot == 0 && item != Main.LocalPlayer.inventory[0])
-                    {
-                        bossChecklistTile = 0.05f;
-                        //bossChecklistRecipeOffset = new Vector2(2f, 2f);
-
-
-                    }
                     
-                    float bossChecklistRewards = 0;
-                    if(context == ItemSlot.Context.TrashItem && slot == 0 && item != Main.LocalPlayer.inventory[0] && Main.LocalPlayer.trashItem != item)
-                    {
-                        bossChecklistRewards = 0.35f;
-                        //Main.NewText($"{item.Name} {slot} {context} {item.dye} {item.scale} Rare{item.rare}");
-                    }
-
-                        /*float calculatedScale = 1.15f + ((Main.playerInventory == true && Main.LocalPlayer.HeldItem == item) ? 0.15f : 0) +
-                        ((Main.playerInventory == false && Main.LocalPlayer.HeldItem == item) ? 0.375f : 0) +
-                         ((Main.playerInventory == true && Main.LocalPlayer.HeldItem != item) ? 0.125f : 0) -
-                        ((context == ItemSlot.Context.InventoryCoin || context == ItemSlot.Context.InventoryAmmo) ? 0.4f : 0) -
-                        ((context == ItemSlot.Context.ChestItem) ? 0.15f : 0) -
-                        ((context == ItemSlot.Context.ShopItem) ? 0.15f : 0) -
-
-                        ((context == ItemSlot.Context.BankItem) ? 0.15f : 0) -
-                        ((context == ItemSlot.Context.HatRackHat ||
-                        context == ItemSlot.Context.HatRackDye ||
-                        context == ItemSlot.Context.DisplayDollArmor ||
-                        context == ItemSlot.Context.DisplayDollAccessory ||
-                        context == ItemSlot.Context.DisplayDollDye) ? 0.2f : 0) +
-                        ((context == ItemSlot.Context.GuideItem && slot == 0 && item != Main.LocalPlayer.inventory[0] && Main.guideItem == item)?-0.125f:0) +
-                        magicalStorageScale +
-                        magicalStorageStation +
-                        bossChecklistScale +
-                        bossChecklistRecipe +
-                        bossChecklistTile +
-                        bossChecklistRewards;*/
 
                     Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare);
                     trueSetColor *= borderOpacity;
 
-                    
-                    //Main.NewText($"{trueSetColor}");
 
                     float correctScale = 1 * Main.inventoryScale;
-                    
 
-                    spriteBatch.Draw(ModContent.Request<Texture2D>($"ItemBorder/assets/border_new{actualBorderType}").Value,
+                    Texture2D drawTexture = ModContent.Request<Texture2D>($"ItemBorder/assets/border_new{actualBorderType}").Value;
+                    if(customBorders.Count > 0)
+                    {
+                        if(customBorder >= 0 && customBorder < customBorders.Count)
+                        {
+                            drawTexture = customBorders[customBorder];
+                        }
+                    }
+
+                    spriteBatch.Draw(drawTexture,
                         position: position,
                         sourceRectangle: new Rectangle(0, 0, 52, 52),
                         color: trueSetColor,
                         rotation: 0f,
                         origin: Vector2.Zero,
                         scale: correctScale,
-                        //((context == ItemSlot.Context.CraftingMaterial) ? ((Main.LocalPlayer.HeldItem == item)?0f:0.15f) : 0),
                         SpriteEffects.None,
                         layerDepth: 0f);
 
 
                 }
+                //Main.NewText($"{Main.libPath} ||| {Main.SavePath}");
             }
         }
 
