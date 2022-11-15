@@ -44,7 +44,9 @@ namespace ItemBorder
         public static float borderOpacity;
         //ItemBorderConfig config => ModContent.GetInstance<ItemBorderConfig>();
         Mod magicalStorage;
-        
+
+        string customAssetsPath = "\\customAssets";
+
         public override void Load()
         {
 
@@ -66,14 +68,14 @@ namespace ItemBorder
             On.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawHandle;
 
             //CUSTOM BORDERS
-            if(!Directory.Exists($"{Main.SavePath}\\testAssets"))
+            if(!Directory.Exists($"{Main.SavePath}{customAssetsPath}"))
             {
-                Directory.CreateDirectory($"{Main.SavePath}\\testAssets");
+                Directory.CreateDirectory($"{Main.SavePath}{customAssetsPath}");
             }
 
             customBorders = new List<Texture2D>();
 
-            DirectoryInfo di = new DirectoryInfo($"{Main.SavePath}\\testAssets");
+            DirectoryInfo di = new DirectoryInfo($"{Main.SavePath}{customAssetsPath}");
             FileInfo[] finfos = di.GetFiles("*.png", SearchOption.TopDirectoryOnly);
             foreach (FileInfo fi in finfos)
             {
