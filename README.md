@@ -12,7 +12,11 @@ Now also finally on Github is this **original** version of **Rarity Borders**!
 ## Custom border guide
 1. Navigate to your **tModLoader** directory (normally at ***"...Documents/Terraria/tModLoader"***)
 2. Create a folder called **"customAssets"** if not already there.
-3. Add your **.png** borders to that folder **!(borders are sorted by name in-game)**
-4. Reload the **Rarity Borders** mod.
-5. Choose your custom border through the config.
+3. Add your **.png** files to that folder **!(borders are sorted by name in-game)**
+4. Keep in mind that the images have to be **52x52** and a **.png** file!
+5. Reload the **Rarity Borders** mod.
+6. Choose your custom border through the config.
 ![folder structure](/guide/folderStructure.png)
+
+Here is the basic example for orientation:
+![basic border](/assets/border_new11.png)
