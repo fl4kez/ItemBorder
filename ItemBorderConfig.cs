@@ -55,6 +55,11 @@ namespace ItemBorder
         [Label("Special items")]
         public List<ItemDefinition> specialItems = new List<ItemDefinition>();
 
+        [Label("Unique border on new item pickup")]
+        [Tooltip("Enables/disables the special border on a first time pickup")]
+        [DefaultValue(true)]
+        public bool specialPickup;
+
         [Label("Custom border")]
         [Increment(1)]
         [DefaultValue(-1)]
@@ -207,6 +212,8 @@ namespace ItemBorder
             ItemBorder.itemDefinitions = specialItems.Select(x => x.Type).ToList();
             //ItemBorder.specialColor = specialColor;
             ItemBorder.customBorder = customBorderType;
+
+            ItemBorder.specialPickup = specialPickup;
         }
         public override void OnLoaded()
         {
@@ -250,6 +257,8 @@ namespace ItemBorder
             ItemBorder.itemDefinitions = specialItems.Select(x => x.Type).ToList();
             //ItemBorder.specialColor = specialColor;
             ItemBorder.customBorder = customBorderType;
+
+            ItemBorder.specialPickup = specialPickup;
         }
         
 

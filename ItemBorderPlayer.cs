@@ -11,6 +11,6 @@ namespace ItemBorder
 {
     public class ItemBorderPlayer : ModPlayer
     {
-        public static List<int> itemFound = new List<int>();
+        //public static List<int> itemFound = new List<int>();
     }
 }

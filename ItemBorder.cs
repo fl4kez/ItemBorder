@@ -189,6 +189,7 @@ namespace ItemBorder
         internal static bool useWalls;
         internal static bool useMaterials;
         internal static int customBorder;
+        internal static bool specialPickup;
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(On.Terraria.UI.ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
@@ -348,17 +349,18 @@ namespace ItemBorder
 
                     bool normalRarity = true;
                     Color abnormalColor = new Color(0,0,0);
-
-                    /*ItemBorderItemDefinition def = itemDefinitions.FirstOrDefault(x => x.defintion.Type == item.netID);
-                    if (def != null)
+                    if (specialPickup)
                     {
-                        normalRarity = false;
-                        abnormalColor = def.specialColor;
-                    }*/
+                        if (item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
+                        {
+                            normalRarity = false;
+                            abnormalColor = new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
+                        }
+                    }
                     #region CoinCheck
-                    if (item.IsACoin)
+                    else if (item.IsACoin)
                     {
-                        switch(item.netID)
+                        switch (item.netID)
                         {
                             case ItemID.CopperCoin:
                                 normalRarity = false;
@@ -377,7 +379,7 @@ namespace ItemBorder
                                 abnormalColor = new Color(136, 164, 176);
                                 break;
 
-                            default:break;
+                            default: break;
                         }
                     }
                     #endregion
@@ -386,7 +388,7 @@ namespace ItemBorder
                         normalRarity = false;
                         abnormalColor = Main.DiscoColor;
                     }
-                    else if(item.master || item.rare == -13)
+                    else if (item.master || item.rare == -13)
                     {
                         //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
                         normalRarity = false;

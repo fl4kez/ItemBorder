@@ -11,20 +11,41 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.UI;
 
 namespace ItemBorder
 {
     public class GlobalItemBorderItem : GlobalItem
     {
-        public static bool usePotions, useTiles;
-        public static int borderType;
+        public enum PickupState
+        {
+            NeverSeen = 0,
+            PickedUpFirstTime = 1,
+            NotFirstTime = 2
+        }
+        public PickupState pickedUpBefore = PickupState.NeverSeen;
 
-        //public override bool OnPickup(Item item, Player player)
-        //{
-        //    ItemBorderPlayer.itemFound.Add(item.type);
-        //    return true;
-        //}
+        public override bool InstancePerEntity => true;
+        public override bool OnPickup(Item item, Player player)
+        {
+            if (pickedUpBefore == PickupState.NeverSeen)
+                pickedUpBefore = PickupState.PickedUpFirstTime;
+            else
+                pickedUpBefore = PickupState.NotFirstTime;
+            return true;
+        }
+        public override void SaveData(Item item, TagCompound tag)
+        {
+            tag.Add("pickup", (int)pickedUpBefore);
+        }
+        public override void LoadData(Item item, TagCompound tag)
+        {
+            if(tag.ContainsKey("pickup"))
+            {
+                pickedUpBefore = (PickupState)tag.GetInt("pickup");
+            }
+        }
         /// <summary>
         /// IL SPY TEST
         /// </summary>

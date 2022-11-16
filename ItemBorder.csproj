@@ -8,8 +8,11 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="NewFolder\**" />
     <Compile Remove="otherMods\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
     <EmbeddedResource Remove="otherMods\**" />
+    <None Remove="NewFolder\**" />
     <None Remove="otherMods\**" />
   </ItemGroup>
   <ItemGroup>
