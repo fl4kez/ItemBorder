@@ -46,7 +46,116 @@ namespace ItemBorder
                 pickedUpBefore = (PickupState)tag.GetInt("pickup");
             }
         }
-        
+
+        public override bool PreDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+        {
+            if (ItemBorder.useOutline == true)
+            {
+                Texture2D sprite = TextureAssets.Item[item.type].Value;
+                Texture2D copy = null;
+                ItemBorder.RunOnMainThread(() =>
+                {
+                    copy = new Texture2D(Main.graphics.GraphicsDevice, sprite.Width, sprite.Height);
+
+                    Color[] data = new Color[sprite.Width * sprite.Height];
+                    sprite.GetData(data);
+                // cor nova
+                Color novaCor = Color.White;
+
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                    // include your RGB color
+                    if (data[i].A != 0)
+                        {
+                            data[i] = novaCor;
+                        }
+                    }
+                    copy.SetData<Color>(data);
+                });
+                Rectangle rect = new Rectangle(0, 0, copy.Width, copy.Height);
+
+                float outlineWidth = 2;
+
+                bool normalRarity = true;
+                Color abnormalColor = new Color(0, 0, 0);
+                if (ItemBorder.specialPickup)
+                {
+                    if (item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
+                    {
+                        normalRarity = false;
+                        abnormalColor = new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
+                    }
+                }
+                #region CoinCheck
+                else if (item.IsACoin)
+                {
+                    switch (item.netID)
+                    {
+                        case ItemID.CopperCoin:
+                            normalRarity = false;
+                            abnormalColor = new Color(183, 88, 25);
+                            break;
+                        case ItemID.SilverCoin:
+                            normalRarity = false;
+                            abnormalColor = new Color(124, 141, 142);
+                            break;
+                        case ItemID.GoldCoin:
+                            normalRarity = false;
+                            abnormalColor = new Color(148, 126, 24);
+                            break;
+                        case ItemID.PlatinumCoin:
+                            normalRarity = false;
+                            abnormalColor = new Color(136, 164, 176);
+                            break;
+
+                        default: break;
+                    }
+                }
+                #endregion
+                else if (item.expert == true || item.rare == -12)
+                {
+                    normalRarity = false;
+                    abnormalColor = Main.DiscoColor;
+                }
+                else if (item.master || item.rare == -13)
+                {
+                    //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
+                    normalRarity = false;
+                    abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
+                }
+                else if (item.rare >= ItemRarityID.Count)
+                {
+                    ModRarity rarity = RarityLoader.GetRarity(item.rare);
+                    normalRarity = false;
+                    abnormalColor = rarity.RarityColor;
+                    //Main.NewText($"{item.Name} {rarity.RarityColor}");
+                }
+
+                Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare);
+
+                Vector2[] offsets = new Vector2[]
+                {
+                new Vector2(-outlineWidth,0),//LEFT
+                new Vector2(outlineWidth,0),//RIGHT
+                new Vector2(0,-outlineWidth),//UP
+                new Vector2(0,outlineWidth),//DOWN
+                };
+                foreach (Vector2 offset in offsets)
+                {
+                    spriteBatch.Draw(copy,
+                                position: position + offset,
+                                sourceRectangle: rect,
+                                color: trueSetColor,
+                                rotation: 0f,
+                                origin: Vector2.Zero,
+                                scale: scale,
+                                SpriteEffects.None,
+                                layerDepth: 0f);
+                }
+            }
+            return true;
+        }
+
         /// <summary>
         /// IL SPY TEST
         /// </summary>

@@ -124,7 +124,8 @@ namespace ItemBorder
                         layerDepth: 0f);
             }
             orig(spriteBatch, inv, context, slot, position, lightColor);
-            ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(orig, spriteBatch, inv, context, slot, position, lightColor);
+            if(useBorder == true)
+                ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(orig, spriteBatch, inv, context, slot, position, lightColor);
             
         }
 
@@ -190,6 +191,8 @@ namespace ItemBorder
         internal static bool useMaterials;
         internal static int customBorder;
         internal static bool specialPickup;
+        internal static bool useOutline;
+        internal static bool useBorder;
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(On.Terraria.UI.ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {

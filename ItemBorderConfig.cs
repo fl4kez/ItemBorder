@@ -24,6 +24,11 @@ namespace ItemBorder
         [Range(0, 11)]
         public int borderType;
 
+        [Label("Use border")]
+        [Tooltip("Use border")]
+        [DefaultValue(true)]
+        public bool useBorder;
+
         [Label("Border opacity %")]
         [DefaultValue(100)]
         [Range(0, 100)]
@@ -65,6 +70,11 @@ namespace ItemBorder
         [DefaultValue(-1)]
         [Range(-1,1000)]
         public int customBorderType;
+
+        [Label("Use outline")]
+        [Tooltip("Use item outline")]
+        [DefaultValue(false)]
+        public bool useOutline;
 
         /*[Label("Special item background color")]
         [Tooltip("Set to 0 0 0 for rainbow")]
@@ -214,6 +224,9 @@ namespace ItemBorder
             ItemBorder.customBorder = customBorderType;
 
             ItemBorder.specialPickup = specialPickup;
+
+            ItemBorder.useOutline = useOutline;
+            ItemBorder.useBorder = useBorder;
         }
         public override void OnLoaded()
         {
@@ -259,6 +272,9 @@ namespace ItemBorder
             ItemBorder.customBorder = customBorderType;
 
             ItemBorder.specialPickup = specialPickup;
+
+            ItemBorder.useOutline = useOutline;
+            ItemBorder.useBorder = useBorder;
         }
         
 
