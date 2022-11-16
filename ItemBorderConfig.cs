@@ -76,6 +76,11 @@ namespace ItemBorder
         [DefaultValue(false)]
         public bool useOutline;
 
+        [Label("Outline width")]
+        [Range(1,3)]
+        [DefaultValue(2)]
+        public int outlineWidth;
+
         /*[Label("Special item background color")]
         [Tooltip("Set to 0 0 0 for rainbow")]
         public Color specialColor;*/
@@ -227,6 +232,8 @@ namespace ItemBorder
 
             ItemBorder.useOutline = useOutline;
             ItemBorder.useBorder = useBorder;
+
+            ItemBorder.outlineWidth = outlineWidth;
         }
         public override void OnLoaded()
         {
@@ -275,6 +282,8 @@ namespace ItemBorder
 
             ItemBorder.useOutline = useOutline;
             ItemBorder.useBorder = useBorder;
+
+            ItemBorder.outlineWidth = outlineWidth;
         }
         
 

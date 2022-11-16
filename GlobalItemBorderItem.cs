@@ -74,7 +74,7 @@ namespace ItemBorder
                 });
                 Rectangle rect = new Rectangle(0, 0, copy.Width, copy.Height);
 
-                float outlineWidth = 2;
+                float outlineWidth = ItemBorder.outlineWidth;
 
                 bool normalRarity = true;
                 Color abnormalColor = new Color(0, 0, 0);
@@ -139,6 +139,10 @@ namespace ItemBorder
                 new Vector2(outlineWidth,0),//RIGHT
                 new Vector2(0,-outlineWidth),//UP
                 new Vector2(0,outlineWidth),//DOWN
+                new Vector2(-outlineWidth,-outlineWidth),//TOPLEFT
+                new Vector2(outlineWidth,outlineWidth),//BOTTOMRIGHT
+                new Vector2(outlineWidth,-outlineWidth),//TOPRIGHT
+                new Vector2(-outlineWidth,outlineWidth),//BOTTOMLEFT
                 };
                 foreach (Vector2 offset in offsets)
                 {
@@ -152,6 +156,18 @@ namespace ItemBorder
                                 SpriteEffects.None,
                                 layerDepth: 0f);
                 }
+                //foreach (Vector2 offset in offsets)
+                //{
+                    spriteBatch.Draw(copy,
+                                position: position,
+                                sourceRectangle: rect,
+                                color: Color.Black,
+                                rotation: 0f,
+                                origin: Vector2.Zero,
+                                scale: scale,
+                                SpriteEffects.None,
+                                layerDepth: 0f);
+                //}
             }
             return true;
         }

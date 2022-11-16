@@ -193,6 +193,7 @@ namespace ItemBorder
         internal static bool specialPickup;
         internal static bool useOutline;
         internal static bool useBorder;
+        internal static int outlineWidth;
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(On.Terraria.UI.ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
