@@ -46,6 +46,7 @@ namespace ItemBorder
                 pickedUpBefore = (PickupState)tag.GetInt("pickup");
             }
         }
+        
         /// <summary>
         /// IL SPY TEST
         /// </summary>
