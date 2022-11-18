@@ -132,6 +132,7 @@ namespace ItemBorder
                 }
 
                 Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare);
+                trueSetColor *= ItemBorder.borderOpacity;
 
                 Vector2[] offsets = new Vector2[]
                 {
