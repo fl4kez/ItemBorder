@@ -62,7 +62,7 @@ namespace ItemBorder
 
         [Label("Unique border on new item pickup")]
         [Tooltip("Enables/disables the special border on a first time pickup")]
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool specialPickup;
 
         [Label("Custom border")]
