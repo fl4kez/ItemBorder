@@ -2,7 +2,7 @@
 
 > Free, open-source and **original** [*Rarity Borders*](https://steamcommunity.com/sharedfiles/filedetails/?id=2884802891) for tModLoader.
 
-**Rarity Borders** Rarity Borders shows the color of the item rarity around the item as a border.  
+**Rarity Borders** shows the color of the item rarity around the item as a border.  
 Works with **any** mod with slots like **Boss Checklist** or **Magic Storage**!  
 
 It even has **custom** border support!
