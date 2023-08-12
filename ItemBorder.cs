@@ -52,7 +52,7 @@ namespace ItemBorder
 
             //Mod calamity = ModLoader.GetMod("Calamity");
             //Mod magicalStorage;
-            if(ModLoader.TryGetMod("MagicStorage",out magicalStorage))
+            if (ModLoader.TryGetMod("MagicStorage",out magicalStorage))
             {
                 usingMagicalStorage = true;
             }
@@ -65,7 +65,7 @@ namespace ItemBorder
             //lel.SaveAsJpeg(File.Create("lel_texture.jpg"), lel.Width, lel.Height);
 
 
-            On.Terraria.UI.ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawHandle;
+            Terraria.UI.On_ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawHandle;
 
             //CUSTOM BORDERS
             if(!Directory.Exists($"{Main.SavePath}{customAssetsPath}"))
@@ -107,7 +107,7 @@ namespace ItemBorder
             evt.Wait();
         }
         public List<Texture2D> customBorders;
-        private void DrawHandle(On.Terraria.UI.ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
+        private void DrawHandle(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
             int definedAsSpecial = itemDefinitions.FirstOrDefault(x => x == inv[slot].netID,0);
             //Main.NewText($"{inv[slot].Name} {definedAsSpecial}");
@@ -124,12 +124,12 @@ namespace ItemBorder
                         layerDepth: 0f);
             }
             orig(spriteBatch, inv, context, slot, position, lightColor);
-            if(useBorder == true)
+
+            if (useBorder == true)
                 ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(orig, spriteBatch, inv, context, slot, position, lightColor);
-            
         }
 
-        private void ItemSlot_Draw_SpriteBatch_refItem_int_Vector2_Color(On.Terraria.UI.ItemSlot.orig_Draw_SpriteBatch_refItem_int_Vector2_Color orig, SpriteBatch spriteBatch, ref Item inv, int context, Vector2 position, Color lightColor)
+        private void ItemSlot_Draw_SpriteBatch_refItem_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_refItem_int_Vector2_Color orig, SpriteBatch spriteBatch, ref Item inv, int context, Vector2 position, Color lightColor)
         {
             //orig(spriteBatch, ref inv, context, position, lightColor);
 
@@ -195,7 +195,7 @@ namespace ItemBorder
         internal static bool useBorder;
         internal static int outlineWidth;
 
-        private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(On.Terraria.UI.ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
+        private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
             //orig(spriteBatch, inv, context, slot, position, lightColor);
             //CHECK FLAGS
@@ -438,6 +438,7 @@ namespace ItemBorder
 
 
                 }
+                
                 //Main.NewText($"{Main.libPath} ||| {Main.SavePath}");
             }
         }

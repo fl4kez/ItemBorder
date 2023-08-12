@@ -1,0 +1,188 @@
+Configs: {
+	ItemBorderConfig: {
+		DisplayName: Item Border Config
+
+		Headers: {
+			Border: Border Header
+			Types: Types Header
+			Extra: Extra Header
+			Slot_options: Slot_options Header
+			Slot-options: Slot-options Header
+		}
+
+		borderType: {
+			Label: Border type
+			Tooltip: ""
+		}
+
+		useBorder: {
+			Label: Use border
+			Tooltip: Use border
+		}
+
+		borderOpacity: {
+			Label: Border opacity %
+			Tooltip: ""
+		}
+
+		showPotionBorder: {
+			Label: Use for potions
+			Tooltip: ""
+		}
+
+		showTileBorder: {
+			Label: Use for tiles
+			Tooltip: ""
+		}
+
+		showWallBorder: {
+			Label: Use for walls
+			Tooltip: ""
+		}
+
+		showMaterialBorder: {
+			Label: Use for materials
+			Tooltip: ""
+		}
+
+		specialItems: {
+			Label: Special items
+			Tooltip: Use to mark items in a special way
+		}
+
+		specialPickup: {
+			Label: Unique border on new item pickup
+			Tooltip: Enables/disables the special border on a first time pickup
+		}
+
+		customBorderType: {
+			Label: Custom border
+			Tooltip: ""
+		}
+
+		useOutline: {
+			Label: Use outline
+			Tooltip: Use item outline
+		}
+
+		outlineWidth: {
+			Label: Outline width
+			Tooltip: ""
+		}
+
+		useForHotbar: {
+			Label: Use for hotbar slots
+			Tooltip: ""
+		}
+
+		useForChests: {
+			Label: Use for chest slots
+			Tooltip: ""
+		}
+
+		useForInventory: {
+			Label: Use for inventory slots
+			Tooltip: ""
+		}
+
+		useForAmmo: {
+			Label: Use for ammo slots
+			Tooltip: ""
+		}
+
+		useForCoin: {
+			Label: Use for coin slots
+			Tooltip: ""
+		}
+
+		useForTrash: {
+			Label: Use for trash slot
+			Tooltip: ""
+		}
+
+		useForArmor: {
+			Label: Use for armor slots
+			Tooltip: ""
+		}
+
+		useForVanityArmor: {
+			Label: Use for vanity armor slots
+			Tooltip: ""
+		}
+
+		useForAccessory: {
+			Label: Use for accessory slots
+			Tooltip: ""
+		}
+
+		useForVanityAccessory: {
+			Label: Use for vanity accessory slots
+			Tooltip: ""
+		}
+
+		useForDye: {
+			Label: Use for dye slots
+			Tooltip: ""
+		}
+
+		useForShop: {
+			Label: Use for shop slots
+			Tooltip: ""
+		}
+
+		useForGrapple: {
+			Label: Use for grapple slot
+			Tooltip: ""
+		}
+
+		useForMount: {
+			Label: Use for mount slot
+			Tooltip: ""
+		}
+
+		useForMinecart: {
+			Label: Use for minecart slot
+			Tooltip: ""
+		}
+
+		useForPet: {
+			Label: Use for pet slot
+			Tooltip: ""
+		}
+
+		useForLightPet: {
+			Label: Use for light pet slot
+			Tooltip: ""
+		}
+
+		useForBank: {
+			Label: Use for bank slots
+			Tooltip: ""
+		}
+
+		useForHatRack: {
+			Label: Use for hat rack hat slots
+			Tooltip: ""
+		}
+
+		useForHatRackDye: {
+			Label: Use for hat rack dye slots
+			Tooltip: ""
+		}
+
+		useForMannequinArmor: {
+			Label: Use for mannequin armor slots
+			Tooltip: ""
+		}
+
+		useForMannequinAccessory: {
+			Label: Use for mannequin accessory slots
+			Tooltip: ""
+		}
+
+		useForMannequinDye: {
+			Label: Use for mannequin dye slots
+			Tooltip: ""
+		}
+	}
+}

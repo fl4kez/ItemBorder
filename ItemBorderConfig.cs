@@ -89,7 +89,7 @@ namespace ItemBorder
         //public ConfigUISlot item;
 
         //SLOT
-        [Header("Slot options")]
+        [Header("Slot-options")]
         [Label("Use for hotbar slots")]
         [DefaultValue(true)]
         public bool useForHotbar;
