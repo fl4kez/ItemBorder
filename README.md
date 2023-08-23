@@ -25,14 +25,25 @@ Here is the basic example for orientation:
 If you want to stop using a custom border just set the **"Custom border"** setting in the config to -1.
 
 List of default borders:
+
 Border 0 -> ![Border 0](/assets/itemBorderWhite0.png)
+
 Border 1 -> ![Border 1](/assets/itemBorderWhite1.png)
+
 Border 2 -> ![Border 2](/assets/itemBorderWhite2.png)
+
 Border 3 -> ![Border 3](/assets/itemBorderWhite3.png)
+
 Border 4 -> ![Border 4](/assets/itemBorderWhite4.png)
+
 Border 5 -> ![Border 5](/assets/itemBorderWhite5.png)
+
 Border 6 -> ![Border 6](/assets/itemBorderWhite6.png)
+
 Border 7 -> ![Border 7](/assets/itemBorderWhite7.png)
+
 Border 8 -> ![Border 8](/assets/itemBorderWhite8.png)
+
 Border 9 -> ![Border 9](/assets/itemBorderWhite9.png)
+
 Border 10 -> ![Border 10](/assets/itemBorderWhite10.png)
