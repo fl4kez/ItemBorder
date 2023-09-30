@@ -2,6 +2,31 @@ Rarity Borders shows the color of the item rarity around the item as a border. W
 
 Now with custom border support! [url=https://github.com/fl4kez/ItemBorder#readme](Read guide)[/url]
 
+Borders:
+Border 0 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new0.png[/img]
+
+Border 1 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new1.png[/img]
+
+Border 2 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new2.png[/img]
+
+Border 3 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new3.png[/img]
+
+Border 4 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new4.png[/img]
+
+Border 5 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new5.png[/img]
+
+Border 6 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new6.png[/img]
+
+Border 7 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new7.png[/img]
+
+Border 8 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new8.png[/img]
+
+Border 9 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new9.png[/img]
+
+Border 10 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new10.png[/img]
+
+Border 11 -> [img]https://raw.githubusercontent.com/fl4kez/ItemBorder/main/assets/border_new11.png[/img]
+
 Has some configurations for:
  - types of slots (chests,vanity,...) 
  - types of borders
@@ -15,3 +40,4 @@ Thank you guys:
 -GabeHasWon
 -Glasses-san
 -jopojelly
+[quote=tModLoader]Developed By hems[/quote]
