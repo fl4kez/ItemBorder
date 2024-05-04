@@ -15,11 +15,6 @@ Configs: {
 			Tooltip: ""
 		}
 
-		useBaseRarity: {
-			Label: Use base rarity
-			Tooltip: Uses the base rarity of an item instead of the rarity that comes with reforging
-		}
-
 		useBorder: {
 			Label: Use border
 			Tooltip: Use border

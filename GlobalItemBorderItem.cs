@@ -112,26 +112,26 @@ namespace ItemBorder
                     }
                 }
                 #endregion
-                else if (item.expert == true || item.rare == -12)
+                else if (item.expert == true || (ItemBorder.useBaseRarity ? item.OriginalRarity == -12 : item.rare == -12))
                 {
                     normalRarity = false;
                     abnormalColor = Main.DiscoColor;
                 }
-                else if (item.master || item.rare == -13)
+                else if (item.master || (ItemBorder.useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
                 {
                     //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
                     normalRarity = false;
                     abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
                 }
-                else if (item.rare >= ItemRarityID.Count)
+                else if ((ItemBorder.useBaseRarity?item.OriginalRarity:item.rare) >= ItemRarityID.Count)
                 {
-                    ModRarity rarity = RarityLoader.GetRarity(item.rare);
+                    ModRarity rarity = RarityLoader.GetRarity(ItemBorder.useBaseRarity?item.OriginalRarity:item.rare);
                     normalRarity = false;
                     abnormalColor = rarity.RarityColor;
                     //Main.NewText($"{item.Name} {rarity.RarityColor}");
                 }
 
-                Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare);
+                Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.useBaseRarity?item.OriginalRarity:item.rare);
                 trueSetColor *= ItemBorder.borderOpacity;
 
                 Vector2[] offsets = new Vector2[]

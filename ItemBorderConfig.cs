@@ -19,17 +19,23 @@ namespace ItemBorder
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Header("Border")]
-        [Label("Border type")]
+        //[LabelKey("Border type")]
         [DefaultValue(11)]
         [Range(0, 11)]
         public int borderType;
 
-        [Label("Use border")]
-        [Tooltip("Use border")]
+        //[LabelKey("Use border")]
+        //[LabelKey("Use border")]
+        //[TooltipKey("Use border")]
         [DefaultValue(true)]
         public bool useBorder;
 
-        [Label("Border opacity %")]
+        //[LabelKey("Use base rarity")]
+        //[TooltipKey("Uses the base rarity of an item instead of the rarity that comes with reforging")]
+        [DefaultValue(false)]
+        public bool useBaseRarity;
+
+        //[LabelKey("Border opacity %")]
         [DefaultValue(100)]
         [Range(0, 100)]
         [Increment(1)]
@@ -38,51 +44,51 @@ namespace ItemBorder
 
         //TYPES
         [Header("Types")]
-        [Label("Use for potions")]
+        //[LabelKey("Use for potions")]
         [DefaultValue(false)]
         public bool showPotionBorder;
 
-        [Label("Use for tiles")]
+        //[LabelKey("Use for tiles")]
         [DefaultValue(true)]
         public bool showTileBorder;
 
-        [Label("Use for walls")]
+        //[LabelKey("Use for walls")]
         [DefaultValue(false)]
         public bool showWallBorder;
 
-        [Label("Use for materials")]
+        //[LabelKey("Use for materials")]
         [DefaultValue(true)]
         public bool showMaterialBorder;
 
         //EXTRA
         [Header("Extra")]
-        [Tooltip("Use to mark items in a special way")]
-        [Label("Special items")]
+        //[TooltipKey("Use to mark items in a special way")]
+        //[LabelKey("Special items")]
         public List<ItemDefinition> specialItems = new List<ItemDefinition>();
 
-        [Label("Unique border on new item pickup")]
-        [Tooltip("Enables/disables the special border on a first time pickup")]
+        //[LabelKey("Unique border on new item pickup")]
+        //[TooltipKey("Enables/disables the special border on a first time pickup")]
         [DefaultValue(false)]
         public bool specialPickup;
 
-        [Label("Custom border")]
+        //[LabelKey("Custom border")]
         [Increment(1)]
         [DefaultValue(-1)]
         [Range(-1,1000)]
         public int customBorderType;
 
-        [Label("Use outline")]
-        [Tooltip("Use item outline")]
+        //[LabelKey("Use outline")]
+        //[TooltipKey("Use item outline")]
         [DefaultValue(false)]
         public bool useOutline;
 
-        [Label("Outline width")]
+        //[LabelKey("Outline width")]
         [Range(1,3)]
         [DefaultValue(2)]
         public int outlineWidth;
 
-        /*[Label("Special item background color")]
-        [Tooltip("Set to 0 0 0 for rainbow")]
+        /*//[LabelKey("Special item background color")]
+        //[TooltipKey("Set to 0 0 0 for rainbow")]
         public Color specialColor;*/
 
         //[CustomModConfigItem(typeof(ConfigUISlot))]
@@ -90,96 +96,96 @@ namespace ItemBorder
 
         //SLOT
         [Header("Slot-options")]
-        [Label("Use for hotbar slots")]
+        //[LabelKey("Use for hotbar slots")]
         [DefaultValue(true)]
         public bool useForHotbar;
 
-        [Label("Use for chest slots")]
+        //[LabelKey("Use for chest slots")]
         [DefaultValue(true)]
         public bool useForChests;
 
-        [Label("Use for inventory slots")]
+        //[LabelKey("Use for inventory slots")]
         [DefaultValue(true)]
         public bool useForInventory;
 
-        [Label("Use for ammo slots")]
+        //[LabelKey("Use for ammo slots")]
         [DefaultValue(false)]
         public bool useForAmmo;
 
-        [Label("Use for coin slots")]
+        //[LabelKey("Use for coin slots")]
         [DefaultValue(false)]
         public bool useForCoin;
 
-        [Label("Use for trash slot")]
+        //[LabelKey("Use for trash slot")]
         [DefaultValue(true)]
         public bool useForTrash;
 
-        [Label("Use for armor slots")]
+        //[LabelKey("Use for armor slots")]
         [DefaultValue(true)]
         public bool useForArmor;
 
-        [Label("Use for vanity armor slots")]
+        //[LabelKey("Use for vanity armor slots")]
         [DefaultValue(true)]
         public bool useForVanityArmor;
 
-        [Label("Use for accessory slots")]
+        //[LabelKey("Use for accessory slots")]
         [DefaultValue(true)]
         public bool useForAccessory;
 
-        [Label("Use for vanity accessory slots")]
+        //[LabelKey("Use for vanity accessory slots")]
         [DefaultValue(true)]
         public bool useForVanityAccessory;
 
-        [Label("Use for dye slots")]
+        //[LabelKey("Use for dye slots")]
         [DefaultValue(true)]
         public bool useForDye;
 
-        [Label("Use for shop slots")]
+        //[LabelKey("Use for shop slots")]
         [DefaultValue(true)]
         public bool useForShop;
 
-        [Label("Use for grapple slot")]
+        //[LabelKey("Use for grapple slot")]
         [DefaultValue(true)]
         public bool useForGrapple;
 
-        [Label("Use for mount slot")]
+        //[LabelKey("Use for mount slot")]
         [DefaultValue(true)]
         public bool useForMount;
 
-        [Label("Use for minecart slot")]
+        //[LabelKey("Use for minecart slot")]
         [DefaultValue(true)]
         public bool useForMinecart;
 
-        [Label("Use for pet slot")]
+        //[LabelKey("Use for pet slot")]
         [DefaultValue(true)]
         public bool useForPet;
 
-        [Label("Use for light pet slot")]
+        //[LabelKey("Use for light pet slot")]
         [DefaultValue(true)]
         public bool useForLightPet;
 
         //NEW CONFIGS - 09.11 - 19:14
-        [Label("Use for bank slots")]
+        //[LabelKey("Use for bank slots")]
         [DefaultValue(true)]
         public bool useForBank;
 
-        [Label("Use for hat rack hat slots")]
+        //[LabelKey("Use for hat rack hat slots")]
         [DefaultValue(true)]
         public bool useForHatRack;
 
-        [Label("Use for hat rack dye slots")]
+        //[LabelKey("Use for hat rack dye slots")]
         [DefaultValue(true)]
         public bool useForHatRackDye;
 
-        [Label("Use for mannequin armor slots")]
+        //[LabelKey("Use for mannequin armor slots")]
         [DefaultValue(true)]
         public bool useForMannequinArmor;
 
-        [Label("Use for mannequin accessory slots")]
+        //[LabelKey("Use for mannequin accessory slots")]
         [DefaultValue(true)]
         public bool useForMannequinAccessory;
 
-        [Label("Use for mannequin dye slots")]
+        //[LabelKey("Use for mannequin dye slots")]
         [DefaultValue(true)]
         public bool useForMannequinDye;
 
@@ -232,6 +238,7 @@ namespace ItemBorder
 
             ItemBorder.useOutline = useOutline;
             ItemBorder.useBorder = useBorder;
+            ItemBorder.useBaseRarity = useBaseRarity;
 
             ItemBorder.outlineWidth = outlineWidth;
         }
@@ -282,6 +289,7 @@ namespace ItemBorder
 
             ItemBorder.useOutline = useOutline;
             ItemBorder.useBorder = useBorder;
+            ItemBorder.useBaseRarity = useBaseRarity;
 
             ItemBorder.outlineWidth = outlineWidth;
         }

@@ -165,7 +165,7 @@ namespace ItemBorder
                 spriteBatch.Draw(ModContent.Request<Texture2D>($"ItemBorder/assets/itemBorderWhite{borderType}").Value,
                     position: position,
                     sourceRectangle: new Rectangle(0, 0, 32, 32),
-                    color: (inv.rare == -12) ? Main.DiscoColor : ItemRarity.GetColor(inv.rare),
+                    color: (useBaseRarity==true)?(ItemRarity.GetColor(inv.OriginalRarity)):((inv.rare == -12) ? Main.DiscoColor : ItemRarity.GetColor(inv.rare)),
                     rotation: 0f,
                     origin: Vector2.Zero,
                     scale: 1f / ((Main.LocalPlayer.HeldItem.Name == inv.Name) ? 0.75f : 1f),
@@ -193,6 +193,7 @@ namespace ItemBorder
         internal static bool specialPickup;
         internal static bool useOutline;
         internal static bool useBorder;
+        internal static bool useBaseRarity;
         internal static int outlineWidth;
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
@@ -387,20 +388,20 @@ namespace ItemBorder
                         }
                     }
                     #endregion
-                    else if (item.expert == true || item.rare == -12)
+                    else if (item.expert == true || (useBaseRarity?item.OriginalRarity == -12:item.rare == -12))
                     {
                         normalRarity = false;
                         abnormalColor = Main.DiscoColor;
                     }
-                    else if (item.master || item.rare == -13)
+                    else if (item.master || (useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
                     {
                         //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
                         normalRarity = false;
                         abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
                     }
-                    else if (item.rare >= ItemRarityID.Count)
+                    else if ((useBaseRarity?item.OriginalRarity:item.rare) >= ItemRarityID.Count)
                     {
-                        ModRarity rarity = RarityLoader.GetRarity(item.rare);
+                        ModRarity rarity = RarityLoader.GetRarity(useBaseRarity?item.OriginalRarity:item.rare);
                         normalRarity = false;
                         abnormalColor = rarity.RarityColor;
                         //Main.NewText($"{item.Name} {rarity.RarityColor}");
@@ -411,7 +412,7 @@ namespace ItemBorder
 
                     
 
-                    Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare);
+                    Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(useBaseRarity?item.OriginalRarity:item.rare);
                     trueSetColor *= borderOpacity;
 
 
