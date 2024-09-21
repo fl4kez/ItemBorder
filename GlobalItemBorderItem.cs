@@ -152,7 +152,7 @@ namespace ItemBorder
                                 sourceRectangle: rect,
                                 color: trueSetColor,
                                 rotation: 0f,
-                                origin: Vector2.Zero,
+                                origin: origin,
                                 scale: scale,
                                 SpriteEffects.None,
                                 layerDepth: 0f);
@@ -164,7 +164,7 @@ namespace ItemBorder
                                 sourceRectangle: rect,
                                 color: Color.Black,
                                 rotation: 0f,
-                                origin: Vector2.Zero,
+                                origin: origin,
                                 scale: scale,
                                 SpriteEffects.None,
                                 layerDepth: 0f);
@@ -292,12 +292,12 @@ namespace ItemBorder
             float proportionX = 32 / item.Size.X;
             float proportionY = 32 / item.Size.Y;
 
-            
+
             //Main.NewText($"{Main.Camera.ScaledPosition} {Main.screenPosition}");
             //item.
             Vector2 actualPos = item.position - Main.screenPosition;
 
-            
+
             //Main.NewText($"{item.Name} {item.position} {actualPos} ||| {item.Size} {reduced} {item.scale} {posOffset} {test}");
             if(item.Name != "Fallen Star")
             Main.NewText($"I:{item.Name} Pos{item.position} Center{item.Center} Diff{item.Center - item.position} Size:{item.Size} {item.Hitbox}");
@@ -432,7 +432,7 @@ namespace ItemBorder
         //    ////    itm.Y = ((int)(siz.Y / 16) * 16);
 
         //    //if (itm.X == 0)
-        //    //{ 
+        //    //{
         //    //    itm.X += (siz.X / 16)/siz.X;
         //    //}
         //    //if (itm.Y == 0)
@@ -459,7 +459,7 @@ namespace ItemBorder
         //    Vector2 vector = item.Size * Main.inventoryScale;
         //    if(item.type > 0 && item.stack > 0)
         //    {
-        //        Rectangle rect = 
+        //        Rectangle rect =
         //    }
         //}
 
