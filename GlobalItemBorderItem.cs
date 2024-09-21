@@ -156,6 +156,9 @@ namespace ItemBorder
                 new Vector2(outlineWidth,-outlineWidth),//TOPRIGHT
                 new Vector2(-outlineWidth,outlineWidth),//BOTTOMLEFT
                 };
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
+
                 ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
                 ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
 
@@ -172,7 +175,8 @@ namespace ItemBorder
                                 layerDepth: 0f);
                 }
                 Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.GameViewMatrix.TransformationMatrix);                //foreach (Vector2 offset in offsets)
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);                
+                //foreach (Vector2 offset in offsets)
                 //{
                 //spriteBatch.Draw(spriteCopy,
                 //            position: position,
