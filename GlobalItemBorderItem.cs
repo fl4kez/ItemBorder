@@ -59,20 +59,20 @@ namespace ItemBorder
 
                     Color[] data = new Color[sprite.Width * sprite.Height];
                     sprite.GetData(data);
-                // cor nova
-                Color novaCor = Color.White;
+                    // cor nova
+                    Color novaCor = Color.White;
 
                     for (int i = 0; i < data.Length; i++)
                     {
-                    // include your RGB color
-                    if (data[i].A != 0)
+                        // include your RGB color
+                        if (data[i].A != 0)
                         {
                             data[i] = novaCor;
                         }
                     }
                     copy.SetData<Color>(data);
                 });
-                Rectangle rect = new Rectangle(0, 0, copy.Width, copy.Height);
+                Rectangle rect = new Rectangle(0, 0, sprite.Width, sprite.Height);
 
                 float outlineWidth = ItemBorder.outlineWidth;
 
@@ -152,22 +152,22 @@ namespace ItemBorder
                                 sourceRectangle: rect,
                                 color: trueSetColor,
                                 rotation: 0f,
-                                origin: Vector2.Zero,
+                                origin: origin,
                                 scale: scale,
                                 SpriteEffects.None,
                                 layerDepth: 0f);
                 }
                 //foreach (Vector2 offset in offsets)
                 //{
-                    spriteBatch.Draw(copy,
-                                position: position,
-                                sourceRectangle: rect,
-                                color: Color.Black,
-                                rotation: 0f,
-                                origin: Vector2.Zero,
-                                scale: scale,
-                                SpriteEffects.None,
-                                layerDepth: 0f);
+                    //spriteBatch.Draw(spriteCopy,
+                    //            position: position,
+                    //            sourceRectangle: rect,
+                    //            color: Color.Black,
+                    //            rotation: 0f,
+                    //            origin: origin,
+                    //            scale: scale,
+                    //            SpriteEffects.None,
+                    //            layerDepth: 0f);
                 //}
             }
             return true;
