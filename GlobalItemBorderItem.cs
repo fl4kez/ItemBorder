@@ -51,27 +51,38 @@ namespace ItemBorder
         {
             if (ItemBorder.useOutline == true)
             {
+
+                // Save the current state of the spriteBatch
+                //SpriteSortMode originalSortMode = Main.spriteBatch.GraphicsDevice.BlendState == BlendState.AlphaBlend
+                //? SpriteSortMode.Deferred
+                //: SpriteSortMode.Immediate; // Example of how Terraria might be using it (you can customize this based on your needs)
+                var originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;
+                var originalSamplerState = Main.spriteBatch.GraphicsDevice.SamplerStates[0];
+                var originalDepthStencilState = Main.spriteBatch.GraphicsDevice.DepthStencilState;
+                var originalRasterizerState = Main.spriteBatch.GraphicsDevice.RasterizerState;
+
                 Texture2D sprite = TextureAssets.Item[item.type].Value;
-                Texture2D copy = null;
-                ItemBorder.RunOnMainThread(() =>
-                {
-                    copy = new Texture2D(Main.graphics.GraphicsDevice, sprite.Width, sprite.Height);
+                Texture2D spriteCopy = TextureAssets.Item[item.type].Value;
+                
+                //ItemBorder.RunOnMainThread(() =>
+                //{
+                //    copy = new Texture2D(Main.graphics.GraphicsDevice, sprite.Width, sprite.Height);
 
-                    Color[] data = new Color[sprite.Width * sprite.Height];
-                    sprite.GetData(data);
-                    // cor nova
-                    Color novaCor = Color.White;
+                //    Color[] data = new Color[sprite.Width * sprite.Height];
+                //    sprite.GetData(data);
+                //    // cor nova
+                //    Color novaCor = Color.White;
 
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        // include your RGB color
-                        if (data[i].A != 0)
-                        {
-                            data[i] = novaCor;
-                        }
-                    }
-                    copy.SetData<Color>(data);
-                });
+                //    for (int i = 0; i < data.Length; i++)
+                //    {
+                //        // include your RGB color
+                //        if (data[i].A != 0)
+                //        {
+                //            data[i] = novaCor;
+                //        }
+                //    }
+                //    copy.SetData<Color>(data);
+                //});
                 Rectangle rect = new Rectangle(0, 0, sprite.Width, sprite.Height);
 
                 float outlineWidth = ItemBorder.outlineWidth;
@@ -145,11 +156,14 @@ namespace ItemBorder
                 new Vector2(outlineWidth,-outlineWidth),//TOPRIGHT
                 new Vector2(-outlineWidth,outlineWidth),//BOTTOMLEFT
                 };
+                ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
+                ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
+
                 foreach (Vector2 offset in offsets)
                 {
-                    spriteBatch.Draw(copy,
+                    spriteBatch.Draw(spriteCopy,
                                 position: position + offset,
-                                sourceRectangle: rect,
+                                sourceRectangle: frame,
                                 color: trueSetColor,
                                 rotation: 0f,
                                 origin: origin,
@@ -157,17 +171,18 @@ namespace ItemBorder
                                 SpriteEffects.None,
                                 layerDepth: 0f);
                 }
-                //foreach (Vector2 offset in offsets)
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.GameViewMatrix.TransformationMatrix);                //foreach (Vector2 offset in offsets)
                 //{
-                    //spriteBatch.Draw(spriteCopy,
-                    //            position: position,
-                    //            sourceRectangle: rect,
-                    //            color: Color.Black,
-                    //            rotation: 0f,
-                    //            origin: origin,
-                    //            scale: scale,
-                    //            SpriteEffects.None,
-                    //            layerDepth: 0f);
+                //spriteBatch.Draw(spriteCopy,
+                //            position: position,
+                //            sourceRectangle: rect,
+                //            color: Color.Black,
+                //            rotation: 0f,
+                //            origin: origin,
+                //            scale: scale,
+                //            SpriteEffects.None,
+                //            layerDepth: 0f);
                 //}
             }
             return true;

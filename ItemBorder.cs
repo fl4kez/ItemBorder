@@ -14,6 +14,7 @@ using Terraria.GameContent;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading;
+using ReLogic.Content;
 
 namespace ItemBorder
 {
@@ -47,6 +48,7 @@ namespace ItemBorder
 
         string customAssetsPath = "\\customAssets";
 
+        public static Effect whiteEffect;
         public override void Load()
         {
 
@@ -61,6 +63,10 @@ namespace ItemBorder
                 usingMagicalStorage = false;
             }
 
+            if(Main.netMode != NetmodeID.Server)
+            {
+                whiteEffect = ModContent.Request<Effect>("ItemBorder/effects/whiteShader", AssetRequestMode.ImmediateLoad).Value;
+            }
             //Texture2D lel = TextureAssets.Extra[54].Value;
             //lel.SaveAsJpeg(File.Create("lel_texture.jpg"), lel.Width, lel.Height);
 
@@ -90,6 +96,11 @@ namespace ItemBorder
                     //customBorders.Add(texture);
                 }
             }
+        }
+
+        public override void Unload()
+        {
+            whiteEffect = null;
         }
         public static void RunOnMainThread(Action action)
         {
