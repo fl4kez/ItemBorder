@@ -46,7 +46,6 @@ namespace ItemBorder
                 pickedUpBefore = (PickupState)tag.GetInt("pickup");
             }
         }
-        bool shownParams=false;
         public override bool PreDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
             if (ItemBorder.useOutline == true)
@@ -60,34 +59,10 @@ namespace ItemBorder
                 var originalSamplerState = Main.spriteBatch.GraphicsDevice.SamplerStates[0];
                 var originalDepthStencilState = Main.spriteBatch.GraphicsDevice.DepthStencilState;
                 var originalRasterizerState = Main.spriteBatch.GraphicsDevice.RasterizerState;
-                if(shownParams == false)
-                {
-                    Main.NewText($"{originalBlendState} {originalSamplerState} {originalDepthStencilState} {originalRasterizerState}");
-                    shownParams = true;
-                }
 
                 Texture2D sprite = TextureAssets.Item[item.type].Value;
                 Texture2D spriteCopy = TextureAssets.Item[item.type].Value;
                 
-                //ItemBorder.RunOnMainThread(() =>
-                //{
-                //    copy = new Texture2D(Main.graphics.GraphicsDevice, sprite.Width, sprite.Height);
-
-                //    Color[] data = new Color[sprite.Width * sprite.Height];
-                //    sprite.GetData(data);
-                //    // cor nova
-                //    Color novaCor = Color.White;
-
-                //    for (int i = 0; i < data.Length; i++)
-                //    {
-                //        // include your RGB color
-                //        if (data[i].A != 0)
-                //        {
-                //            data[i] = novaCor;
-                //        }
-                //    }
-                //    copy.SetData<Color>(data);
-                //});
                 Rectangle rect = new Rectangle(0, 0, sprite.Width, sprite.Height);
 
                 float outlineWidth = ItemBorder.outlineWidth;
@@ -156,13 +131,13 @@ namespace ItemBorder
                 new Vector2(outlineWidth,0),//RIGHT
                 new Vector2(0,-outlineWidth),//UP
                 new Vector2(0,outlineWidth),//DOWN
-                new Vector2(-outlineWidth,-outlineWidth),//TOPLEFT
-                new Vector2(outlineWidth,outlineWidth),//BOTTOMRIGHT
-                new Vector2(outlineWidth,-outlineWidth),//TOPRIGHT
-                new Vector2(-outlineWidth,outlineWidth),//BOTTOMLEFT
+                //new Vector2(-outlineWidth,-outlineWidth),//TOPLEFT
+                //new Vector2(outlineWidth,outlineWidth),//BOTTOMRIGHT
+                //new Vector2(outlineWidth,-outlineWidth),//TOPRIGHT
+                //new Vector2(-outlineWidth,outlineWidth),//BOTTOMLEFT
                 };
                 Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
 
                 ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
                 ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
@@ -180,7 +155,19 @@ namespace ItemBorder
                                 layerDepth: 0f);
                 }
                 Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);                
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
+
+                //DRAW ITEM YOURSELF SO OPACITY IS 100% AND NOT 75%
+                drawColor = new Color(drawColor.R, drawColor.G, drawColor.B, 255);
+                spriteBatch.Draw(sprite,
+                                position: position ,
+                                sourceRectangle: frame,
+                                color: drawColor,
+                                rotation: 0f,
+                                origin: origin,
+                                scale: scale,
+                                SpriteEffects.None,
+                                layerDepth: 0f);
                 //foreach (Vector2 offset in offsets)
                 //{
                 //spriteBatch.Draw(spriteCopy,
@@ -194,7 +181,7 @@ namespace ItemBorder
                 //            layerDepth: 0f);
                 //}
             }
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -298,52 +285,52 @@ namespace ItemBorder
 
 
 
-        public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
-        {
-            bool normalRarity = true;
-            Color abnormalColor = new Color(0, 0, 0);
-            if (item.expert == true)
-            {
-                normalRarity = false;
-                abnormalColor = Main.DiscoColor;
-            }
-            else if (item.master)
-            {
-                //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
-                normalRarity = false;
-                abnormalColor = ItemRarity.GetColor(-13);
-            }
-            float proportionX = 32 / item.Size.X;
-            float proportionY = 32 / item.Size.Y;
+        //public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+        //{
+        //    bool normalRarity = true;
+        //    Color abnormalColor = new Color(0, 0, 0);
+        //    if (item.expert == true)
+        //    {
+        //        normalRarity = false;
+        //        abnormalColor = Main.DiscoColor;
+        //    }
+        //    else if (item.master)
+        //    {
+        //        //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
+        //        normalRarity = false;
+        //        abnormalColor = ItemRarity.GetColor(-13);
+        //    }
+        //    float proportionX = 32 / item.Size.X;
+        //    float proportionY = 32 / item.Size.Y;
 
 
-            //Main.NewText($"{Main.Camera.ScaledPosition} {Main.screenPosition}");
-            //item.
-            Vector2 actualPos = item.position - Main.screenPosition;
+        //    //Main.NewText($"{Main.Camera.ScaledPosition} {Main.screenPosition}");
+        //    //item.
+        //    Vector2 actualPos = item.position - Main.screenPosition;
 
 
-            //Main.NewText($"{item.Name} {item.position} {actualPos} ||| {item.Size} {reduced} {item.scale} {posOffset} {test}");
-            //if (item.Name != "Fallen Star")
-                //Main.NewText($"I:{item.Name} Pos{item.position} Center{item.Center} Diff{item.Center - item.position} Size:{item.Size} {item.Hitbox}");
+        //    //Main.NewText($"{item.Name} {item.position} {actualPos} ||| {item.Size} {reduced} {item.scale} {posOffset} {test}");
+        //    //if (item.Name != "Fallen Star")
+        //        //Main.NewText($"I:{item.Name} Pos{item.position} Center{item.Center} Diff{item.Center - item.position} Size:{item.Size} {item.Hitbox}");
 
 
 
-            spriteBatch.Draw(
-                ModContent.Request<Texture2D>($"ItemBorder/assets/itemBorderWhite{ItemBorder.borderType}").Value,
-                        position: actualPos - (new Vector2(Math.Abs(item.Center.X - item.position.X), Math.Abs(item.Center.Y - item.position.Y)) / 2),//-
-                                                                                                                                                      //((item.Size.X > 16 || item.Size.Y > 16)?new Vector2(item.Size.X/2,item.Size.Y/2): new Vector2(item.Size.X/1.25f, item.Size.Y/1.25f))
-                                                                                                                                                      //-((item.Size.X > 16 && item.Size.Y > 16)?new Vector2(Math.Abs(32-item.Size.X),Math.Abs(32 -item.Size.Y)):Vector2.Zero),//+(lel/(item.Size.X - item.Size.Y)/16),//+new Vector2(item.Size.X-32,item.Size.Y-32),//-posOffset,
-                        sourceRectangle: new Rectangle(0, 0, 32, 32),
-                        color: (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare),
-                        rotation: 0f,
-                        origin: Vector2.Zero,
-                        scale: 1.35f / ((proportionX + proportionY) / 2),// * (1+((proportionX + proportionY)/2)), //* minusScale, //+ (item.scale - 1) - minusScale,
-                                                                         //((context == ItemSlot.Context.CraftingMaterial) ? ((Main.LocalPlayer.HeldItem == item)?0f:0.15f) : 0),
-                        SpriteEffects.None,
-                        layerDepth: 0f
-                );
-            //Utils.DrawRect(spriteBatch, item.Hitbox, (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare));
-        }
+        //    spriteBatch.Draw(
+        //        ModContent.Request<Texture2D>($"ItemBorder/assets/itemBorderWhite{ItemBorder.borderType}").Value,
+        //                position: actualPos - (new Vector2(Math.Abs(item.Center.X - item.position.X), Math.Abs(item.Center.Y - item.position.Y)) / 2),//-
+        //                                                                                                                                              //((item.Size.X > 16 || item.Size.Y > 16)?new Vector2(item.Size.X/2,item.Size.Y/2): new Vector2(item.Size.X/1.25f, item.Size.Y/1.25f))
+        //                                                                                                                                              //-((item.Size.X > 16 && item.Size.Y > 16)?new Vector2(Math.Abs(32-item.Size.X),Math.Abs(32 -item.Size.Y)):Vector2.Zero),//+(lel/(item.Size.X - item.Size.Y)/16),//+new Vector2(item.Size.X-32,item.Size.Y-32),//-posOffset,
+        //                sourceRectangle: new Rectangle(0, 0, 32, 32),
+        //                color: (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare),
+        //                rotation: 0f,
+        //                origin: Vector2.Zero,
+        //                scale: 1.35f / ((proportionX + proportionY) / 2),// * (1+((proportionX + proportionY)/2)), //* minusScale, //+ (item.scale - 1) - minusScale,
+        //                                                                 //((context == ItemSlot.Context.CraftingMaterial) ? ((Main.LocalPlayer.HeldItem == item)?0f:0.15f) : 0),
+        //                SpriteEffects.None,
+        //                layerDepth: 0f
+        //        );
+        //    //Utils.DrawRect(spriteBatch, item.Hitbox, (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(item.rare));
+        //}
 
 
         //public override void PostDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
