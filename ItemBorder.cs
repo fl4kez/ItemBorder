@@ -126,18 +126,24 @@ namespace ItemBorder
         private void DrawHandle(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
             int definedAsSpecial = itemDefinitions.FirstOrDefault(x => x == inv[slot].netID,0);
-            //Main.NewText($"{inv[slot].Name} {definedAsSpecial}");
-            if (definedAsSpecial != 0)
+;
+            if (definedAsSpecial != 0 && Main.mouseItem.netID != inv[slot].netID)
             {
-                spriteBatch.Draw(TextureAssets.InventoryBack16.Value,
-                        position: position,
-                        sourceRectangle: new Rectangle(0, 0, 52, 52),
-                        color: /*(specialColor.R == 0 && specialColor.G == 0 && specialColor.B == 0)?*/Main.DiscoColor/*:specialColor*/,
-                        rotation: 0f,
-                        origin: Vector2.Zero,
-                        scale: 1 * Main.inventoryScale,
-                        SpriteEffects.None,
-                        layerDepth: 0f);
+                Item item = inv[slot];
+                if (item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
+                {
+                    //Color color = new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
+
+                    spriteBatch.Draw(TextureAssets.InventoryBack16.Value,
+                            position: position,
+                            sourceRectangle: new Rectangle(0, 0, 52, 52),
+                            color: /*(specialColor.R == 0 && specialColor.G == 0 && specialColor.B == 0)?*/ItemBorder.InvertMeAColour(Main.DiscoColor)/*:specialColor*/,
+                            rotation: 0f,
+                            origin: Vector2.Zero,
+                            scale: 1 * Main.inventoryScale,
+                            SpriteEffects.None,
+                            layerDepth: 0f);
+                }
             }
             orig(spriteBatch, inv, context, slot, position, lightColor);
 
@@ -145,56 +151,63 @@ namespace ItemBorder
                 ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(orig, spriteBatch, inv, context, slot, position, lightColor);
         }
 
-        private void ItemSlot_Draw_SpriteBatch_refItem_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_refItem_int_Vector2_Color orig, SpriteBatch spriteBatch, ref Item inv, int context, Vector2 position, Color lightColor)
+        const int RGBMAX = 255;
+        public static Color InvertMeAColour(Color ColourToInvert)
         {
-            //orig(spriteBatch, ref inv, context, position, lightColor);
-
-            bool isAmmo = false;
-            for (int i = 54; i < 58; i++) //AMMO SLOT
-            {
-                if (Main.LocalPlayer.inventory[i].Name == inv.Name)
-                {
-                    isAmmo = true;
-                }
-            }
-
-            //POTION
-            bool isPotion = true;
-            if (!usePotions)
-            {
-                isPotion = !IsPotion(inv);
-            }
-            //TILE
-            bool isTile = true;
-            if (!useTiles)
-            {
-                isTile = (inv.createTile == -1);
-            }
-            //if (inv.Name == "Iron Shortsword")
-            //    Main.NewText($"Pos:{position} inv:{inv} | {context} | {inv.rare}");
-
-            if (!inv.IsACoin && isPotion && isTile && !isAmmo && context == ItemSlot.Context.InventoryItem)
-            {
-                //float proportionX = 32 / frame.Size().X;
-                //float proportionY = 32 / frame.Size().Y;
-
-                spriteBatch.Draw(ModContent.Request<Texture2D>($"ItemBorder/assets/itemBorderWhite{borderType}").Value,
-                    position: position,
-                    sourceRectangle: new Rectangle(0, 0, 32, 32),
-                    color: (useBaseRarity==true)?(ItemRarity.GetColor(inv.OriginalRarity)):((inv.rare == -12) ? Main.DiscoColor : ItemRarity.GetColor(inv.rare)),
-                    rotation: 0f,
-                    origin: Vector2.Zero,
-                    scale: 1f / ((Main.LocalPlayer.HeldItem.Name == inv.Name) ? 0.75f : 1f),
-                    SpriteEffects.None,
-                    layerDepth: 0f);
-
-                //if(Main.LocalPlayer.HeldItem.Name == item.Name)
-                //{
-                //Main.NewText($"{scale} {frame.Size()} {item.ammo} {item.FitsAmmoSlot()} {item.createTile}");
-                //Main.NewText($"{item.healLife} {item.healMana} {item.buffType} {item.potion}");
-                //}
-            }
+            return new Color(RGBMAX - ColourToInvert.R,
+              RGBMAX - ColourToInvert.G, RGBMAX - ColourToInvert.B);
         }
+
+        //private void ItemSlot_Draw_SpriteBatch_refItem_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_refItem_int_Vector2_Color orig, SpriteBatch spriteBatch, ref Item inv, int context, Vector2 position, Color lightColor)
+        //{
+        //    //orig(spriteBatch, ref inv, context, position, lightColor);
+
+        //    bool isAmmo = false;
+        //    for (int i = 54; i < 58; i++) //AMMO SLOT
+        //    {
+        //        if (Main.LocalPlayer.inventory[i].Name == inv.Name)
+        //        {
+        //            isAmmo = true;
+        //        }
+        //    }
+
+        //    //POTION
+        //    bool isPotion = true;
+        //    if (!usePotions)
+        //    {
+        //        isPotion = !IsPotion(inv);
+        //    }
+        //    //TILE
+        //    bool isTile = true;
+        //    if (!useTiles)
+        //    {
+        //        isTile = (inv.createTile == -1);
+        //    }
+        //    //if (inv.Name == "Iron Shortsword")
+        //    //    Main.NewText($"Pos:{position} inv:{inv} | {context} | {inv.rare}");
+
+        //    if (!inv.IsACoin && isPotion && isTile && !isAmmo && context == ItemSlot.Context.InventoryItem)
+        //    {
+        //        //float proportionX = 32 / frame.Size().X;
+        //        //float proportionY = 32 / frame.Size().Y;
+
+        //        spriteBatch.Draw(ModContent.Request<Texture2D>($"ItemBorder/assets/itemBorderWhite{borderType}").Value,
+        //            position: position,
+        //            sourceRectangle: new Rectangle(0, 0, 32, 32),
+        //            color: (useBaseRarity==true)?(ItemRarity.GetColor(inv.OriginalRarity)):((inv.rare == -12) ? Main.DiscoColor : ItemRarity.GetColor(inv.rare)),
+        //            rotation: 0f,
+        //            origin: Vector2.Zero,
+        //            scale: 1f / ((Main.LocalPlayer.HeldItem.Name == inv.Name) ? 0.75f : 1f),
+        //            SpriteEffects.None,
+        //            layerDepth: 0f);
+
+        //        //if(Main.LocalPlayer.HeldItem.Name == item.Name)
+        //        //{
+        //        //Main.NewText($"{scale} {frame.Size()} {item.ammo} {item.FitsAmmoSlot()} {item.createTile}");
+        //        //Main.NewText($"{item.healLife} {item.healMana} {item.buffType} {item.potion}");
+        //        //}
+        //    }
+        //}
 
         int[] contextIDs = new int[] { 0 };
         internal static bool useForBank;
@@ -358,11 +371,11 @@ namespace ItemBorder
                 
                 if (isPotion && isTile && isWall && isMaterial && item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem)
                 {
-                    bool isMagicStorageSlot = false;
-                    if(usingMagicalStorage)
-                    {
-                        isMagicStorageSlot = new StackTrace().GetFrames().Any(f => f.GetMethod()?.DeclaringType == magicalStorage.Code.GetType("MagicStorage.UI.MagicStorageItemSlot"));
-                    }
+                    //bool isMagicStorageSlot = false;
+                    //if(usingMagicalStorage)
+                    //{
+                    //    isMagicStorageSlot = new StackTrace().GetFrames().Any(f => f.GetMethod()?.DeclaringType == magicalStorage.Code.GetType("MagicStorage.UI.MagicStorageItemSlot"));
+                    //}
 
 
                     //float proportionX = 32 / frame.Size().X;
@@ -370,13 +383,18 @@ namespace ItemBorder
 
                     bool normalRarity = true;
                     Color abnormalColor = new Color(0,0,0);
-                    if (specialPickup)
+                    int definedAsSpecial = itemDefinitions.FirstOrDefault(x => x == inv[slot].netID, 0);
+                    if (specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
                     {
-                        if (item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
-                        {
-                            normalRarity = false;
-                            abnormalColor = new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
-                        }
+                       
+                        //Main.NewText($"{inv[slot].Name} {definedAsSpecial}");
+                        
+                            
+                        normalRarity = false;
+                        Main.NewText($"Drawing special item border {item.Name}");
+                        abnormalColor = ItemBorder.InvertMeAColour(Main.DiscoColor);//new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
+                            
+                        
                     }
                     #region CoinCheck
                     else if (item.IsACoin)
