@@ -8,6 +8,7 @@ Configs: {
 			Extra: Extra Header
 			Slot_options: Slot_options Header
 			Slot-options: Slot-options Header
+			Customization: Customization Header
 		}
 
 		borderType: {
@@ -189,5 +190,31 @@ Configs: {
 			Label: use Base Rarity
 			Tooltip: ""
 		}
+
+		ConfigTable: {
+			Tooltip: ""
+			Label: Config Table
+		}
 	}
+
+	TableRowConfig: {
+		Tooltip: ""
+
+		Label: {
+			Label: Label
+			Tooltip: ""
+		}
+
+		Border: {
+			Label: Border
+			Tooltip: ""
+		}
+
+		Outline: {
+			Label: Outline
+			Tooltip: ""
+		}
+	}
+
+	CustomTableUI.Tooltip: ""
 }

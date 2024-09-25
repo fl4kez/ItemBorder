@@ -96,6 +96,11 @@ namespace ItemBorder
                     //customBorders.Add(texture);
                 }
             }
+
+            //var config = ModContent.GetInstance<ItemBorderConfig>();
+            //config.ConfigTable.Add(new TableRowConfig("My First Label"));
+            //config.ConfigTable.Add(new TableRowConfig("My Second Label"));
+            //config.ConfigTable.Add(new TableRowConfig("My Third Label"));
         }
 
         public override void Unload()

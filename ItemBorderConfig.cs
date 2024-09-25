@@ -10,9 +10,23 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.UI;
+using YourModNamespace;
 
 namespace ItemBorder
 {
+    public class TableRowConfig
+    {
+        public string Label;
+        public bool Border;
+        public bool Outline;
+
+        public TableRowConfig(string label)
+        {
+            Label = label;
+            Border = false;
+            Outline = false;
+        }
+    }
     public class ItemBorderConfig : ModConfig
     {
 
@@ -293,7 +307,11 @@ namespace ItemBorder
 
             ItemBorder.outlineWidth = outlineWidth;
         }
-        
 
+        [Header("Customization")]
+        //[LabelKey("$Customization Table")]
+        //[CustomModConfigItem(typeof(CustomTableUI))]
+        // List of all table entries with labels and border/outline booleans
+        public CustomTableUI ConfigTable;
     }
 }
