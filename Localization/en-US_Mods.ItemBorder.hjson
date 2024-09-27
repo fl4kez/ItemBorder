@@ -216,5 +216,17 @@ Configs: {
 		}
 	}
 
-	CustomTableUI.Tooltip: ""
+	CustomTableUI: {
+		Tooltip: ""
+
+		checkboxOutline: {
+			Tooltip: ""
+			Label: checkbox Outline
+		}
+
+		checkboxBorder: {
+			Tooltip: ""
+			Label: checkbox Border
+		}
+	}
 }

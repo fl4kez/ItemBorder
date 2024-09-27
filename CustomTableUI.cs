@@ -8,6 +8,7 @@ using Terraria;
 using Microsoft.Xna.Framework.Graphics;
 using System.Reflection.Emit;
 using Terraria.ModLoader.UI;
+using ReLogic.Content;
 
 namespace YourModNamespace
 {
@@ -23,13 +24,47 @@ namespace YourModNamespace
         private UIText borderHeader;
         private UIText outlineHeader;
 
-        public override void Draw(SpriteBatch spriteBatch)
+        private Asset<Texture2D> checkedTexture;
+        
+        private Asset<Texture2D> uncheckedTexture;
+        private bool isCheckedBorder=true;
+        public UIImageButton checkboxBorder;
+        private bool isCheckedOutline=true;
+        public UIImageButton checkboxOutline;
+
+        //private void ToggleCheck(UIMouseEvent evt, UIElement listeningElement)
+        //{
+        //    isChecked = !isChecked;
+        //    checkbox.SetImage(isChecked ? checkedTexture : uncheckedTexture);
+        //}
+
+        public override void OnBind()
         {
-            base.Draw(spriteBatch);
+            base.OnBind();
         }
 
+        public void SwapStateBorder()
+        {
+            isCheckedBorder = !isCheckedBorder;
+            checkboxBorder.SetImage(isCheckedBorder ? checkedTexture : uncheckedTexture);
+            Main.NewText($"Changed border to {isCheckedBorder}");
+        }
+        public void SwapStateOutline()
+        {
+            isCheckedOutline = !isCheckedOutline;
+            checkboxOutline.SetImage(isCheckedOutline ? checkedTexture : uncheckedTexture);
+            Main.NewText($"Changed outline to {isCheckedOutline}");
+        }
+
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            base.LeftClick(evt);
+            Main.NewText("Clicked TableUI");
+        }
         public override void OnInitialize()
         {
+            checkedTexture = ModContent.Request<Texture2D>("ItemBorder/assets/SettingsToggleOn", ReLogic.Content.AssetRequestMode.ImmediateLoad);
+            uncheckedTexture = ModContent.Request<Texture2D>("ItemBorder/assets/SettingsToggleOff", ReLogic.Content.AssetRequestMode.ImmediateLoad);
             //// Create the main panel
             //panel = new UIPanel();
             //panel.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { Main.NewText($"I clicked TablePanel"); };
@@ -37,47 +72,54 @@ namespace YourModNamespace
             //panel.Height.Set(300f, 0f);  // Set a fixed height for testing
             //panel.BackgroundColor = new Color(63, 82, 151) * 0.7f;  // Color to make sure it's visible
             //Append(panel);
-            this.Height.Set(300f, 0f);
+            
             //this.label.SetText("");
             //this.labelHeader.SetText("");
             //this.AddOrRemoveChild
 
-
-
-            labelHeader = new UIText("Name", 0.9f);
+            labelHeader = new UIText("Name", 0.8f);
             labelHeader.Left.Set(100f, 0f);
             Append(labelHeader);
 
-            borderHeader = new UIText("Border", 0.9f);
+            borderHeader = new UIText("Border", 0.8f);
             borderHeader.Left.Set(400f, 0f);
             Append(borderHeader);    
 
-            outlineHeader = new UIText("Outline", 0.9f);
+            outlineHeader = new UIText("Outline", 0.8f);
             outlineHeader.Left.Set(500f, 0f);
             Append(outlineHeader);
-
+            
             // Add a simple label to the panel
-            label = new UIText("Test Label",0.8f);
+            label = new UIText("Test Label",0.7f);
             //label.Height = this.Height;
             label.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { Main.NewText($"I clicked label"); };
-            label.Left.Set(20f, 0f);  // Position it from the left
-            label.Top.Set(10f, 0f);
+            label.Left.Set(100f, 0f);  // Position it from the left
+            label.Top.Set(15f, 0f);
             Append(label);
 
             // Add a checkbox for "Outline"
-            outlineCheckbox = new UICheckbox("Outline", false);  // False for initial value
+            outlineCheckbox = new UICheckbox(false);  // False for initial value
             //outlineCheckbox.Height = this.Height;
-            outlineCheckbox.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { Main.NewText($"I clicked outlineCheckbox"); };
-            outlineCheckbox.Left.Set(150f, 0f);  // Positioned to the right of the label
-            outlineCheckbox.Top.Set(10f, 0f);
+            outlineCheckbox.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { outlineCheckbox.ToggleCheck(); };
+            //checkboxOutline = new UIImageButton(isCheckedOutline ? checkedTexture : uncheckedTexture);
+            //checkboxOutline.SetVisibility(1, 1);
+            //checkboxOutline.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => SwapStateOutline();
+            //checkboxOutline.Left.Set(525f, 0f);  // Positioned to the right of the label
+            outlineCheckbox.Left.Set(525f, 0f);  // Positioned to the right of the label
+            //checkboxOutline.Top.Set(15f, 0f);
+            outlineCheckbox.Top.Set(15f, 0f);
+            //Append(checkboxOutline);
             Append(outlineCheckbox);
 
             // Add a checkbox for "Border"
-            borderCheckbox = new UICheckbox("Border", false);  // False for initial value
+            borderCheckbox = new UICheckbox(false);  // False for initial value
             //borderCheckbox.Height = this.Height;
-            borderCheckbox.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { Main.NewText($"I clicked borderCheckbox"); };
-            borderCheckbox.Left.Set(250f, 0f);  // Positioned to the right of the Outline checkbox
-            borderCheckbox.Top.Set(10f, 0f);
+            borderCheckbox.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { borderCheckbox.ToggleCheck(); };
+            //checkboxBorder = new UIImageButton(isCheckedBorder ? checkedTexture : uncheckedTexture);
+            //checkboxBorder.SetVisibility(1, 1);
+            //checkboxBorder.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => SwapStateBorder();
+            borderCheckbox.Left.Set(425f, 0f);  // Positioned to the right of the Outline checkbox
+            borderCheckbox.Top.Set(15f, 0f);
             Append(borderCheckbox);
 
             Main.NewText("Panel initialized");

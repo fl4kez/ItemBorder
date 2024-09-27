@@ -18,36 +18,49 @@ namespace YourModNamespace
 
         public bool Selected => isChecked; // Property to get the checkbox state
 
-        public override void LeftClick(UIMouseEvent evt)
-        {
-            SetState(!isChecked);
-        }
-
-        public UICheckbox(string label, bool defaultState = false)
+        public UICheckbox(bool defaultState = false)
         {
             isChecked = defaultState;
 
             checkedTexture = ModContent.Request<Texture2D>("ItemBorder/assets/SettingsToggleOn", ReLogic.Content.AssetRequestMode.ImmediateLoad);
             uncheckedTexture = ModContent.Request<Texture2D>("ItemBorder/assets/SettingsToggleOff", ReLogic.Content.AssetRequestMode.ImmediateLoad);
 
+            labelText = new UIText("", 0.7f);
+            SetOnOffText();
+            labelText.Left.Set(-25f, 0f); // Position the label to the right of the checkbox
+            Append(labelText);
+
             checkbox = new UIImageButton(isChecked ? checkedTexture : uncheckedTexture);
-            checkbox.OnLeftClick += ToggleCheck;
+            checkbox.SetVisibility(1, 1);
+            checkbox.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { ToggleCheck(); };
+            Width.Set(20f, 0f);
+            Height.Set(20f, 0f);
+            //checkbox.Width.Set(20f, 0f);
+            //checkbox.Height.Set(20f, 0f);
             Append(checkbox);
+            
 
-            //labelText = new UIText(label);
-            //labelText.Left.Set(25f, 0f); // Position the label to the right of the checkbox
-            //Append(labelText);
+            
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        // Debug method to check if the element is receiving clicks
+        public override void LeftClick(UIMouseEvent evt)
         {
-            base.Draw(spriteBatch);
+            //base.LeftClick(evt);
+            Main.NewText("UICheckbox clicked");
         }
 
-        private void ToggleCheck(UIMouseEvent evt, UIElement listeningElement)
+        public void SetOnOffText()
+        {
+            this.labelText.SetText(isChecked ? "On" : "Off");
+        }
+
+        public void ToggleCheck()
         {
             isChecked = !isChecked;
             checkbox.SetImage(isChecked ? checkedTexture : uncheckedTexture);
+            Main.NewText($"Changed outline to {isChecked}");
+            SetOnOffText();
         }
 
         public void SetState(bool state)

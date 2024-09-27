@@ -391,7 +391,7 @@ namespace ItemBorder
                         
                             
                         normalRarity = false;
-                        Main.NewText($"Drawing special item border {item.Name}");
+                        //Main.NewText($"Drawing special item border {item.Name}");
                         abnormalColor = ItemBorder.InvertMeAColour(Main.DiscoColor);//new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
                             
                         
