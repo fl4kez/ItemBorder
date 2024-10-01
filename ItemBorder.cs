@@ -97,11 +97,12 @@ namespace ItemBorder
                 }
             }
 
-            //var config = ModContent.GetInstance<ItemBorderConfig>();
+            //config = ModContent.GetInstance<ItemBorderConfig>();
             //config.ConfigTable.Add(new TableRowConfig("My First Label"));
             //config.ConfigTable.Add(new TableRowConfig("My Second Label"));
             //config.ConfigTable.Add(new TableRowConfig("My Third Label"));
         }
+        //ItemBorderConfig config;
 
         public override void Unload()
         {
@@ -145,10 +146,11 @@ namespace ItemBorder
                             layerDepth: 0f);
                 }
             }
-            orig(spriteBatch, inv, context, slot, position, lightColor);
 
+            orig(spriteBatch, inv, context, slot, position, lightColor);
             if (useBorder == true)
                 ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(orig, spriteBatch, inv, context, slot, position, lightColor);
+                
         }
 
         const int RGBMAX = 255;

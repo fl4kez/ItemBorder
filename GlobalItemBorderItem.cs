@@ -49,6 +49,7 @@ namespace ItemBorder
         }
         public override bool PreDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
+            Texture2D sprite = TextureAssets.Item[item.type].Value;
             if (ItemBorder.useOutline == true)
             {
 
@@ -61,7 +62,7 @@ namespace ItemBorder
                 var originalDepthStencilState = Main.spriteBatch.GraphicsDevice.DepthStencilState;
                 var originalRasterizerState = Main.spriteBatch.GraphicsDevice.RasterizerState;
 
-                Texture2D sprite = TextureAssets.Item[item.type].Value;
+                //Texture2D sprite = TextureAssets.Item[item.type].Value;
                 Texture2D spriteCopy = TextureAssets.Item[item.type].Value;
                 
                 Rectangle rect = new Rectangle(0, 0, sprite.Width, sprite.Height);
@@ -158,17 +159,7 @@ namespace ItemBorder
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
 
-                //DRAW ITEM YOURSELF SO OPACITY IS 100% AND NOT 75%
-                drawColor = new Color(drawColor.R, drawColor.G, drawColor.B, 255);
-                spriteBatch.Draw(sprite,
-                                position: position ,
-                                sourceRectangle: frame,
-                                color: drawColor,
-                                rotation: 0f,
-                                origin: origin,
-                                scale: scale,
-                                SpriteEffects.None,
-                                layerDepth: 0f);
+                
                 //foreach (Vector2 offset in offsets)
                 //{
                 //spriteBatch.Draw(spriteCopy,
@@ -182,6 +173,17 @@ namespace ItemBorder
                 //            layerDepth: 0f);
                 //}
             }
+            //DRAW ITEM YOURSELF SO OPACITY IS 100% AND NOT 75%
+            drawColor = new Color(drawColor.R, drawColor.G, drawColor.B, 255);
+            spriteBatch.Draw(sprite,
+                            position: position,
+                            sourceRectangle: frame,
+                            color: drawColor,
+                            rotation: 0f,
+                            origin: origin,
+                            scale: scale,
+                            SpriteEffects.None,
+                            layerDepth: 0f);
             return false;
         }
         

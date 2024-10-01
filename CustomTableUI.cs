@@ -6,125 +6,101 @@ using Terraria.ModLoader.Config;
 using Terraria.ModLoader;
 using Terraria;
 using Microsoft.Xna.Framework.Graphics;
-using System.Reflection.Emit;
-using Terraria.ModLoader.UI;
 using ReLogic.Content;
+using System.Linq;
+using System.Collections.Generic;
+using ItemBorder;
 
-namespace YourModNamespace
+namespace ItemBorder
 {
     [CustomModConfigItem(typeof(CustomTableUI))]
     public class CustomTableUI : ConfigElement
     {
-        private UIPanel panel;
-        private UIText label;
-        private UICheckbox borderCheckbox;
-        private UICheckbox outlineCheckbox;
-
         private UIText labelHeader;
         private UIText borderHeader;
         private UIText outlineHeader;
 
-        private Asset<Texture2D> checkedTexture;
-        
-        private Asset<Texture2D> uncheckedTexture;
-        private bool isCheckedBorder=true;
-        public UIImageButton checkboxBorder;
-        private bool isCheckedOutline=true;
-        public UIImageButton checkboxOutline;
+        //private Asset<Texture2D> checkedTexture;
+        //private Asset<Texture2D> uncheckedTexture;
 
-        //private void ToggleCheck(UIMouseEvent evt, UIElement listeningElement)
-        //{
-        //    isChecked = !isChecked;
-        //    checkbox.SetImage(isChecked ? checkedTexture : uncheckedTexture);
-        //}
+        float baseHeight;
 
-        public override void OnBind()
-        {
-            base.OnBind();
-        }
-
-        public void SwapStateBorder()
-        {
-            isCheckedBorder = !isCheckedBorder;
-            checkboxBorder.SetImage(isCheckedBorder ? checkedTexture : uncheckedTexture);
-            Main.NewText($"Changed border to {isCheckedBorder}");
-        }
-        public void SwapStateOutline()
-        {
-            isCheckedOutline = !isCheckedOutline;
-            checkboxOutline.SetImage(isCheckedOutline ? checkedTexture : uncheckedTexture);
-            Main.NewText($"Changed outline to {isCheckedOutline}");
-        }
-
-        public override void LeftClick(UIMouseEvent evt)
-        {
-            base.LeftClick(evt);
-            Main.NewText("Clicked TableUI");
-        }
         public override void OnInitialize()
         {
-            checkedTexture = ModContent.Request<Texture2D>("ItemBorder/assets/SettingsToggleOn", ReLogic.Content.AssetRequestMode.ImmediateLoad);
-            uncheckedTexture = ModContent.Request<Texture2D>("ItemBorder/assets/SettingsToggleOff", ReLogic.Content.AssetRequestMode.ImmediateLoad);
-            //// Create the main panel
-            //panel = new UIPanel();
-            //panel.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { Main.NewText($"I clicked TablePanel"); };
-            //panel.Width.Set(0, 1f);  // Full width
-            //panel.Height.Set(300f, 0f);  // Set a fixed height for testing
-            //panel.BackgroundColor = new Color(63, 82, 151) * 0.7f;  // Color to make sure it's visible
-            //Append(panel);
-            
-            //this.label.SetText("");
-            //this.labelHeader.SetText("");
-            //this.AddOrRemoveChild
+            baseHeight = Height.Pixels;
 
+
+            //checkedTexture = ModContent.Request<Texture2D>("ItemBorder/assets/SettingsToggleOn", ReLogic.Content.AssetRequestMode.ImmediateLoad);
+            //uncheckedTexture = ModContent.Request<Texture2D>("ItemBorder/assets/SettingsToggleOff", ReLogic.Content.AssetRequestMode.ImmediateLoad);
+
+            // Initialize headers
             labelHeader = new UIText("Name", 0.8f);
             labelHeader.Left.Set(100f, 0f);
             Append(labelHeader);
 
             borderHeader = new UIText("Border", 0.8f);
             borderHeader.Left.Set(400f, 0f);
-            Append(borderHeader);    
+            Append(borderHeader);
 
             outlineHeader = new UIText("Outline", 0.8f);
             outlineHeader.Left.Set(500f, 0f);
             Append(outlineHeader);
-            
-            // Add a simple label to the panel
-            label = new UIText("Test Label",0.7f);
-            //label.Height = this.Height;
-            label.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { Main.NewText($"I clicked label"); };
-            label.Left.Set(100f, 0f);  // Position it from the left
-            label.Top.Set(15f, 0f);
+
+            // Example: Add a default row
+            AddCustomizationRow("hotbar","Use for hotbar", true, true);
+            //AddCustomizationRow("Test Label 2", false, false);
+        }
+
+        float offsetValue = 15f;
+        int rowIndex => (Children.Count() - 3) / 3;
+
+        public void AddCustomizationRow(string KEY,string labelText, bool initialBorderState, bool initialOutlineState)
+        {
+            //int rowIndex = (Children.Count() - 3) / 3;  // Calculate row index based on current number of rows
+
+
+            if (this.Parent != null)
+            {
+                this.Parent.Height.Set(baseHeight + (offsetValue * (rowIndex)), 0);
+                this.Parent.Recalculate();
+                this.Height.Set(baseHeight + (offsetValue * (rowIndex)), 0);
+                //this.Recalculate();
+                //this.Parent.Recalculate();
+                this.Parent.RecalculateChildren();
+            }
+
+
+
+            //Main.NewText($"RowIndex: {rowIndex}");
+            //Main.NewText($"{this.Parent.GetDimensions().Y}");
+            //Main.NewText($"{this.GetDimensions().Y}");
+
+            // Label for the row
+            UIText label = new UIText(labelText, 0.7f);
+            label.Left.Set(100f, 0f);
+            label.Top.Set(15f + offsetValue * rowIndex, 0f);  // Adjust the position based on the number of rows
             Append(label);
 
-            // Add a checkbox for "Outline"
-            outlineCheckbox = new UICheckbox(false);  // False for initial value
-            //outlineCheckbox.Height = this.Height;
-            outlineCheckbox.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { outlineCheckbox.ToggleCheck(); };
-            //checkboxOutline = new UIImageButton(isCheckedOutline ? checkedTexture : uncheckedTexture);
-            //checkboxOutline.SetVisibility(1, 1);
-            //checkboxOutline.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => SwapStateOutline();
-            //checkboxOutline.Left.Set(525f, 0f);  // Positioned to the right of the label
-            outlineCheckbox.Left.Set(525f, 0f);  // Positioned to the right of the label
-            //checkboxOutline.Top.Set(15f, 0f);
-            outlineCheckbox.Top.Set(15f, 0f);
-            //Append(checkboxOutline);
-            Append(outlineCheckbox);
-
-            // Add a checkbox for "Border"
-            borderCheckbox = new UICheckbox(false);  // False for initial value
-            //borderCheckbox.Height = this.Height;
-            borderCheckbox.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => { borderCheckbox.ToggleCheck(); };
-            //checkboxBorder = new UIImageButton(isCheckedBorder ? checkedTexture : uncheckedTexture);
-            //checkboxBorder.SetVisibility(1, 1);
-            //checkboxBorder.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) => SwapStateBorder();
-            borderCheckbox.Left.Set(425f, 0f);  // Positioned to the right of the Outline checkbox
-            borderCheckbox.Top.Set(15f, 0f);
+            // Checkbox for "Border"
+            UICheckbox borderCheckbox = new UICheckbox(initialBorderState);
+            borderCheckbox.Left.Set(425f, 0f);
+            borderCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
             Append(borderCheckbox);
 
-            Main.NewText("Panel initialized");
-            Main.NewText("Row added: " + label);
-            
+            // Checkbox for "Outline"
+            UICheckbox outlineCheckbox = new UICheckbox(initialOutlineState);
+            outlineCheckbox.Left.Set(525f, 0f);
+            outlineCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
+            Append(outlineCheckbox);
+
+            TableRowConfig row = new TableRowConfig(KEY,label, borderCheckbox, outlineCheckbox);
+            rows.Add(row);
+        }
+        public List<TableRowConfig> rows = new List<TableRowConfig>();
+
+        public CustomTableUI()
+        {
         }
     }
+    
 }

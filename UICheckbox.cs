@@ -6,7 +6,7 @@ using Terraria;
 using ReLogic.Content;
 using Terraria.ModLoader;
 
-namespace YourModNamespace
+namespace ItemBorder
 {
     public class UICheckbox : UIElement
     {
@@ -43,12 +43,12 @@ namespace YourModNamespace
             
         }
 
-        // Debug method to check if the element is receiving clicks
-        public override void LeftClick(UIMouseEvent evt)
-        {
-            //base.LeftClick(evt);
-            Main.NewText("UICheckbox clicked");
-        }
+        //// Debug method to check if the element is receiving clicks
+        //public override void LeftClick(UIMouseEvent evt)
+        //{
+        //    //base.LeftClick(evt);
+        //    Main.NewText("UICheckbox clicked");
+        //}
 
         public void SetOnOffText()
         {
@@ -59,7 +59,7 @@ namespace YourModNamespace
         {
             isChecked = !isChecked;
             checkbox.SetImage(isChecked ? checkedTexture : uncheckedTexture);
-            Main.NewText($"Changed outline to {isChecked}");
+            //Main.NewText($"Changed outline to {isChecked}");
             SetOnOffText();
         }
 

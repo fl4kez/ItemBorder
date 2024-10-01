@@ -214,6 +214,11 @@ Configs: {
 			Label: Outline
 			Tooltip: ""
 		}
+
+		KEY: {
+			Label: KEY
+			Tooltip: ""
+		}
 	}
 
 	CustomTableUI: {
@@ -227,6 +232,25 @@ Configs: {
 		checkboxBorder: {
 			Tooltip: ""
 			Label: checkbox Border
+		}
+
+		rows: {
+			Label: rows
+			Tooltip: ""
+		}
+	}
+
+	UICheckbox: {
+		Tooltip: ""
+
+		checkbox: {
+			Label: checkbox
+			Tooltip: ""
+		}
+
+		Selected: {
+			Label: Selected
+			Tooltip: ""
 		}
 	}
 }
