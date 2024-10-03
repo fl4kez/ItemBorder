@@ -53,7 +53,7 @@ namespace ItemBorder
             if (CustomTableUI.rows.Count > 0)
             {
                 //Main.NewText($"{CustomTableUI.rows.Count} {CustomTableUI.rows[0].Outline.Selected}");
-                if (CustomTableUI.rows[0].Outline.Selected == true)
+                if (CustomTableUI.rows["hotbar"].Outline.Selected == true)
                 {
 
                     // Save the current state of the spriteBatch

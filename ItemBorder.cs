@@ -24,12 +24,19 @@ namespace ItemBorder
         public static bool usePotions, useTiles;
         public static int borderType;
         internal static bool useForHotbar;
+        internal static TableRowConfig hotbar => CustomTableUI.rows["hotbar"];
         internal static bool useForLightPet;
+        internal static TableRowConfig lightPet => CustomTableUI.rows["lightPet"];
         internal static bool useForPet;
+        internal static TableRowConfig pet => CustomTableUI.rows["pet"];
         internal static bool useForMinecart;
+        internal static TableRowConfig minecart => CustomTableUI.rows["minecart"];
         internal static bool useForMount;
+        internal static TableRowConfig mount => CustomTableUI.rows["mount"];
         internal static bool useForGrapple;
+        internal static TableRowConfig grapple => CustomTableUI.rows["grapple"];
         internal static bool useForShop;
+        internal static TableRowConfig shop => CustomTableUI.rows["shop"];
         internal static bool useForDye;
         internal static bool useForVanityAccessory;
         internal static bool useForAccessory;
@@ -40,6 +47,22 @@ namespace ItemBorder
         internal static bool useForAmmo;
         internal static bool useForInventory;
         internal static bool useForChests;
+
+        int[] contextIDs = new int[] { 0 };
+        internal static bool useForBank;
+        internal static bool useForHatRack;
+        internal static bool useForHatRackDye;
+        internal static bool useForMannequinArmor;
+        internal static bool useForMannequinAccessory;
+        internal static bool useForMannequinDye;
+        internal static bool useWalls;
+        internal static bool useMaterials;
+        internal static int customBorder;
+        internal static bool specialPickup;
+        internal static bool useOutline;
+        internal static bool useBorder;
+        internal static bool useBaseRarity;
+        internal static int outlineWidth;
 
         public static bool usingMagicalStorage;
         public static float borderOpacity;
@@ -103,6 +126,7 @@ namespace ItemBorder
             //config.ConfigTable.Add(new TableRowConfig("My Second Label"));
             //config.ConfigTable.Add(new TableRowConfig("My Third Label"));
             config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar", true, true);
+            config.ConfigTable.AddCustomizationRowToList("shop", "Use for shop", true, true);
         }
         ItemBorderConfig config;
 
@@ -213,21 +237,7 @@ namespace ItemBorder
         //    }
         //}
 
-        int[] contextIDs = new int[] { 0 };
-        internal static bool useForBank;
-        internal static bool useForHatRack;
-        internal static bool useForHatRackDye;
-        internal static bool useForMannequinArmor;
-        internal static bool useForMannequinAccessory;
-        internal static bool useForMannequinDye;
-        internal static bool useWalls;
-        internal static bool useMaterials;
-        internal static int customBorder;
-        internal static bool specialPickup;
-        internal static bool useOutline;
-        internal static bool useBorder;
-        internal static bool useBaseRarity;
-        internal static int outlineWidth;
+        
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {

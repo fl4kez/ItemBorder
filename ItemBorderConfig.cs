@@ -18,16 +18,25 @@ namespace ItemBorder
     public class TableRowConfig
     {
         public UIText Label;
-        public string KEY;
+        //public string KEY;
         public UICheckbox Border;
         public UICheckbox Outline;
 
-        public TableRowConfig(string key,UIText label, UICheckbox border, UICheckbox outline)
+        public TableRowConfig(UIText label, UICheckbox border, UICheckbox outline)
         {
-            KEY = key;
+            //KEY = key;
             Label = label;
             Border = border;
             Outline = outline;
+        }
+
+        bool BorderValue()
+        {
+            return this.Border.Selected;
+        }
+        bool OutlineValue()
+        {
+            return this.Outline.Selected;
         }
     }
     public class ItemBorderConfig : ModConfig

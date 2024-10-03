@@ -71,17 +71,25 @@ namespace ItemBorder
             //        AddCustomizationRow(row.KEY, row.Label.Text, row.Border.Selected, row.Outline.Selected);
             //    }
             //}
+            bool skip = true;
             foreach (var row in rows)
             {
-                AddCustomizationRow(row);
+                if (skip)
+                { 
+                    AddCustomizationRow(row.Value, true);
+                    skip = false;
+                    continue;
+                }
+
+                AddCustomizationRow(row.Value,false);
             }
             //AddCustomizationRow("Test Label 2", false, false);
         }
 
-        float offsetValue = 15f;
+        float offsetValue = 20f;
         int rowIndex => (Children.Count() - 3) / 3;
 
-        public void AddCustomizationRow(TableRowConfig tableRow)
+        public void AddCustomizationRow(TableRowConfig tableRow,bool skipSeperator)
         {
             //int rowIndex = (Children.Count() - 3) / 3;  // Calculate row index based on current number of rows
 
@@ -104,6 +112,8 @@ namespace ItemBorder
 
             // Label for the row
             //tableRow.Label.Left.Set(100f, 0f);
+            
+
             tableRow.Label.Top.Set(15f + offsetValue * rowIndex, 0f);
             Append(tableRow.Label);
 
@@ -117,6 +127,22 @@ namespace ItemBorder
             tableRow.Outline.Top.Set(15f + offsetValue * rowIndex, 0f);
             Append(tableRow.Outline);
 
+            //if (skipSeperator)
+            //{
+            //    //Utils.DrawLine(Main.spriteBatch,this.dim)
+            //    UIHorizontalSeparator line = new UIHorizontalSeparator(600, false);
+            //    line.Top.Set(15f + offsetValue * (rowIndex), 0f);
+            //    line.MinHeight.Set(0, 0);
+            //    line.Height.Set(0, 0);
+            //    //line.MinWidth.Set(0, 0);
+            //    //line.Width.Set(0, 0);
+
+            //    line.IgnoresMouseInteraction = true;
+            //    //line.Left.Set(525f, 0f);
+
+            //    Append(line);
+            //}
+            
             //TableRowConfig row = new TableRowConfig(KEY,label, borderCheckbox, outlineCheckbox);
             //rows.Add(row);
         }
@@ -150,10 +176,11 @@ namespace ItemBorder
             outlineCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
             //Append(outlineCheckbox);
 
-            TableRowConfig row = new TableRowConfig(KEY, label, borderCheckbox, outlineCheckbox);
-            rows.Add(row);
+
+            TableRowConfig row = new TableRowConfig(label, borderCheckbox, outlineCheckbox);
+            rows.Add(KEY,row);
         }
-        public static List<TableRowConfig> rows = new List<TableRowConfig>();
+        public static Dictionary<string,TableRowConfig> rows = new Dictionary<string, TableRowConfig>();
     }
     
 }
