@@ -10,7 +10,6 @@ using ReLogic.Content;
 using System.Linq;
 using System.Collections.Generic;
 using ItemBorder;
-using System.Reflection.Emit;
 
 namespace ItemBorder
 {
