@@ -50,128 +50,132 @@ namespace ItemBorder
         public override bool PreDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
             Texture2D sprite = TextureAssets.Item[item.type].Value;
-            if (ItemBorder.useOutline == true)
+            if (CustomTableUI.rows.Count > 0)
             {
-
-                // Save the current state of the spriteBatch
-                //SpriteSortMode originalSortMode = Main.spriteBatch.GraphicsDevice.BlendState == BlendState.AlphaBlend
-                //? SpriteSortMode.Deferred
-                //: SpriteSortMode.Immediate; // Example of how Terraria might be using it (you can customize this based on your needs)
-                var originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;
-                var originalSamplerState = Main.spriteBatch.GraphicsDevice.SamplerStates[0];
-                var originalDepthStencilState = Main.spriteBatch.GraphicsDevice.DepthStencilState;
-                var originalRasterizerState = Main.spriteBatch.GraphicsDevice.RasterizerState;
-
-                //Texture2D sprite = TextureAssets.Item[item.type].Value;
-                Texture2D spriteCopy = TextureAssets.Item[item.type].Value;
-                
-                Rectangle rect = new Rectangle(0, 0, sprite.Width, sprite.Height);
-
-                float outlineWidth = ItemBorder.outlineWidth;
-
-                bool normalRarity = true;
-                Color abnormalColor = new Color(0, 0, 0);
-                int definedAsSpecial = ItemBorder.itemDefinitions.FirstOrDefault(x => x == item.netID, 0);
-                if (ItemBorder.specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
+                //Main.NewText($"{CustomTableUI.rows.Count} {CustomTableUI.rows[0].Outline.Selected}");
+                if (CustomTableUI.rows[0].Outline.Selected == true)
                 {
 
-                    normalRarity = false;
-                    abnormalColor = ItemBorder.InvertMeAColour(Main.DiscoColor);//new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
-                    
-                }
-                #region CoinCheck
-                else if (item.IsACoin)
-                {
-                    switch (item.netID)
+                    // Save the current state of the spriteBatch
+                    //SpriteSortMode originalSortMode = Main.spriteBatch.GraphicsDevice.BlendState == BlendState.AlphaBlend
+                    //? SpriteSortMode.Deferred
+                    //: SpriteSortMode.Immediate; // Example of how Terraria might be using it (you can customize this based on your needs)
+                    var originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;
+                    var originalSamplerState = Main.spriteBatch.GraphicsDevice.SamplerStates[0];
+                    var originalDepthStencilState = Main.spriteBatch.GraphicsDevice.DepthStencilState;
+                    var originalRasterizerState = Main.spriteBatch.GraphicsDevice.RasterizerState;
+
+                    //Texture2D sprite = TextureAssets.Item[item.type].Value;
+                    Texture2D spriteCopy = TextureAssets.Item[item.type].Value;
+
+                    Rectangle rect = new Rectangle(0, 0, sprite.Width, sprite.Height);
+
+                    float outlineWidth = ItemBorder.outlineWidth;
+
+                    bool normalRarity = true;
+                    Color abnormalColor = new Color(0, 0, 0);
+                    int definedAsSpecial = ItemBorder.itemDefinitions.FirstOrDefault(x => x == item.netID, 0);
+                    if (ItemBorder.specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
                     {
-                        case ItemID.CopperCoin:
-                            normalRarity = false;
-                            abnormalColor = new Color(183, 88, 25);
-                            break;
-                        case ItemID.SilverCoin:
-                            normalRarity = false;
-                            abnormalColor = new Color(124, 141, 142);
-                            break;
-                        case ItemID.GoldCoin:
-                            normalRarity = false;
-                            abnormalColor = new Color(148, 126, 24);
-                            break;
-                        case ItemID.PlatinumCoin:
-                            normalRarity = false;
-                            abnormalColor = new Color(136, 164, 176);
-                            break;
 
-                        default: break;
+                        normalRarity = false;
+                        abnormalColor = ItemBorder.InvertMeAColour(Main.DiscoColor);//new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
+
                     }
-                }
-                #endregion
-                else if (item.expert == true || (ItemBorder.useBaseRarity ? item.OriginalRarity == -12 : item.rare == -12))
-                {
-                    normalRarity = false;
-                    abnormalColor = Main.DiscoColor;
-                }
-                else if (item.master || (ItemBorder.useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
-                {
-                    //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
-                    normalRarity = false;
-                    abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
-                }
-                else if ((ItemBorder.useBaseRarity?item.OriginalRarity:item.rare) >= ItemRarityID.Count)
-                {
-                    ModRarity rarity = RarityLoader.GetRarity(ItemBorder.useBaseRarity?item.OriginalRarity:item.rare);
-                    normalRarity = false;
-                    abnormalColor = rarity.RarityColor;
-                    //Main.NewText($"{item.Name} {rarity.RarityColor}");
-                }
+                    #region CoinCheck
+                    else if (item.IsACoin)
+                    {
+                        switch (item.netID)
+                        {
+                            case ItemID.CopperCoin:
+                                normalRarity = false;
+                                abnormalColor = new Color(183, 88, 25);
+                                break;
+                            case ItemID.SilverCoin:
+                                normalRarity = false;
+                                abnormalColor = new Color(124, 141, 142);
+                                break;
+                            case ItemID.GoldCoin:
+                                normalRarity = false;
+                                abnormalColor = new Color(148, 126, 24);
+                                break;
+                            case ItemID.PlatinumCoin:
+                                normalRarity = false;
+                                abnormalColor = new Color(136, 164, 176);
+                                break;
 
-                Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.useBaseRarity?item.OriginalRarity:item.rare);
-                trueSetColor *= ItemBorder.borderOpacity;
+                            default: break;
+                        }
+                    }
+                    #endregion
+                    else if (item.expert == true || (ItemBorder.useBaseRarity ? item.OriginalRarity == -12 : item.rare == -12))
+                    {
+                        normalRarity = false;
+                        abnormalColor = Main.DiscoColor;
+                    }
+                    else if (item.master || (ItemBorder.useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
+                    {
+                        //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
+                        normalRarity = false;
+                        abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
+                    }
+                    else if ((ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare) >= ItemRarityID.Count)
+                    {
+                        ModRarity rarity = RarityLoader.GetRarity(ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare);
+                        normalRarity = false;
+                        abnormalColor = rarity.RarityColor;
+                        //Main.NewText($"{item.Name} {rarity.RarityColor}");
+                    }
 
-                Vector2[] offsets = new Vector2[]
-                {
+                    Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare);
+                    trueSetColor *= ItemBorder.borderOpacity;
+
+                    Vector2[] offsets = new Vector2[]
+                    {
                 new Vector2(-outlineWidth,0),//LEFT
                 new Vector2(outlineWidth,0),//RIGHT
                 new Vector2(0,-outlineWidth),//UP
                 new Vector2(0,outlineWidth),//DOWN
-                //new Vector2(-outlineWidth,-outlineWidth),//TOPLEFT
-                //new Vector2(outlineWidth,outlineWidth),//BOTTOMRIGHT
-                //new Vector2(outlineWidth,-outlineWidth),//TOPRIGHT
-                //new Vector2(-outlineWidth,outlineWidth),//BOTTOMLEFT
-                };
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
+                                            //new Vector2(-outlineWidth,-outlineWidth),//TOPLEFT
+                                            //new Vector2(outlineWidth,outlineWidth),//BOTTOMRIGHT
+                                            //new Vector2(outlineWidth,-outlineWidth),//TOPRIGHT
+                                            //new Vector2(-outlineWidth,outlineWidth),//BOTTOMLEFT
+                    };
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
 
-                ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
-                ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
+                    ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
+                    ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
 
-                foreach (Vector2 offset in offsets)
-                {
-                    spriteBatch.Draw(spriteCopy,
-                                position: position + offset,
-                                sourceRectangle: frame,
-                                color: trueSetColor,
-                                rotation: 0f,
-                                origin: origin,
-                                scale: scale,
-                                SpriteEffects.None,
-                                layerDepth: 0f);
+                    foreach (Vector2 offset in offsets)
+                    {
+                        spriteBatch.Draw(spriteCopy,
+                                    position: position + offset,
+                                    sourceRectangle: frame,
+                                    color: trueSetColor,
+                                    rotation: 0f,
+                                    origin: origin,
+                                    scale: scale,
+                                    SpriteEffects.None,
+                                    layerDepth: 0f);
+                    }
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
+
+
+                    //foreach (Vector2 offset in offsets)
+                    //{
+                    //spriteBatch.Draw(spriteCopy,
+                    //            position: position,
+                    //            sourceRectangle: rect,
+                    //            color: Color.Black,
+                    //            rotation: 0f,
+                    //            origin: origin,
+                    //            scale: scale,
+                    //            SpriteEffects.None,
+                    //            layerDepth: 0f);
+                    //}
                 }
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
-
-                
-                //foreach (Vector2 offset in offsets)
-                //{
-                //spriteBatch.Draw(spriteCopy,
-                //            position: position,
-                //            sourceRectangle: rect,
-                //            color: Color.Black,
-                //            rotation: 0f,
-                //            origin: origin,
-                //            scale: scale,
-                //            SpriteEffects.None,
-                //            layerDepth: 0f);
-                //}
             }
             //DRAW ITEM YOURSELF SO OPACITY IS 100% AND NOT 75%
             drawColor = new Color(drawColor.R, drawColor.G, drawColor.B, 255);

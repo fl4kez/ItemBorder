@@ -60,7 +60,10 @@ namespace ItemBorder
             isChecked = !isChecked;
             checkbox.SetImage(isChecked ? checkedTexture : uncheckedTexture);
             //Main.NewText($"Changed outline to {isChecked}");
+            //Main.NewText($"{CustomTableUI.rows[0].Label.Text} {CustomTableUI.rows[0].Outline.Selected} {CustomTableUI.rows[0].Border.Selected}");
+            //Main.NewText($"{ReferenceEquals(CustomTableUI.rows[0].Outline,this)}");
             SetOnOffText();
+            
         }
 
         public void SetState(bool state)

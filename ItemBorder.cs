@@ -97,12 +97,14 @@ namespace ItemBorder
                 }
             }
 
-            //config = ModContent.GetInstance<ItemBorderConfig>();
+            config = ModContent.GetInstance<ItemBorderConfig>();
+            config.ConfigTable = new CustomTableUI();
             //config.ConfigTable.Add(new TableRowConfig("My First Label"));
             //config.ConfigTable.Add(new TableRowConfig("My Second Label"));
             //config.ConfigTable.Add(new TableRowConfig("My Third Label"));
+            config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar", true, true);
         }
-        //ItemBorderConfig config;
+        ItemBorderConfig config;
 
         public override void Unload()
         {

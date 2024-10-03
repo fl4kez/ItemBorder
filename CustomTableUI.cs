@@ -10,6 +10,7 @@ using ReLogic.Content;
 using System.Linq;
 using System.Collections.Generic;
 using ItemBorder;
+using System.Reflection.Emit;
 
 namespace ItemBorder
 {
@@ -24,6 +25,13 @@ namespace ItemBorder
         //private Asset<Texture2D> uncheckedTexture;
 
         float baseHeight;
+
+        static bool initializedRows = false;
+
+        public override void OnBind()
+        {
+            base.OnBind();
+        }
 
         public override void OnInitialize()
         {
@@ -47,14 +55,33 @@ namespace ItemBorder
             Append(outlineHeader);
 
             // Example: Add a default row
-            AddCustomizationRow("hotbar","Use for hotbar", true, true);
+            //if(initializedRows == false)
+            //{
+            //    AddCustomizationRowToList("hotbar", "Use for hotbar", true, true);
+            //    foreach (var row in rows)
+            //    {
+            //        AddCustomizationRow(row.KEY, row.Label.Text, row.Border.Selected, row.Outline.Selected);
+            //    }
+            //    initializedRows = true;
+            //}
+            //else
+            //{
+            //    foreach(var row in rows)
+            //    {
+            //        AddCustomizationRow(row.KEY, row.Label.Text, row.Border.Selected, row.Outline.Selected);
+            //    }
+            //}
+            foreach (var row in rows)
+            {
+                AddCustomizationRow(row);
+            }
             //AddCustomizationRow("Test Label 2", false, false);
         }
 
         float offsetValue = 15f;
         int rowIndex => (Children.Count() - 3) / 3;
 
-        public void AddCustomizationRow(string KEY,string labelText, bool initialBorderState, bool initialOutlineState)
+        public void AddCustomizationRow(TableRowConfig tableRow)
         {
             //int rowIndex = (Children.Count() - 3) / 3;  // Calculate row index based on current number of rows
 
@@ -76,31 +103,57 @@ namespace ItemBorder
             //Main.NewText($"{this.GetDimensions().Y}");
 
             // Label for the row
+            //tableRow.Label.Left.Set(100f, 0f);
+            tableRow.Label.Top.Set(15f + offsetValue * rowIndex, 0f);
+            Append(tableRow.Label);
+
+            // Checkbox for "Border"
+            //tableRow.Border.Left.Set(100f, 0f);
+            tableRow.Border.Top.Set(15f + offsetValue * rowIndex, 0f);
+            Append(tableRow.Border);
+
+            // Checkbox for "Outline"
+            //tableRow.Outline.Left.Set(100f, 0f);
+            tableRow.Outline.Top.Set(15f + offsetValue * rowIndex, 0f);
+            Append(tableRow.Outline);
+
+            //TableRowConfig row = new TableRowConfig(KEY,label, borderCheckbox, outlineCheckbox);
+            //rows.Add(row);
+        }
+        public void AddCustomizationRowToList(string KEY, string labelText, bool initialBorderState, bool initialOutlineState)
+        {
+            //int rowIndex = (Children.Count() - 3) / 3;  // Calculate row index based on current number of rows
+
+
+
+
+
+            //Main.NewText($"RowIndex: {rowIndex}");
+            //Main.NewText($"{this.Parent.GetDimensions().Y}");
+            //Main.NewText($"{this.GetDimensions().Y}");
+
+            // Label for the row
             UIText label = new UIText(labelText, 0.7f);
             label.Left.Set(100f, 0f);
             label.Top.Set(15f + offsetValue * rowIndex, 0f);  // Adjust the position based on the number of rows
-            Append(label);
+            //Append(label);
 
             // Checkbox for "Border"
             UICheckbox borderCheckbox = new UICheckbox(initialBorderState);
             borderCheckbox.Left.Set(425f, 0f);
             borderCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
-            Append(borderCheckbox);
+            //Append(borderCheckbox);
 
             // Checkbox for "Outline"
             UICheckbox outlineCheckbox = new UICheckbox(initialOutlineState);
             outlineCheckbox.Left.Set(525f, 0f);
             outlineCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
-            Append(outlineCheckbox);
+            //Append(outlineCheckbox);
 
-            TableRowConfig row = new TableRowConfig(KEY,label, borderCheckbox, outlineCheckbox);
+            TableRowConfig row = new TableRowConfig(KEY, label, borderCheckbox, outlineCheckbox);
             rows.Add(row);
         }
-        public List<TableRowConfig> rows = new List<TableRowConfig>();
-
-        public CustomTableUI()
-        {
-        }
+        public static List<TableRowConfig> rows = new List<TableRowConfig>();
     }
     
 }
