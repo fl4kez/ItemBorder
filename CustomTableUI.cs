@@ -32,6 +32,18 @@ namespace ItemBorder
             base.OnBind();
         }
 
+        
+        //protected override void DrawSelf(SpriteBatch spriteBatch)
+        //{
+        //    base.DrawSelf(spriteBatch);
+        //    Main.NewText($"{rows["hotbar"].Outline.GetDimensions().X} {rows["hotbar"].Outline.GetDimensions().Y}");
+        //    Utils.DrawLine(spriteBatch, new Point(600, 400), new Point(1200, 400), Color.White);
+        //    Utils.DrawLine(spriteBatch, new Point(600, 500), new Point(1200, 500), Color.Yellow);
+        //    Utils.DrawLine(spriteBatch, new Point(600, 600), new Point(1200, 600), Color.White);
+        //    Utils.DrawLine(spriteBatch, new Point(600, 700), new Point(1200, 700), Color.Yellow);
+        //    Utils.DrawLine(spriteBatch, new Point(600, 800), new Point(1200, 800), Color.White);
+
+        //}
         public override void OnInitialize()
         {
             baseHeight = Height.Pixels;
@@ -53,23 +65,7 @@ namespace ItemBorder
             outlineHeader.Left.Set(500f, 0f);
             Append(outlineHeader);
 
-            // Example: Add a default row
-            //if(initializedRows == false)
-            //{
-            //    AddCustomizationRowToList("hotbar", "Use for hotbar", true, true);
-            //    foreach (var row in rows)
-            //    {
-            //        AddCustomizationRow(row.KEY, row.Label.Text, row.Border.Selected, row.Outline.Selected);
-            //    }
-            //    initializedRows = true;
-            //}
-            //else
-            //{
-            //    foreach(var row in rows)
-            //    {
-            //        AddCustomizationRow(row.KEY, row.Label.Text, row.Border.Selected, row.Outline.Selected);
-            //    }
-            //}
+
             bool skip = true;
             foreach (var row in rows)
             {
@@ -126,22 +122,21 @@ namespace ItemBorder
             tableRow.Outline.Top.Set(15f + offsetValue * rowIndex, 0f);
             Append(tableRow.Outline);
 
-            //if (skipSeperator)
-            //{
-            //    //Utils.DrawLine(Main.spriteBatch,this.dim)
-            //    UIHorizontalSeparator line = new UIHorizontalSeparator(600, false);
-            //    line.Top.Set(15f + offsetValue * (rowIndex), 0f);
-            //    line.MinHeight.Set(0, 0);
-            //    line.Height.Set(0, 0);
-            //    //line.MinWidth.Set(0, 0);
-            //    //line.Width.Set(0, 0);
+            if (skipSeperator)
+            {
+                //UIHorizontalSeparator line = new UIHorizontalSeparator(600, false);
+                //line.Top.Set(15f + offsetValue * (rowIndex), 0f);
+                //line.MinHeight.Set(0, 0);
+                //line.Height.Set(0, 0);
+                ////line.MinWidth.Set(0, 0);
+                ////line.Width.Set(0, 0);
 
-            //    line.IgnoresMouseInteraction = true;
-            //    //line.Left.Set(525f, 0f);
+                //line.IgnoresMouseInteraction = true;
+                ////line.Left.Set(525f, 0f);
 
-            //    Append(line);
-            //}
-            
+                //Append(line);
+            }
+
             //TableRowConfig row = new TableRowConfig(KEY,label, borderCheckbox, outlineCheckbox);
             //rows.Add(row);
         }
