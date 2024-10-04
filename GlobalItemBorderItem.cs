@@ -30,6 +30,10 @@ namespace ItemBorder
         public override bool InstancePerEntity => true;
         public override bool OnPickup(Item item, Player player)
         {
+            if(ItemBorder.IsSpecial(item) == null)
+            {
+                return true;
+            }
             if (pickedUpBefore == PickupState.NeverSeen)
                 pickedUpBefore = PickupState.PickedUpFirstTime;
             else
