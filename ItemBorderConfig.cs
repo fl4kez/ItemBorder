@@ -19,24 +19,47 @@ namespace ItemBorder
     {
         public UIText Label;
         //public string KEY;
-        public UICheckbox Border;
-        public UICheckbox Outline;
+        public BoolColumn Border;
+        public BoolColumn Outline;
+        public BoolColumn World;
 
-        public TableRowConfig(UIText label, UICheckbox border, UICheckbox outline)
+        public TableRowConfig(UIText label, BoolColumn border, BoolColumn outline, BoolColumn world)
         {
             //KEY = key;
             Label = label;
             Border = border;
             Outline = outline;
+            World = world;
         }
 
-        bool BorderValue()
+        public bool BorderValue()
         {
-            return this.Border.Selected;
+            if(Border.Value != null)
+                return this.Border.Value.Selected;
+            return false;
         }
-        bool OutlineValue()
+        public bool OutlineValue()
         {
-            return this.Outline.Selected;
+            if (Outline.Value != null)
+                return this.Outline.Value.Selected;
+            return false;
+        }
+        public bool WorldValue()
+        {
+            if (World.Value != null)
+                return this.World.Value.Selected;
+            return false;
+        }
+        public class BoolColumn
+        {
+            public bool Use;
+            public bool DefaultValue;
+            public UICheckbox Value;
+            public BoolColumn(bool use,bool defaultValue)
+            {
+                Use = use;
+                DefaultValue = defaultValue;
+            }
         }
     }
     public class ItemBorderConfig : ModConfig

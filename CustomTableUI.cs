@@ -19,6 +19,7 @@ namespace ItemBorder
         private UIText labelHeader;
         private UIText borderHeader;
         private UIText outlineHeader;
+        private UIText worldHeader;
 
         //private Asset<Texture2D> checkedTexture;
         //private Asset<Texture2D> uncheckedTexture;
@@ -58,12 +59,16 @@ namespace ItemBorder
             Append(labelHeader);
 
             borderHeader = new UIText("Border", 0.8f);
-            borderHeader.Left.Set(400f, 0f);
+            borderHeader.Left.Set(300f, 0f);
             Append(borderHeader);
 
             outlineHeader = new UIText("Outline", 0.8f);
-            outlineHeader.Left.Set(500f, 0f);
+            outlineHeader.Left.Set(400f, 0f);
             Append(outlineHeader);
+
+            worldHeader = new UIText("World", 0.8f);
+            worldHeader.Left.Set(500f, 0f);
+            Append(worldHeader);
 
 
             bool skip = true;
@@ -82,7 +87,7 @@ namespace ItemBorder
         }
 
         float offsetValue = 20f;
-        int rowIndex => (Children.Count() - 3) / 3;
+        int rowIndex = 0;
 
         public void AddCustomizationRow(TableRowConfig tableRow,bool skipSeperator)
         {
@@ -113,14 +118,25 @@ namespace ItemBorder
             Append(tableRow.Label);
 
             // Checkbox for "Border"
-            //tableRow.Border.Left.Set(100f, 0f);
-            tableRow.Border.Top.Set(15f + offsetValue * rowIndex, 0f);
-            Append(tableRow.Border);
+            if (tableRow.Border.Use)
+            {
+                tableRow.Border.Value.Top.Set(15f + offsetValue * rowIndex, 0f);
+                Append(tableRow.Border.Value);
+            }
 
             // Checkbox for "Outline"
-            //tableRow.Outline.Left.Set(100f, 0f);
-            tableRow.Outline.Top.Set(15f + offsetValue * rowIndex, 0f);
-            Append(tableRow.Outline);
+            if (tableRow.Outline.Use)
+            {
+                tableRow.Outline.Value.Top.Set(15f + offsetValue * rowIndex, 0f);
+                Append(tableRow.Outline.Value);
+            }
+
+            //Checkbox for "World"
+            if (tableRow.World.Use)
+            {
+                tableRow.World.Value.Top.Set(15f + offsetValue * rowIndex, 0f);
+                Append(tableRow.World.Value);
+            }
 
             if (skipSeperator)
             {
@@ -139,8 +155,10 @@ namespace ItemBorder
 
             //TableRowConfig row = new TableRowConfig(KEY,label, borderCheckbox, outlineCheckbox);
             //rows.Add(row);
+            rowIndex++;
         }
-        public void AddCustomizationRowToList(string KEY, string labelText, bool initialBorderState, bool initialOutlineState)
+        public void AddCustomizationRowToList(string KEY, string labelText, 
+            TableRowConfig.BoolColumn border, TableRowConfig.BoolColumn outline, TableRowConfig.BoolColumn world)
         {
             //int rowIndex = (Children.Count() - 3) / 3;  // Calculate row index based on current number of rows
 
@@ -159,19 +177,33 @@ namespace ItemBorder
             //Append(label);
 
             // Checkbox for "Border"
-            UICheckbox borderCheckbox = new UICheckbox(initialBorderState);
-            borderCheckbox.Left.Set(425f, 0f);
+            UICheckbox borderCheckbox = new UICheckbox(border.DefaultValue);
+            borderCheckbox.Left.Set(325f, 0f);
             borderCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
-            //Append(borderCheckbox);
+            if (border.Use)
+            {
+                border.Value = borderCheckbox;
+            }
 
             // Checkbox for "Outline"
-            UICheckbox outlineCheckbox = new UICheckbox(initialOutlineState);
-            outlineCheckbox.Left.Set(525f, 0f);
+            UICheckbox outlineCheckbox = new UICheckbox(outline.DefaultValue);
+            outlineCheckbox.Left.Set(425f, 0f);
             outlineCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
-            //Append(outlineCheckbox);
+            if (outline.Use)
+            {
+                outline.Value = outlineCheckbox;
+            }
+
+            UICheckbox worldCheckbox = new UICheckbox(world.DefaultValue);
+            worldCheckbox.Left.Set(525f, 0f);
+            worldCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
+            if (world.Use)
+            {
+                world.Value = worldCheckbox;
+            }
 
 
-            TableRowConfig row = new TableRowConfig(label, borderCheckbox, outlineCheckbox);
+            TableRowConfig row = new TableRowConfig(label, border, outline, world);
             rows.Add(KEY,row);
         }
         public static Dictionary<string,TableRowConfig> rows = new Dictionary<string, TableRowConfig>();

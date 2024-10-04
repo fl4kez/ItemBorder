@@ -136,8 +136,13 @@ namespace ItemBorder
             //config.ConfigTable.Add(new TableRowConfig("My First Label"));
             //config.ConfigTable.Add(new TableRowConfig("My Second Label"));
             //config.ConfigTable.Add(new TableRowConfig("My Third Label"));
-            config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar", true, true);
-            config.ConfigTable.AddCustomizationRowToList("shop", "Use for shop", true, true);
+            config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar", Column(true,true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("shop", "Use for shop", Column(true, true), Column(true, true), Column(false, false));
+        }
+
+        public TableRowConfig.BoolColumn Column(bool use, bool defaultVal)
+        {
+            return new TableRowConfig.BoolColumn(use, defaultVal);
         }
 
         private float CorrectlyDrawOutline(On_ItemSlot.orig_DrawItemIcon orig, Item item, int context, SpriteBatch spriteBatch, Vector2 screenPositionForItemCenter, float scale, float sizeLimit, Color environmentColor)
@@ -149,7 +154,7 @@ namespace ItemBorder
             if (CustomTableUI.rows.Count > 0)
             {
                 //Main.NewText($"{CustomTableUI.rows.Count} {CustomTableUI.rows[0].Outline.Selected}");
-                if (CustomTableUI.rows["hotbar"].Outline.Selected == true)
+                if (CustomTableUI.rows["hotbar"].OutlineValue() == true)
                 {
 
                     // Save the current state of the spriteBatch
