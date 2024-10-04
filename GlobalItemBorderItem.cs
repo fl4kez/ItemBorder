@@ -211,9 +211,32 @@ namespace ItemBorder
             //{
             //    Main.NewText($"{CustomTableUI.rows["wall"].WorldValue()} {ItemBorder.IsWall(item)}");
             //}
+
+            //POTION
+            if (ItemBorder.potion.WorldValue() == false)
+            {
+                if (ItemBorder.IsPotion(item))
+                    return true;
+            }
+
+            //TILE
+            if (ItemBorder.tile.WorldValue() == false)
+            {
+                if (ItemBorder.IsTile(item))
+                    return true;
+            }
+
+            //WALL
             if (ItemBorder.wall.WorldValue() == false)
             {
                 if (ItemBorder.IsWall(item))
+                    return true;
+            }
+
+            //MATERIAL
+            if (ItemBorder.material.WorldValue() == false)
+            {
+                if (ItemBorder.IsMaterial(item))
                     return true;
             }
             var originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;

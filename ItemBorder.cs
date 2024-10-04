@@ -147,6 +147,141 @@ namespace ItemBorder
 
         private float CorrectlyDrawOutline(On_ItemSlot.orig_DrawItemIcon orig, Item item, int context, SpriteBatch spriteBatch, Vector2 screenPositionForItemCenter, float scale, float sizeLimit, Color environmentColor)
         {
+            switch (context)
+            {
+                case ItemSlot.Context.MouseItem:
+                    if (mouseItem.OutlineValue() == false)
+                    {
+                        orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                        return scale;
+                    }
+                    break;
+                case 13:
+                    if (hotbar.OutlineValue() == false)
+                    {
+                        orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                        return scale;
+                    }
+                    break;
+                case 20:
+                    if (lightPet.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 19:
+                    if (pet.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 18:
+                    if (minecart.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 17:
+                    if (mount.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 16:
+                    if (grapple.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 15:
+                    if (shop.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 12:
+                    if (dye.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 11:
+                    if (vanityAccessory.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 10:
+                    if (accessory.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 9:
+                    if (vanityArmor.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 8:
+                    if (armor.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 6:
+                    if (trash.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 1:
+                    if (coin.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 2:
+                    if (ammo.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 0:
+                    if (inventory.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 3:
+                    if (chest.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+
+                case 4:
+                    if (bank.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 26:
+                    if (hatRack.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 27:
+                    if (hatRackDye.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 23:
+                    if (mannequinArmor.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 24:
+                    if (mannequinAccessory.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 25:
+                    if (mannequinDye.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                default:
+                    break;
+            }
+            //AMMO
+            if (ItemBorder.ammo.OutlineValue() == false)
+            {
+                if (IsAmmoSlot(item))
+                {
+                    orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                    return scale;
+                }
+            }
+
+            //POTION
+            if (ItemBorder.potion.OutlineValue() == false)
+            {
+                if (IsPotion(item))
+                {
+                    orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                    return scale;
+                }
+            }
+
+            //TILE
+            if (ItemBorder.tile.OutlineValue() == false)
+            {
+                if (IsTile(item))
+                {
+                    orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                    return scale;
+                }
+            }
+
+            //WALL
+            if (ItemBorder.wall.OutlineValue() == false)
+            {
+                if (IsWall(item))
+                {
+                    orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                    return scale;
+                };
+            }
+
+            //MATERIAL
+            if (ItemBorder.material.OutlineValue() == false)
+            {
+                if (IsMaterial(item))
+                {
+                    orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                    return scale;
+                }
+            }
             Texture2D sprite = TextureAssets.Item[item.type].Value;
             Rectangle frame = new Rectangle(0, 0, sprite.Width, sprite.Height);
            
@@ -154,8 +289,8 @@ namespace ItemBorder
             if (CustomTableUI.rows.Count > 0)
             {
                 //Main.NewText($"{CustomTableUI.rows.Count} {CustomTableUI.rows[0].Outline.Selected}");
-                if (CustomTableUI.rows["hotbar"].OutlineValue() == true)
-                {
+                //if (CustomTableUI.rows["hotbar"].OutlineValue() == true)
+                //{
 
                     // Save the current state of the spriteBatch
                     //SpriteSortMode originalSortMode = Main.spriteBatch.GraphicsDevice.BlendState == BlendState.AlphaBlend
@@ -270,7 +405,7 @@ namespace ItemBorder
                     }
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
-                }
+                //}
             }
             //Sets Draw color ALPHA to 255 (full) to not overlay with outline color
             environmentColor.A = 255;

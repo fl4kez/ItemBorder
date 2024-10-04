@@ -75,7 +75,7 @@ namespace ItemBorder
         [DefaultValue(false)]
         public bool borderBaseRarity;
 
-        [DefaultValue(11)]
+        [DefaultValue(5)] //PREVIOUSLY 11
         [Range(0, 11)]
         public int borderType;
 
