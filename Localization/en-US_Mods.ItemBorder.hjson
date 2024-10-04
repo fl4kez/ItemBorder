@@ -259,7 +259,7 @@ Configs: {
 	}
 
 	CustomTableUI: {
-		Tooltip: ""
+		Tooltip: Customize options. Clicking on the columns on the right will invert all fields in the column.
 
 		checkboxOutline: {
 			Tooltip: ""

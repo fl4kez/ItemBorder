@@ -59,14 +59,38 @@ namespace ItemBorder
             Append(labelHeader);
 
             borderHeader = new UIText("Border", 0.8f);
+            borderHeader.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) =>
+            {
+                foreach (var item in rows)
+                {
+                    if (item.Value.Border.Value != null)
+                        item.Value.Border.Value.SetState(!item.Value.BorderValue());
+                }
+            };
             borderHeader.Left.Set(300f, 0f);
             Append(borderHeader);
 
             outlineHeader = new UIText("Outline", 0.8f);
+            outlineHeader.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) =>
+            {
+                foreach (var item in rows)
+                {
+                    if (item.Value.Outline.Value != null)
+                        item.Value.Outline.Value.SetState(!item.Value.OutlineValue());
+                }
+            };
             outlineHeader.Left.Set(400f, 0f);
             Append(outlineHeader);
 
             worldHeader = new UIText("World", 0.8f);
+            worldHeader.OnLeftClick += (UIMouseEvent evt, UIElement listeningElement) =>
+            {
+                foreach (var item in rows)
+                {
+                    if(item.Value.World.Value != null)
+                        item.Value.World.Value.SetState(!item.Value.WorldValue());
+                }
+            };
             worldHeader.Left.Set(500f, 0f);
             Append(worldHeader);
 

@@ -15,16 +15,12 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using ReLogic.Content;
+using Terraria.ModLoader.Config;
 
 namespace ItemBorder
 {
     public class ItemBorder : Mod
     {
-        public static List<int> itemDefinitions;
-        public static bool usePotions, useTiles;
-        public static int borderType;
-        internal static bool useForHotbar;
-
         internal static TableRowConfig mouseItem => CustomTableUI.rows["mouseItem"];
         internal static TableRowConfig potion => CustomTableUI.rows["potion"];
         internal static TableRowConfig tile => CustomTableUI.rows["tile"];
@@ -32,57 +28,30 @@ namespace ItemBorder
         internal static TableRowConfig material => CustomTableUI.rows["material"];
 
         internal static TableRowConfig hotbar => CustomTableUI.rows["hotbar"];
-        internal static bool useForLightPet;
-        internal static TableRowConfig lightPet => CustomTableUI.rows["lightPet"];
-        internal static bool useForPet;
-        internal static TableRowConfig pet => CustomTableUI.rows["pet"];
-        internal static bool useForMinecart;
-        internal static TableRowConfig minecart => CustomTableUI.rows["minecart"];
-        internal static bool useForMount;
-        internal static TableRowConfig mount => CustomTableUI.rows["mount"];
-        internal static bool useForGrapple;
-        internal static TableRowConfig grapple => CustomTableUI.rows["grapple"];
-        internal static bool useForShop;
-        internal static TableRowConfig shop => CustomTableUI.rows["shop"];
-        internal static bool useForDye;
-        internal static TableRowConfig dye => CustomTableUI.rows["dye"];
-        internal static bool useForVanityAccessory;
-        internal static TableRowConfig vanityAccessory => CustomTableUI.rows["svanityAccessoryhop"];
-        internal static bool useForAccessory;
-        internal static TableRowConfig accessory => CustomTableUI.rows["accessory"];
-        internal static bool useForVanityArmor;
-        internal static TableRowConfig vanityArmor => CustomTableUI.rows["vanityArmor"];
-        internal static bool useForArmor;
-        internal static TableRowConfig armor => CustomTableUI.rows["armor"];
-        internal static bool useForTrash;
-        internal static TableRowConfig trash => CustomTableUI.rows["trash"];
-        internal static bool useForCoin;
-        internal static TableRowConfig coin => CustomTableUI.rows["coin"];
-        internal static bool useForAmmo;
-        internal static TableRowConfig ammo => CustomTableUI.rows["ammo"];
-        internal static bool useForInventory;
+        internal static TableRowConfig chest => CustomTableUI.rows["chest"];
         internal static TableRowConfig inventory => CustomTableUI.rows["inventory"];
-        internal static bool useForChests;
-        internal static TableRowConfig chests => CustomTableUI.rows["chests"];
-
-        int[] contextIDs = new int[] { 0 };
-        internal static bool useForBank;
-        internal static bool useForHatRack;
-        internal static bool useForHatRackDye;
-        internal static bool useForMannequinArmor;
-        internal static bool useForMannequinAccessory;
-        internal static bool useForMannequinDye;
-        internal static bool useWalls;
-        internal static bool useMaterials;
-        internal static int customBorder;
-        internal static bool specialPickup;
-        internal static bool useOutline;
-        internal static bool useBorder;
-        internal static bool useBaseRarity;
-        internal static int outlineWidth;
+        internal static TableRowConfig ammo => CustomTableUI.rows["ammo"];
+        internal static TableRowConfig coin => CustomTableUI.rows["coin"];
+        internal static TableRowConfig trash => CustomTableUI.rows["trash"];
+        internal static TableRowConfig armor => CustomTableUI.rows["armor"];
+        internal static TableRowConfig vanityArmor => CustomTableUI.rows["vanityArmor"];
+        internal static TableRowConfig accessory => CustomTableUI.rows["accessory"];
+        internal static TableRowConfig vanityAccessory => CustomTableUI.rows["vanityAccessory"];
+        internal static TableRowConfig dye => CustomTableUI.rows["dye"];
+        internal static TableRowConfig shop => CustomTableUI.rows["shop"];
+        internal static TableRowConfig grapple => CustomTableUI.rows["grapple"];
+        internal static TableRowConfig mount => CustomTableUI.rows["mount"];
+        internal static TableRowConfig minecart => CustomTableUI.rows["minecart"];
+        internal static TableRowConfig pet => CustomTableUI.rows["pet"];
+        internal static TableRowConfig lightPet => CustomTableUI.rows["lightPet"];
+        internal static TableRowConfig bank => CustomTableUI.rows["bank"];
+        internal static TableRowConfig hatRack => CustomTableUI.rows["hatRack"];
+        internal static TableRowConfig hatRackDye => CustomTableUI.rows["hatRackDye"];
+        internal static TableRowConfig mannequinArmor => CustomTableUI.rows["mannequinArmor"];
+        internal static TableRowConfig mannequinAccessory => CustomTableUI.rows["mannequinAccessory"];
+        internal static TableRowConfig mannequinDye => CustomTableUI.rows["mannequinDye"];
 
         public static bool usingMagicalStorage;
-        public static float borderOpacity;
         //ItemBorderConfig config => ModContent.GetInstance<ItemBorderConfig>();
         Mod magicalStorage;
 
@@ -144,11 +113,32 @@ namespace ItemBorder
             config.ConfigTable.AddCustomizationRowToList("wall", "Use for walls", Column(true,true), Column(true, true), Column(true, true));
             config.ConfigTable.AddCustomizationRowToList("material", "Use for materials", Column(true,true), Column(true, true), Column(true, true));
 
-            config.ConfigTable.AddCustomizationRowToList("ammo", "Use for ammo slots", Column(true,true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar slots", Column(true,true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("chest", "Use for chest slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("inventory", "Use for inventory slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("ammo", "Use for ammo slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("coin", "Use for coin slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("trash", "Use for trash slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("armor", "Use for armor slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("vanityArmor", "Use for vanity armor slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("accessory", "Use for accessory slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("vanityAccessory", "Use for vanity accessory slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("dye", "Use for dye slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("shop", "Use for shop slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("grapple", "Use for grapple slot", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("mount", "Use for mount slot", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("minecart", "Use for minecart slot", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("pet", "Use for pet slot", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("lightPet", "Use for light pet slot", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("bank", "Use for bank slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("hatRack", "Use for hat rack slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("hatRackDye", "Use for hat rack dye slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("mannequinArmor", "Use for mannequin armor slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("mannequinAccessory", "Use for mannequin accessory slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("mannequinDye", "Use for mannequin dye slots", Column(true, true), Column(true, true), Column(false, false));
 
-            config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar", Column(true,true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("shop", "Use for shop", Column(true, true), Column(true, true), Column(false, false));
         }
+        public static ItemBorderConfig config;
 
         public TableRowConfig.BoolColumn Column(bool use, bool defaultVal)
         {
@@ -181,12 +171,12 @@ namespace ItemBorder
 
                     Rectangle rect = new Rectangle(0, 0, sprite.Width, sprite.Height);
 
-                    float outlineWidth = ItemBorder.outlineWidth;
+                    float outlineWidth = ItemBorder.config.outlineWidth;
 
                     bool normalRarity = true;
                     Color abnormalColor = new Color(0, 0, 0);
-                    int definedAsSpecial = IsSpecial(item);
-                    if (ItemBorder.specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
+                    ItemDefinition definedAsSpecial = IsSpecial(item);
+                    if (ItemBorder.config.specialPickup && definedAsSpecial != null && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
                     {
 
                         normalRarity = false;
@@ -219,27 +209,27 @@ namespace ItemBorder
                         }
                     }
                     #endregion
-                    else if (item.expert == true || (ItemBorder.useBaseRarity ? item.OriginalRarity == -12 : item.rare == -12))
+                    else if (item.expert == true || (ItemBorder.config.outlineBaseRarity ? item.OriginalRarity == -12 : item.rare == -12))
                     {
                         normalRarity = false;
                         abnormalColor = Main.DiscoColor;
                     }
-                    else if (item.master || (ItemBorder.useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
+                    else if (item.master || (ItemBorder.config.outlineBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
                     {
                         //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
                         normalRarity = false;
                         abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
                     }
-                    else if ((ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare) >= ItemRarityID.Count)
+                    else if ((ItemBorder.config.outlineBaseRarity ? item.OriginalRarity : item.rare) >= ItemRarityID.Count)
                     {
-                        ModRarity rarity = RarityLoader.GetRarity(ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare);
+                        ModRarity rarity = RarityLoader.GetRarity(ItemBorder.config.outlineBaseRarity ? item.OriginalRarity : item.rare);
                         normalRarity = false;
                         abnormalColor = rarity.RarityColor;
                         //Main.NewText($"{item.Name} {rarity.RarityColor}");
                     }
 
-                    Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare);
-                    trueSetColor *= ItemBorder.borderOpacity;
+                    Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.config.outlineBaseRarity ? item.OriginalRarity : item.rare);
+                    trueSetColor *= ItemBorder.config.outlineOpacity / 100;
 
                     Vector2[] offsets = new Vector2[]
                     {
@@ -288,8 +278,6 @@ namespace ItemBorder
             return scale;
         }
 
-        ItemBorderConfig config;
-
         public override void Unload()
         {
             whiteEffect = null;
@@ -313,8 +301,8 @@ namespace ItemBorder
         private void DrawHandle(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
             Item item = inv[slot];
-            int definedAsSpecial = IsSpecial(item);
-            if (definedAsSpecial != 0 && Main.mouseItem.type != inv[slot].type)
+            ItemDefinition definedAsSpecial = IsSpecial(item);
+            if (definedAsSpecial != null && Main.mouseItem.type != item.type)
             {
                 
                 if (item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
@@ -334,7 +322,7 @@ namespace ItemBorder
             }
 
             orig(spriteBatch, inv, context, slot, position, lightColor);
-            if (useBorder == true)
+            if (config.useBorder == true)
                 ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(orig, spriteBatch, inv, context, slot, position, lightColor);
             //if (useOutline == true)
             //    DrawOutline(item,spriteBatch,position,lightColor,lightColor,1);
@@ -374,9 +362,9 @@ namespace ItemBorder
             }
             return false;
         }
-        public static int IsSpecial(Item item)
+        public static ItemDefinition IsSpecial(Item item)
         {
-            return itemDefinitions.FirstOrDefault(x => x == item.type, 0);
+            return config.specialItems.FirstOrDefault(x => x.Type == item.type, null);
         }
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
@@ -388,96 +376,96 @@ namespace ItemBorder
             switch (context)
             {
                 case 13:
-                    if (useForHotbar == false)
+                    if (hotbar.BorderValue() == false)
                         return;
                     break;
                 case 20:
-                    if (useForLightPet == false)
+                    if (lightPet.BorderValue() == false)
                         return;
                     break;
                 case 19:
-                    if (useForPet == false)
+                    if (pet.BorderValue() == false)
                         return;
                     break;
                 case 18:
-                    if (useForMinecart == false)
+                    if (minecart.BorderValue() == false)
                         return;
                     break;
                 case 17:
-                    if (useForMount == false)
+                    if (mount.BorderValue() == false)
                         return;
                     break;
                 case 16:
-                    if (useForGrapple == false)
+                    if (grapple.BorderValue() == false)
                         return;
                     break;
                 case 15:
-                    if (useForShop == false)
+                    if (shop.BorderValue() == false)
                         return;
                     break;
                 case 12:
-                    if (useForDye == false)
+                    if (dye.BorderValue() == false)
                         return;
                     break;
                 case 11:
-                    if (useForVanityAccessory == false)
+                    if (vanityAccessory.BorderValue() == false)
                         return;
                     break;
                 case 10:
-                    if (useForAccessory == false)
+                    if (accessory.BorderValue() == false)
                         return;
                     break;
                 case 9:
-                    if (useForVanityArmor == false)
+                    if (vanityArmor.BorderValue() == false)
                         return;
                     break;
                 case 8:
-                    if (useForArmor == false)
+                    if (armor.BorderValue() == false)
                         return;
                     break;
                 case 6:
-                    if (useForTrash == false)
+                    if (trash.BorderValue() == false)
                         return;
                     break;
                 case 1:
-                    if (useForCoin == false)
+                    if (coin.BorderValue() == false)
                         return;
                     break;
                 case 2:
-                    if (useForAmmo == false)
+                    if (ammo.BorderValue() == false)
                         return;
                     break;
                 case 0:
-                    if (useForInventory == false)
+                    if (inventory.BorderValue() == false)
                         return;
                     break;
                 case 3:
-                    if (useForChests == false)
+                    if (chest.BorderValue() == false)
                         return;
                     break;
 
                 case 4:
-                    if (useForBank == false)
+                    if (bank.BorderValue() == false)
                         return;
                     break;
                 case 26:
-                    if (useForHatRack == false)
+                    if (hatRack.BorderValue() == false)
                         return;
                     break;
                 case 27:
-                    if (useForHatRackDye == false)
+                    if (hatRackDye.BorderValue() == false)
                         return;
                     break;
                 case 23:
-                    if (useForMannequinArmor == false)
+                    if (mannequinArmor.BorderValue() == false)
                         return;
                     break;
                 case 24:
-                    if (useForMannequinAccessory == false)
+                    if (mannequinAccessory.BorderValue() == false)
                         return;
                     break;
                 case 25:
-                    if (useForMannequinDye == false)
+                    if (mannequinDye.BorderValue() == false)
                         return;
                     break;
                 default:
@@ -486,62 +474,50 @@ namespace ItemBorder
 
             Item item = inv[slot];
             
-            bool isAmmo = false;
-           
+            //AMMO
+            if (ItemBorder.ammo.BorderValue() == false)
+            {
+                if (IsAmmoSlot(slot))
+                    return;
+            }
 
             //POTION
-            bool isPotion = true;
-            if (!usePotions)
+            if (ItemBorder.potion.BorderValue() == false)
             {
-                isPotion = IsPotion(item);
+                if (IsPotion(item))
+                    return;
             }
+
             //TILE
-            bool isTile = true;
-            if (!useTiles)
+            if (ItemBorder.tile.BorderValue() == false)
             {
-                isTile = IsTile(item);
+                if (IsTile(item))
+                    return;
             }
 
             //WALL
-            bool isWall = true;
-            if(!useWalls)
+            if (ItemBorder.wall.BorderValue() == false)
             {
-               isWall = IsWall(item);
+                if (IsWall(item))
+                    return;
             }
 
             //MATERIAL
-            bool isMaterial = true;
-            if (!useMaterials)
+            if (ItemBorder.material.BorderValue() == false)
             {
-                isMaterial = IsMaterial(item);
+                if (IsMaterial(item))
+                    return;
             }
                 
-            if (isPotion && isTile && isWall && isMaterial && item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem)
+            if (item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem)
             {
-                //bool isMagicStorageSlot = false;
-                //if(usingMagicalStorage)
-                //{
-                //    isMagicStorageSlot = new StackTrace().GetFrames().Any(f => f.GetMethod()?.DeclaringType == magicalStorage.Code.GetType("MagicStorage.UI.MagicStorageItemSlot"));
-                //}
-
-
-                //float proportionX = 32 / frame.Size().X;
-                //float proportionY = 32 / frame.Size().Y;
-
                 bool normalRarity = true;
                 Color abnormalColor = new Color(0,0,0);
-                int definedAsSpecial = IsSpecial(item);
-                if (specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
+                ItemDefinition definedAsSpecial = IsSpecial(item);
+                if (config.specialPickup && definedAsSpecial != null && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
                 {
-                       
-                    //Main.NewText($"{inv[slot].Name} {definedAsSpecial}");
-                        
-                            
                     normalRarity = false;
-                    //Main.NewText($"Drawing special item border {item.Name}");
                     abnormalColor = ItemBorder.InvertMeAColour(Main.DiscoColor);//new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
-                            
-                        
                 }
                 #region CoinCheck
                 else if (item.IsACoin)
@@ -569,32 +545,32 @@ namespace ItemBorder
                     }
                 }
                 #endregion
-                else if (item.expert == true || (useBaseRarity?item.OriginalRarity == -12:item.rare == -12))
+                else if (item.expert == true || (config.borderBaseRarity?item.OriginalRarity == -12:item.rare == -12))
                 {
                     normalRarity = false;
                     abnormalColor = Main.DiscoColor;
                 }
-                else if (item.master || (useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
+                else if (item.master || (config.borderBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
                 {
                     //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
                     normalRarity = false;
                     abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
                 }
-                else if ((useBaseRarity?item.OriginalRarity:item.rare) >= ItemRarityID.Count)
+                else if ((config.borderBaseRarity ? item.OriginalRarity:item.rare) >= ItemRarityID.Count)
                 {
-                    ModRarity rarity = RarityLoader.GetRarity(useBaseRarity?item.OriginalRarity:item.rare);
+                    ModRarity rarity = RarityLoader.GetRarity(config.borderBaseRarity ? item.OriginalRarity:item.rare);
                     normalRarity = false;
                     abnormalColor = rarity.RarityColor;
                     //Main.NewText($"{item.Name} {rarity.RarityColor}");
                 }
 
 
-                int actualBorderType = borderType;
+                int actualBorderType = config.borderType;
 
                     
 
-                Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(useBaseRarity?item.OriginalRarity:item.rare);
-                trueSetColor *= borderOpacity;
+                Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(config.borderBaseRarity ? item.OriginalRarity:item.rare);
+                trueSetColor *= config.borderOpacity/100;
 
 
                 float correctScale = 1 * Main.inventoryScale;
@@ -602,9 +578,9 @@ namespace ItemBorder
                 Texture2D drawTexture = ModContent.Request<Texture2D>($"ItemBorder/assets/border_new{actualBorderType}").Value;
                 if(customBorders.Count > 0)
                 {
-                    if(customBorder >= 0 && customBorder < customBorders.Count)
+                    if(config.customBorderType >= 0 && config.customBorderType < customBorders.Count)
                     {
-                        drawTexture = customBorders[customBorder];
+                        drawTexture = customBorders[config.customBorderType];
                     }
                 }
 

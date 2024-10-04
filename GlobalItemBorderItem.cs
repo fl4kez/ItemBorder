@@ -223,8 +223,8 @@ namespace ItemBorder
 
             bool normalRarity = true;
             Color abnormalColor = new Color(0, 0, 0);
-            int definedAsSpecial = ItemBorder.IsSpecial(item);
-            if (ItemBorder.specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
+            ItemDefinition definedAsSpecial = ItemBorder.IsSpecial(item);
+            if (ItemBorder.config.specialPickup && definedAsSpecial != null && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
             {
 
                 normalRarity = false;
@@ -257,27 +257,27 @@ namespace ItemBorder
                 }
             }
             #endregion
-            else if (item.expert == true || (ItemBorder.useBaseRarity ? item.OriginalRarity == -12 : item.rare == -12))
+            else if (item.expert == true || (ItemBorder.config.worldBaseRarity ? item.OriginalRarity == -12 : item.rare == -12))
             {
                 normalRarity = false;
                 abnormalColor = Main.DiscoColor;
             }
-            else if (item.master || (ItemBorder.useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
+            else if (item.master || (ItemBorder.config.worldBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
             {
                 //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
                 normalRarity = false;
                 abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
             }
-            else if ((ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare) >= ItemRarityID.Count)
+            else if ((ItemBorder.config.worldBaseRarity ? item.OriginalRarity : item.rare) >= ItemRarityID.Count)
             {
-                ModRarity rarity = RarityLoader.GetRarity(ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare);
+                ModRarity rarity = RarityLoader.GetRarity(ItemBorder.config.worldBaseRarity ? item.OriginalRarity : item.rare);
                 normalRarity = false;
                 abnormalColor = rarity.RarityColor;
                 //Main.NewText($"{item.Name} {rarity.RarityColor}");
             }
 
-            Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.useBaseRarity ? item.OriginalRarity : item.rare);
-            trueSetColor *= ItemBorder.borderOpacity;
+            Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.config.worldBaseRarity ? item.OriginalRarity : item.rare);
+            trueSetColor *= ItemBorder.config.worldOpacity/100;
 
             // Get the rarity color based on the item's rarity
             //Color outlineColor = GetRarityColor(item.rare);
@@ -306,10 +306,10 @@ namespace ItemBorder
             // Define the offset vectors for the outline
             Vector2[] offsets = new Vector2[]
             {
-            new Vector2(-ItemBorder.outlineWidth, 0),  // Left
-            new Vector2(ItemBorder.outlineWidth, 0),   // Right
-            new Vector2(0, -ItemBorder.outlineWidth),  // Up
-            new Vector2(0, ItemBorder.outlineWidth),   // Down
+            new Vector2(-ItemBorder.config.worldWidth, 0),  // Left
+            new Vector2(ItemBorder.config.worldWidth, 0),   // Right
+            new Vector2(0, -ItemBorder.config.worldWidth),  // Up
+            new Vector2(0, ItemBorder.config.worldWidth),   // Down
             };
             
             // Draw the outline by drawing the sprite slightly offset in all directions
