@@ -71,5 +71,16 @@ namespace ItemBorder
             isChecked = state;
             checkbox.SetImage(isChecked ? checkedTexture : uncheckedTexture);
         }
+
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            base.MouseOver(evt);
+            labelText.TextColor = Color.Red;
+        }
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            base.MouseOut(evt);
+            labelText.TextColor = Color.White;
+        }
     }
 }

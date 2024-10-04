@@ -24,6 +24,13 @@ namespace ItemBorder
         public static bool usePotions, useTiles;
         public static int borderType;
         internal static bool useForHotbar;
+
+        internal static TableRowConfig mouseItem => CustomTableUI.rows["mouseItem"];
+        internal static TableRowConfig potion => CustomTableUI.rows["potion"];
+        internal static TableRowConfig tile => CustomTableUI.rows["tile"];
+        internal static TableRowConfig wall => CustomTableUI.rows["wall"];
+        internal static TableRowConfig material => CustomTableUI.rows["material"];
+
         internal static TableRowConfig hotbar => CustomTableUI.rows["hotbar"];
         internal static bool useForLightPet;
         internal static TableRowConfig lightPet => CustomTableUI.rows["lightPet"];
@@ -100,9 +107,6 @@ namespace ItemBorder
             {
                 whiteEffect = ModContent.Request<Effect>("ItemBorder/effects/whiteShader", AssetRequestMode.ImmediateLoad).Value;
             }
-            //Texture2D lel = TextureAssets.Extra[54].Value;
-            //lel.SaveAsJpeg(File.Create("lel_texture.jpg"), lel.Width, lel.Height);
-
 
             Terraria.UI.On_ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawHandle;
             Terraria.UI.On_ItemSlot.DrawItemIcon += CorrectlyDrawOutline;
@@ -133,9 +137,15 @@ namespace ItemBorder
 
             config = ModContent.GetInstance<ItemBorderConfig>();
             config.ConfigTable = new CustomTableUI();
-            //config.ConfigTable.Add(new TableRowConfig("My First Label"));
-            //config.ConfigTable.Add(new TableRowConfig("My Second Label"));
-            //config.ConfigTable.Add(new TableRowConfig("My Third Label"));
+            config.ConfigTable.AddCustomizationRowToList("mouseItem", "Use for item in cursor", Column(false, false), Column(true, true), Column(false, false));
+
+            config.ConfigTable.AddCustomizationRowToList("potion", "Use for potions", Column(true,true), Column(true, true), Column(true, true));
+            config.ConfigTable.AddCustomizationRowToList("tile", "Use for tiles", Column(true,true), Column(true, true), Column(true, true));
+            config.ConfigTable.AddCustomizationRowToList("wall", "Use for walls", Column(true,true), Column(true, true), Column(true, true));
+            config.ConfigTable.AddCustomizationRowToList("material", "Use for materials", Column(true,true), Column(true, true), Column(true, true));
+
+            config.ConfigTable.AddCustomizationRowToList("ammo", "Use for ammo slots", Column(true,true), Column(true, true), Column(false, false));
+
             config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar", Column(true,true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("shop", "Use for shop", Column(true, true), Column(true, true), Column(false, false));
         }
@@ -175,7 +185,7 @@ namespace ItemBorder
 
                     bool normalRarity = true;
                     Color abnormalColor = new Color(0, 0, 0);
-                    int definedAsSpecial = ItemBorder.itemDefinitions.FirstOrDefault(x => x == item.netID, 0);
+                    int definedAsSpecial = IsSpecial(item);
                     if (ItemBorder.specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
                     {
 
@@ -186,7 +196,7 @@ namespace ItemBorder
                     #region CoinCheck
                     else if (item.IsACoin)
                     {
-                        switch (item.netID)
+                        switch (item.type)
                         {
                             case ItemID.CopperCoin:
                                 normalRarity = false;
@@ -272,6 +282,8 @@ namespace ItemBorder
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
                 }
             }
+            //Sets Draw color ALPHA to 255 (full) to not overlay with outline color
+            environmentColor.A = 255;
             orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
             return scale;
         }
@@ -300,9 +312,9 @@ namespace ItemBorder
         public List<Texture2D> customBorders;
         private void DrawHandle(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
         {
-            int definedAsSpecial = itemDefinitions.FirstOrDefault(x => x == inv[slot].netID,0);
             Item item = inv[slot];
-            if (definedAsSpecial != 0 && Main.mouseItem.netID != inv[slot].netID)
+            int definedAsSpecial = IsSpecial(item);
+            if (definedAsSpecial != 0 && Main.mouseItem.type != inv[slot].type)
             {
                 
                 if (item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
@@ -333,6 +345,38 @@ namespace ItemBorder
         {
             return new Color(RGBMAX - ColourToInvert.R,
               RGBMAX - ColourToInvert.G, RGBMAX - ColourToInvert.B);
+        }
+
+        public static bool IsWall(Item item)
+        {
+            return (item.createWall != -1);
+        }
+        public static bool IsTile(Item item)
+        {
+            return (item.createTile != -1);
+        }
+        public static bool IsMaterial(Item item)
+        {
+            return (item.material);
+        }
+        public static bool IsAmmoSlot(int slot)
+        {
+            return (slot > 53 && slot < 58);
+        }
+        public static bool IsAmmoSlot(Item item)
+        {
+            for (int i = 54; i < 58; i++) //AMMO SLOT
+            {
+                if (Main.LocalPlayer.inventory[i].type == item.type)
+                {
+                   return true;
+                }
+            }
+            return false;
+        }
+        public static int IsSpecial(Item item)
+        {
+            return itemDefinitions.FirstOrDefault(x => x == item.type, 0);
         }
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
@@ -441,162 +485,155 @@ namespace ItemBorder
             }
 
             Item item = inv[slot];
+            
+            bool isAmmo = false;
+           
+
+            //POTION
+            bool isPotion = true;
+            if (!usePotions)
             {
+                isPotion = IsPotion(item);
+            }
+            //TILE
+            bool isTile = true;
+            if (!useTiles)
+            {
+                isTile = IsTile(item);
+            }
+
+            //WALL
+            bool isWall = true;
+            if(!useWalls)
+            {
+               isWall = IsWall(item);
+            }
+
+            //MATERIAL
+            bool isMaterial = true;
+            if (!useMaterials)
+            {
+                isMaterial = IsMaterial(item);
+            }
                 
-                bool isAmmo = false;
-                for (int i = 54; i < 58; i++) //AMMO SLOT
-                {
-                    if (Main.LocalPlayer.inventory[i].Name == item.Name)
-                    {
-                        isAmmo = true;
-                    }
-                }
-
-                //POTION
-                bool isPotion = true;
-                if (!usePotions)
-                {
-                    isPotion = !IsPotion(item);
-                }
-                //TILE
-                bool isTile = true;
-                if (!useTiles)
-                {
-                    isTile = (item.createTile == -1);
-                }
-
-                //WALL
-                bool isWall = true;
-                if(!useWalls)
-                {
-                    isWall = (item.createWall == -1);
-                }
-
-                //MATERIAL
-                bool isMaterial = true;
-                if (!useMaterials)
-                {
-                    isMaterial = !(item.material);
-                }
-                
-                if (isPotion && isTile && isWall && isMaterial && item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem)
-                {
-                    //bool isMagicStorageSlot = false;
-                    //if(usingMagicalStorage)
-                    //{
-                    //    isMagicStorageSlot = new StackTrace().GetFrames().Any(f => f.GetMethod()?.DeclaringType == magicalStorage.Code.GetType("MagicStorage.UI.MagicStorageItemSlot"));
-                    //}
+            if (isPotion && isTile && isWall && isMaterial && item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem)
+            {
+                //bool isMagicStorageSlot = false;
+                //if(usingMagicalStorage)
+                //{
+                //    isMagicStorageSlot = new StackTrace().GetFrames().Any(f => f.GetMethod()?.DeclaringType == magicalStorage.Code.GetType("MagicStorage.UI.MagicStorageItemSlot"));
+                //}
 
 
-                    //float proportionX = 32 / frame.Size().X;
-                    //float proportionY = 32 / frame.Size().Y;
+                //float proportionX = 32 / frame.Size().X;
+                //float proportionY = 32 / frame.Size().Y;
 
-                    bool normalRarity = true;
-                    Color abnormalColor = new Color(0,0,0);
-                    int definedAsSpecial = itemDefinitions.FirstOrDefault(x => x == inv[slot].netID, 0);
-                    if (specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
-                    {
+                bool normalRarity = true;
+                Color abnormalColor = new Color(0,0,0);
+                int definedAsSpecial = IsSpecial(item);
+                if (specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
+                {
                        
-                        //Main.NewText($"{inv[slot].Name} {definedAsSpecial}");
+                    //Main.NewText($"{inv[slot].Name} {definedAsSpecial}");
                         
                             
-                        normalRarity = false;
-                        //Main.NewText($"Drawing special item border {item.Name}");
-                        abnormalColor = ItemBorder.InvertMeAColour(Main.DiscoColor);//new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
+                    normalRarity = false;
+                    //Main.NewText($"Drawing special item border {item.Name}");
+                    abnormalColor = ItemBorder.InvertMeAColour(Main.DiscoColor);//new Color(Main.DiscoG, Main.DiscoR, Main.masterColor);
                             
                         
-                    }
-                    #region CoinCheck
-                    else if (item.IsACoin)
+                }
+                #region CoinCheck
+                else if (item.IsACoin)
+                {
+                    switch (item.type)
                     {
-                        switch (item.netID)
-                        {
-                            case ItemID.CopperCoin:
-                                normalRarity = false;
-                                abnormalColor = new Color(183, 88, 25);
-                                break;
-                            case ItemID.SilverCoin:
-                                normalRarity = false;
-                                abnormalColor = new Color(124, 141, 142);
-                                break;
-                            case ItemID.GoldCoin:
-                                normalRarity = false;
-                                abnormalColor = new Color(148, 126, 24);
-                                break;
-                            case ItemID.PlatinumCoin:
-                                normalRarity = false;
-                                abnormalColor = new Color(136, 164, 176);
-                                break;
+                        case ItemID.CopperCoin:
+                            normalRarity = false;
+                            abnormalColor = new Color(183, 88, 25);
+                            break;
+                        case ItemID.SilverCoin:
+                            normalRarity = false;
+                            abnormalColor = new Color(124, 141, 142);
+                            break;
+                        case ItemID.GoldCoin:
+                            normalRarity = false;
+                            abnormalColor = new Color(148, 126, 24);
+                            break;
+                        case ItemID.PlatinumCoin:
+                            normalRarity = false;
+                            abnormalColor = new Color(136, 164, 176);
+                            break;
 
-                            default: break;
-                        }
+                        default: break;
                     }
-                    #endregion
-                    else if (item.expert == true || (useBaseRarity?item.OriginalRarity == -12:item.rare == -12))
-                    {
-                        normalRarity = false;
-                        abnormalColor = Main.DiscoColor;
-                    }
-                    else if (item.master || (useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
-                    {
-                        //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
-                        normalRarity = false;
-                        abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
-                    }
-                    else if ((useBaseRarity?item.OriginalRarity:item.rare) >= ItemRarityID.Count)
-                    {
-                        ModRarity rarity = RarityLoader.GetRarity(useBaseRarity?item.OriginalRarity:item.rare);
-                        normalRarity = false;
-                        abnormalColor = rarity.RarityColor;
-                        //Main.NewText($"{item.Name} {rarity.RarityColor}");
-                    }
+                }
+                #endregion
+                else if (item.expert == true || (useBaseRarity?item.OriginalRarity == -12:item.rare == -12))
+                {
+                    normalRarity = false;
+                    abnormalColor = Main.DiscoColor;
+                }
+                else if (item.master || (useBaseRarity ? item.OriginalRarity == -13 : item.rare == -13))
+                {
+                    //Main.NewText($"{item.Name} {item.rare} {item.OriginalRarity} {ItemRarity.GetColor(item.rare)} ");
+                    normalRarity = false;
+                    abnormalColor = new Color(255, Main.masterColor, 0);//ItemRarity.GetColor(-13);
+                }
+                else if ((useBaseRarity?item.OriginalRarity:item.rare) >= ItemRarityID.Count)
+                {
+                    ModRarity rarity = RarityLoader.GetRarity(useBaseRarity?item.OriginalRarity:item.rare);
+                    normalRarity = false;
+                    abnormalColor = rarity.RarityColor;
+                    //Main.NewText($"{item.Name} {rarity.RarityColor}");
+                }
 
 
-                    int actualBorderType = borderType;
+                int actualBorderType = borderType;
 
                     
 
-                    Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(useBaseRarity?item.OriginalRarity:item.rare);
-                    trueSetColor *= borderOpacity;
+                Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(useBaseRarity?item.OriginalRarity:item.rare);
+                trueSetColor *= borderOpacity;
 
 
-                    float correctScale = 1 * Main.inventoryScale;
+                float correctScale = 1 * Main.inventoryScale;
 
-                    Texture2D drawTexture = ModContent.Request<Texture2D>($"ItemBorder/assets/border_new{actualBorderType}").Value;
-                    if(customBorders.Count > 0)
+                Texture2D drawTexture = ModContent.Request<Texture2D>($"ItemBorder/assets/border_new{actualBorderType}").Value;
+                if(customBorders.Count > 0)
+                {
+                    if(customBorder >= 0 && customBorder < customBorders.Count)
                     {
-                        if(customBorder >= 0 && customBorder < customBorders.Count)
-                        {
-                            drawTexture = customBorders[customBorder];
-                        }
+                        drawTexture = customBorders[customBorder];
                     }
-
-                    spriteBatch.Draw(drawTexture,
-                        position: position,
-                        sourceRectangle: new Rectangle(0, 0, 52, 52),
-                        color: trueSetColor,
-                        rotation: 0f,
-                        origin: Vector2.Zero,
-                        scale: correctScale,
-                        SpriteEffects.None,
-                        layerDepth: 0f);
-
-
                 }
-                
-                //Main.NewText($"{Main.libPath} ||| {Main.SavePath}");
+
+                spriteBatch.Draw(drawTexture,
+                    position: position,
+                    sourceRectangle: new Rectangle(0, 0, 52, 52),
+                    color: trueSetColor,
+                    rotation: 0f,
+                    origin: Vector2.Zero,
+                    scale: correctScale,
+                    SpriteEffects.None,
+                    layerDepth: 0f);
+
+
             }
+                
+            //Main.NewText($"{Main.libPath} ||| {Main.SavePath}");
+            
         }
 
 
-        public bool IsPotion(Item item)
+        public static bool IsPotion(Item item)
         {
             bool mightBeAPotion = item.healLife > 0 || item.healMana > 0 || item.buffType > 0 || item.potion;
 
             if (!mightBeAPotion)
                 return false;
 
-            return item.consumable && item.UseSound is SoundStyle style && (style.IsTheSameAs(SoundID.Item2) || style.IsTheSameAs(SoundID.Item3));
+            return (item.consumable && item.UseSound is SoundStyle style && (style.IsTheSameAs(SoundID.Item2) || style.IsTheSameAs(SoundID.Item3)));
         }
 
         //public void DrawOutline(Item item, SpriteBatch spriteBatch, Vector2 position, Color drawColor, Color itemColor, float scale)

@@ -9,6 +9,8 @@ Configs: {
 			Slot_options: Slot_options Header
 			Slot-options: Slot-options Header
 			Customization: Customization Header
+			Outline: Outline Header
+			World: World Header
 		}
 
 		borderType: {
@@ -194,6 +196,41 @@ Configs: {
 		ConfigTable: {
 			Tooltip: ""
 			Label: Config Table
+		}
+
+		borderBaseRarity: {
+			Label: border Base Rarity
+			Tooltip: ""
+		}
+
+		outlineBaseRarity: {
+			Label: outline Base Rarity
+			Tooltip: ""
+		}
+
+		outlineOpacity: {
+			Label: outline Opacity
+			Tooltip: ""
+		}
+
+		useWorld: {
+			Label: use World
+			Tooltip: ""
+		}
+
+		worldBaseRarity: {
+			Label: world Base Rarity
+			Tooltip: ""
+		}
+
+		worldWidth: {
+			Label: world Width
+			Tooltip: ""
+		}
+
+		worldOpacity: {
+			Label: world Opacity
+			Tooltip: ""
 		}
 	}
 

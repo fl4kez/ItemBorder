@@ -207,6 +207,15 @@ namespace ItemBorder
         
         public override bool PreDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
+            //if(item.Name == "Stone Wall")
+            //{
+            //    Main.NewText($"{CustomTableUI.rows["wall"].WorldValue()} {ItemBorder.IsWall(item)}");
+            //}
+            if (ItemBorder.wall.WorldValue() == false)
+            {
+                if (ItemBorder.IsWall(item))
+                    return true;
+            }
             var originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;
             var originalSamplerState = Main.spriteBatch.GraphicsDevice.SamplerStates[0];
             var originalDepthStencilState = Main.spriteBatch.GraphicsDevice.DepthStencilState;
@@ -214,7 +223,7 @@ namespace ItemBorder
 
             bool normalRarity = true;
             Color abnormalColor = new Color(0, 0, 0);
-            int definedAsSpecial = ItemBorder.itemDefinitions.FirstOrDefault(x => x == item.netID, 0);
+            int definedAsSpecial = ItemBorder.IsSpecial(item);
             if (ItemBorder.specialPickup && definedAsSpecial != 0 && item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
             {
 
@@ -225,7 +234,7 @@ namespace ItemBorder
             #region CoinCheck
             else if (item.IsACoin)
             {
-                switch (item.netID)
+                switch (item.type)
                 {
                     case ItemID.CopperCoin:
                         normalRarity = false;

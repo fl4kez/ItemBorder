@@ -89,6 +89,7 @@ namespace ItemBorder
         float offsetValue = 20f;
         int rowIndex = 0;
 
+
         public void AddCustomizationRow(TableRowConfig tableRow,bool skipSeperator)
         {
             //int rowIndex = (Children.Count() - 3) / 3;  // Calculate row index based on current number of rows
@@ -121,6 +122,8 @@ namespace ItemBorder
             if (tableRow.Border.Use)
             {
                 tableRow.Border.Value.Top.Set(15f + offsetValue * rowIndex, 0f);
+                tableRow.Border.Value.OnMouseOver += (UIMouseEvent evt, UIElement listeningElement) => { tableRow.Label.TextColor = Color.Red; };
+                tableRow.Border.Value.OnMouseOut += (UIMouseEvent evt, UIElement listeningElement) => { tableRow.Label.TextColor = Color.White; };
                 Append(tableRow.Border.Value);
             }
 
@@ -128,6 +131,8 @@ namespace ItemBorder
             if (tableRow.Outline.Use)
             {
                 tableRow.Outline.Value.Top.Set(15f + offsetValue * rowIndex, 0f);
+                tableRow.Outline.Value.OnMouseOver += (UIMouseEvent evt, UIElement listeningElement) => { tableRow.Label.TextColor = Color.Red; };
+                tableRow.Outline.Value.OnMouseOut += (UIMouseEvent evt, UIElement listeningElement) => { tableRow.Label.TextColor = Color.White; };
                 Append(tableRow.Outline.Value);
             }
 
@@ -135,6 +140,8 @@ namespace ItemBorder
             if (tableRow.World.Use)
             {
                 tableRow.World.Value.Top.Set(15f + offsetValue * rowIndex, 0f);
+                tableRow.World.Value.OnMouseOver += (UIMouseEvent evt, UIElement listeningElement) => { tableRow.Label.TextColor = Color.Red; };
+                tableRow.World.Value.OnMouseOut += (UIMouseEvent evt, UIElement listeningElement) => { tableRow.Label.TextColor = Color.White; };
                 Append(tableRow.World.Value);
             }
 
