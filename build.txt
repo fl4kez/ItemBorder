@@ -1,5 +1,5 @@
 displayName = Rarity Borders
 author = hems
-version = 1.81
+version = 1.82
 side = Client
 homepage = https://github.com/fl4kez/ItemBorder

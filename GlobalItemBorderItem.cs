@@ -320,15 +320,15 @@ namespace ItemBorder
             bool itemHaveAnim = Main.itemAnimations[item.type] != null;
             if (itemHaveAnim)
                 sourceRect = Main.itemAnimations[item.type].GetFrame(texture);
-            if (item.Name == "Bee Keeper" || item.Name == "Copper Shortsword")
-            {
-                Main.NewText($"{sourceRect.Size()} {sourceRect.X} {sourceRect.Y} {texture.Size()} {trueSetColor} {alphaColor} {lightColor} {trueSetColor.MultiplyRGB(lightColor)}");
-                //foreach(var type in Main.itemAnimationsRegistered)
-                //{
-                //    Main.NewText($"{type} {Main.item[type].Name}");
-                //}
+            //if (item.Name == "Bee Keeper" || item.Name == "Copper Shortsword")
+            //{
+            //    Main.NewText($"{sourceRect.Size()} {sourceRect.X} {sourceRect.Y} {texture.Size()} {trueSetColor} {alphaColor} {lightColor} {trueSetColor.MultiplyRGB(lightColor)}");
+            //    //foreach(var type in Main.itemAnimationsRegistered)
+            //    //{
+            //    //    Main.NewText($"{type} {Main.item[type].Name}");
+            //    //}
                 
-            }
+            //}
             // Calculate the position to draw the outline
             Vector2 position = item.position - Main.screenPosition + new Vector2(item.width / 2, item.height - sourceRect.Height / 2);
 

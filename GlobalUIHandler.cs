@@ -25,7 +25,7 @@ namespace YourModNamespace
                 if (element.ContainsPoint(new Vector2(Main.mouseX, Main.mouseY)))
                 {
                     // Print to chat the type of element hovered over
-                    Main.NewText($"Hovering over: {element.GetType().Name}", 255, 255, 0);
+                    //Main.NewText($"Hovering over: {element.GetType().Name}", 255, 255, 0);
 
                     // Optional: Break after finding the first hovered element to avoid multiple messages
                     break;
