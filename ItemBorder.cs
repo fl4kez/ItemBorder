@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Threading;
 using ReLogic.Content;
 using Terraria.ModLoader.Config;
+using Microsoft.CodeAnalysis.Text;
 
 namespace ItemBorder
 {
@@ -233,6 +234,12 @@ namespace ItemBorder
                 default:
                     break;
             }
+            if(config.useOutline == false)
+            {
+                orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                return scale;
+            }
+
             //AMMO
             if (ItemBorder.ammo.OutlineValue() == false)
             {
@@ -285,7 +292,6 @@ namespace ItemBorder
             Texture2D sprite = TextureAssets.Item[item.type].Value;
             Rectangle frame = new Rectangle(0, 0, sprite.Width, sprite.Height);
            
-            Vector2 origin = new Vector2(frame.Width / 2, frame.Height / 2);
             if (CustomTableUI.rows.Count > 0)
             {
                 //Main.NewText($"{CustomTableUI.rows.Count} {CustomTableUI.rows[0].Outline.Selected}");
@@ -304,9 +310,13 @@ namespace ItemBorder
                     //Texture2D sprite = TextureAssets.Item[item.type].Value;
                     Texture2D spriteCopy = TextureAssets.Item[item.type].Value;
 
-                    Rectangle rect = new Rectangle(0, 0, sprite.Width, sprite.Height);
+                    frame = spriteCopy.Frame();
+                    bool itemHaveAnim = Main.itemAnimations[item.type] != null;
+                    if (itemHaveAnim)
+                        frame = Main.itemAnimations[item.type].GetFrame(spriteCopy);
 
                     float outlineWidth = ItemBorder.config.outlineWidth;
+                    Vector2 origin = new Vector2(frame.Width / 2, frame.Height / 2);
 
                     bool normalRarity = true;
                     Color abnormalColor = new Color(0, 0, 0);
@@ -364,7 +374,7 @@ namespace ItemBorder
                     }
 
                     Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.config.outlineBaseRarity ? item.OriginalRarity : item.rare);
-                    trueSetColor *= ItemBorder.config.outlineOpacity / 100;
+                    trueSetColor *= (float)ItemBorder.config.outlineOpacity / 100f;
 
                     Vector2[] offsets = new Vector2[]
                     {
@@ -380,7 +390,6 @@ namespace ItemBorder
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
 
-
                     ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
                     ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
 
@@ -393,10 +402,10 @@ namespace ItemBorder
                     float finalDrawScale = scale * num * scale2;
                     foreach (Vector2 offset in offsets)
                     {
-                        spriteBatch.Draw(spriteCopy,
-                                    position: screenPositionForItemCenter + offset,
-                                    sourceRectangle: frame,
-                                    color: trueSetColor,
+                    spriteBatch.Draw(spriteCopy,
+                    position: screenPositionForItemCenter + offset,
+                    sourceRectangle: frame,
+                    color: trueSetColor,
                                     rotation: 0f,
                                     origin: origin,
                                     scale: finalDrawScale,
@@ -705,7 +714,7 @@ namespace ItemBorder
                     
 
                 Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(config.borderBaseRarity ? item.OriginalRarity:item.rare);
-                trueSetColor *= config.borderOpacity/100;
+                trueSetColor *= (float)config.borderOpacity/100f;
 
 
                 float correctScale = 1 * Main.inventoryScale;

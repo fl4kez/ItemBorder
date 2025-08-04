@@ -64,7 +64,7 @@ namespace ItemBorder
                 foreach (var item in rows)
                 {
                     if (item.Value.Border.Value != null)
-                        item.Value.Border.Value.SetState(!item.Value.BorderValue());
+                        item.Value.Border.Value.ToggleCheck();
                 }
             };
             borderHeader.Left.Set(300f, 0f);
@@ -76,7 +76,7 @@ namespace ItemBorder
                 foreach (var item in rows)
                 {
                     if (item.Value.Outline.Value != null)
-                        item.Value.Outline.Value.SetState(!item.Value.OutlineValue());
+                        item.Value.Outline.Value.ToggleCheck();
                 }
             };
             outlineHeader.Left.Set(400f, 0f);
@@ -88,7 +88,7 @@ namespace ItemBorder
                 foreach (var item in rows)
                 {
                     if(item.Value.World.Value != null)
-                        item.Value.World.Value.SetState(!item.Value.WorldValue());
+                        item.Value.World.Value.ToggleCheck();
                 }
             };
             worldHeader.Left.Set(500f, 0f);

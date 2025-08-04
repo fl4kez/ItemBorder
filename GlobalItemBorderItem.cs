@@ -216,6 +216,11 @@ namespace ItemBorder
             //    Main.NewText($"{CustomTableUI.rows["wall"].WorldValue()} {ItemBorder.IsWall(item)}");
             //}
 
+            if(ItemBorder.config.useWorld == false)
+            {
+                return true;
+            }
+
             //POTION
             if (ItemBorder.potion.WorldValue() == false)
             {
@@ -304,31 +309,62 @@ namespace ItemBorder
             }
 
             Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.config.worldBaseRarity ? item.OriginalRarity : item.rare);
-            trueSetColor *= ItemBorder.config.worldOpacity/100;
+            trueSetColor *= (float)ItemBorder.config.worldOpacity/100f;
 
             // Get the rarity color based on the item's rarity
             //Color outlineColor = GetRarityColor(item.rare);
 
             // Get the item's texture
             Texture2D texture = TextureAssets.Item[item.type].Value;
-
+            Rectangle sourceRect = texture.Frame();
+            bool itemHaveAnim = Main.itemAnimations[item.type] != null;
+            if (itemHaveAnim)
+                sourceRect = Main.itemAnimations[item.type].GetFrame(texture);
+            if (item.Name == "Bee Keeper" || item.Name == "Copper Shortsword")
+            {
+                Main.NewText($"{sourceRect.Size()} {sourceRect.X} {sourceRect.Y} {texture.Size()} {trueSetColor} {alphaColor} {lightColor} {trueSetColor.MultiplyRGB(lightColor)}");
+                //foreach(var type in Main.itemAnimationsRegistered)
+                //{
+                //    Main.NewText($"{type} {Main.item[type].Name}");
+                //}
+                
+            }
             // Calculate the position to draw the outline
-            Vector2 position = item.position - Main.screenPosition + new Vector2(item.width / 2, item.height - texture.Height / 2);
+            Vector2 position = item.position - Main.screenPosition + new Vector2(item.width / 2, item.height - sourceRect.Height / 2);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.GameViewMatrix.TransformationMatrix);
             ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
             ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
+
+            Color clr = Lighting.GetColor(item.Center.ToTileCoordinates());
+            
             // Draw the outline around the item
-            DrawOutline(spriteBatch, texture, position, trueSetColor, rotation, scale);
+            DrawOutline(spriteBatch, texture, position, trueSetColor.MultiplyRGBA(clr), rotation, scale,sourceRect);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.GameViewMatrix.TransformationMatrix);
+
+
+            //DRAW ITEM YOURSELF SO OPACITY IS 100% AND NOT 75%
+            Color drawColor = new Color(Color.White.R, Color.White.G, Color.White.B, 255);
+            Vector2 origin = new Vector2((sourceRect.Width / 2), (sourceRect.Height / 2));
+            //Vector2 positionReal = item.position - Main.screenPosition + new Vector2(item.width / 2, item.height - sourceRect.Height / 2);
+            //spriteBatch.Draw(texture,
+            //                position: position,
+            //                sourceRectangle: sourceRect,
+            //                color: lightColor,
+            //                rotation: rotation,
+            //                origin: origin,
+            //                scale: scale,
+            //                SpriteEffects.None,
+            //                layerDepth: 0f);
+
             return true;
         }
 
-        private void DrawOutline(SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color outlineColor, float rotation, float scale)
+        private void DrawOutline(SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color outlineColor, float rotation, float scale, Rectangle sourceRect)
         {
-            Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            Vector2 origin = new Vector2((sourceRect.Width / 2), (sourceRect.Height / 2));
 
             // Define the offset vectors for the outline
             Vector2[] offsets = new Vector2[]
@@ -342,7 +378,7 @@ namespace ItemBorder
             // Draw the outline by drawing the sprite slightly offset in all directions
             foreach (Vector2 offset in offsets)
             {
-                spriteBatch.Draw(texture, position + offset, null, outlineColor, rotation, origin, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, position + offset, sourceRect, outlineColor, rotation, origin, scale, SpriteEffects.None, 0f);
             }
 
             // Draw the actual item sprite

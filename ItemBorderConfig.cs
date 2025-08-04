@@ -107,7 +107,7 @@ namespace ItemBorder
         [Range(0, 100)]
         [Increment(1)]
         [Slider]
-        public float outlineOpacity;
+        public int outlineOpacity;
         #endregion
 
         #region WORLD
@@ -126,7 +126,7 @@ namespace ItemBorder
         [Range(0, 100)]
         [Increment(1)]
         [Slider]
-        public float worldOpacity;
+        public int worldOpacity;
         #endregion
 
      
