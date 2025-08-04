@@ -391,6 +391,8 @@ namespace ItemBorder
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
 
                     ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
+                    ItemBorder.whiteEffect.Parameters["texelWidth"].SetValue(outlineWidth/spriteCopy.Width);
+                    ItemBorder.whiteEffect.Parameters["texelHeight"].SetValue(outlineWidth/spriteCopy.Height);
                     ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
 
                     float scale2 = 1f;
@@ -400,10 +402,10 @@ namespace ItemBorder
                         num = ((frame.Width <= frame.Height) ? (sizeLimit / (float)frame.Height) : (sizeLimit / (float)frame.Width));
                     }
                     float finalDrawScale = scale * num * scale2;
-                    foreach (Vector2 offset in offsets)
-                    {
+                    //foreach (Vector2 offset in offsets)
+                    //{
                     spriteBatch.Draw(spriteCopy,
-                    position: screenPositionForItemCenter + offset,
+                    position: screenPositionForItemCenter,
                     sourceRectangle: frame,
                     color: trueSetColor,
                                     rotation: 0f,
@@ -411,7 +413,7 @@ namespace ItemBorder
                                     scale: finalDrawScale,
                                     SpriteEffects.None,
                                     layerDepth: 0f);
-                    }
+                    //}
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
                 //}
