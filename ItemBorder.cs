@@ -59,6 +59,9 @@ namespace ItemBorder
         string customAssetsPath = "\\customAssets";
 
         public static Effect whiteEffect;
+        
+        private static Dictionary<int, Texture2D> outlineTextureCache = new Dictionary<int, Texture2D>();
+        
         public override void Load()
         {
 
@@ -391,8 +394,6 @@ namespace ItemBorder
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
 
                     ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
-                    ItemBorder.whiteEffect.Parameters["texelWidth"].SetValue(outlineWidth/spriteCopy.Width);
-                    ItemBorder.whiteEffect.Parameters["texelHeight"].SetValue(outlineWidth/spriteCopy.Height);
                     ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
 
                     float scale2 = 1f;
@@ -402,18 +403,23 @@ namespace ItemBorder
                         num = ((frame.Width <= frame.Height) ? (sizeLimit / (float)frame.Height) : (sizeLimit / (float)frame.Width));
                     }
                     float finalDrawScale = scale * num * scale2;
-                    //foreach (Vector2 offset in offsets)
-                    //{
-                    spriteBatch.Draw(spriteCopy,
-                    position: screenPositionForItemCenter,
-                    sourceRectangle: frame,
-                    color: trueSetColor,
-                                    rotation: 0f,
-                                    origin: origin,
-                                    scale: finalDrawScale,
-                                    SpriteEffects.None,
-                                    layerDepth: 0f);
-                    //}
+                    Rectangle? currentFrame = itemHaveAnim ? frame : null;
+                    Texture2D outlineTexture = GetOutlineTexture(item.type, config.outlineWidth, currentFrame);
+                    
+                    if (outlineTexture != null)
+                    {
+                        Vector2 outlineOrigin = new Vector2(outlineTexture.Width / 2, outlineTexture.Height / 2);
+                        
+                        spriteBatch.Draw(outlineTexture, 
+                            screenPositionForItemCenter, 
+                            null, 
+                            Color.White, 
+                            0f, 
+                            outlineOrigin, 
+                            finalDrawScale, 
+                            SpriteEffects.None, 
+                            0f);
+                    }
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
                 //}
@@ -427,6 +433,278 @@ namespace ItemBorder
         public override void Unload()
         {
             whiteEffect = null;
+            
+            if (outlineTextureCache.Count > 0)
+            {
+                var texturesToDispose = outlineTextureCache.Values.ToList();
+                RunOnMainThread(() =>
+                {
+                    foreach (var texture in texturesToDispose)
+                    {
+                        texture?.Dispose();
+                    }
+                });
+                outlineTextureCache.Clear();
+            }
+        }
+        
+        public static Texture2D GenerateOutlineTexture(Texture2D original, int outlineWidth)
+        {
+            if (Main.netMode == NetmodeID.Server || original == null) return null;
+            
+            GraphicsDevice graphics = Main.graphics.GraphicsDevice;
+            
+            int newWidth = original.Width + outlineWidth * 2;
+            int newHeight = original.Height + outlineWidth * 2;
+            
+            Color[] originalData = new Color[original.Width * original.Height];
+            original.GetData(originalData);
+            
+            bool hasOpaquePixels = false;
+            foreach (var pixel in originalData)
+            {
+                if (pixel.A > 0)
+                {
+                    hasOpaquePixels = true;
+                    break;
+                }
+            }
+            
+            if (!hasOpaquePixels)
+            {
+                return null;
+            }
+            
+            Color[] outlineData = new Color[newWidth * newHeight];
+            
+            int chunkSize = 2;
+            for (int chunkY = 0; chunkY < newHeight; chunkY += chunkSize)
+            {
+                for (int chunkX = 0; chunkX < newWidth; chunkX += chunkSize)
+                {
+                    bool shouldBeOutline = false;
+                    
+                    for (int py = chunkY; py < Math.Min(chunkY + chunkSize, newHeight) && !shouldBeOutline; py++)
+                    {
+                        for (int px = chunkX; px < Math.Min(chunkX + chunkSize, newWidth) && !shouldBeOutline; px++)
+                        {
+                            bool pixelShouldBeOutline = false;
+                            
+                            for (int dy = -outlineWidth; dy <= outlineWidth && !pixelShouldBeOutline; dy++)
+                            {
+                                for (int dx = -outlineWidth; dx <= outlineWidth && !pixelShouldBeOutline; dx++)
+                                {
+                                    if (dx * dx + dy * dy > outlineWidth * outlineWidth) continue;
+                                    
+                                    int origX = px - outlineWidth + dx;
+                                    int origY = py - outlineWidth + dy;
+                                    
+                                    if (origX >= 0 && origX < original.Width && 
+                                        origY >= 0 && origY < original.Height)
+                                    {
+                                        int origIndex = origY * original.Width + origX;
+                                        
+                                        if (originalData[origIndex].A > 0)
+                                        {
+                                            pixelShouldBeOutline = true;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            int centerX = px - outlineWidth;
+                            int centerY = py - outlineWidth;
+                            bool centerIsTransparent = true;
+                            
+                            if (centerX >= 0 && centerX < original.Width && 
+                                centerY >= 0 && centerY < original.Height)
+                            {
+                                int centerIndex = centerY * original.Width + centerX;
+                                centerIsTransparent = originalData[centerIndex].A == 0;
+                            }
+                            
+                            if (pixelShouldBeOutline && centerIsTransparent)
+                            {
+                                shouldBeOutline = true;
+                            }
+                        }
+                    }
+                    
+                    Color chunkColor = shouldBeOutline ? Color.White : Color.Transparent;
+                    
+                    for (int py = chunkY; py < Math.Min(chunkY + chunkSize, newHeight); py++)
+                    {
+                        for (int px = chunkX; px < Math.Min(chunkX + chunkSize, newWidth); px++)
+                        {
+                            int outlineIndex = py * newWidth + px;
+                            outlineData[outlineIndex] = chunkColor;
+                        }
+                    }
+                }
+            }
+            
+            Texture2D outlineTexture = new Texture2D(graphics, newWidth, newHeight);
+            outlineTexture.SetData(outlineData);
+            return outlineTexture;
+        }
+        
+        public static Texture2D GenerateOutlineTextureFromFrame(Texture2D spritesheet, int outlineWidth, Rectangle sourceFrame)
+        {
+            if (Main.netMode == NetmodeID.Server || spritesheet == null) return null;
+            
+            GraphicsDevice graphics = Main.graphics.GraphicsDevice;
+            
+            Color[] spritesheetData = new Color[spritesheet.Width * spritesheet.Height];
+            spritesheet.GetData(spritesheetData);
+            
+            Color[] frameData = new Color[sourceFrame.Width * sourceFrame.Height];
+            for (int y = 0; y < sourceFrame.Height; y++)
+            {
+                for (int x = 0; x < sourceFrame.Width; x++)
+                {
+                    int frameIndex = y * sourceFrame.Width + x;
+                    int spritesheetIndex = (sourceFrame.Y + y) * spritesheet.Width + (sourceFrame.X + x);
+                    
+                    if (spritesheetIndex >= 0 && spritesheetIndex < spritesheetData.Length)
+                    {
+                        frameData[frameIndex] = spritesheetData[spritesheetIndex];
+                    }
+                }
+            }
+            
+            bool hasOpaquePixels = false;
+            foreach (var pixel in frameData)
+            {
+                if (pixel.A > 0)
+                {
+                    hasOpaquePixels = true;
+                    break;
+                }
+            }
+            
+            if (!hasOpaquePixels)
+            {
+                return null;
+            }
+            
+            int newWidth = sourceFrame.Width + outlineWidth * 2;
+            int newHeight = sourceFrame.Height + outlineWidth * 2;
+            
+            Color[] outlineData = new Color[newWidth * newHeight];
+            
+            int chunkSize = 2;
+            for (int chunkY = 0; chunkY < newHeight; chunkY += chunkSize)
+            {
+                for (int chunkX = 0; chunkX < newWidth; chunkX += chunkSize)
+                {
+                    bool shouldBeOutline = false;
+                    
+                    for (int py = chunkY; py < Math.Min(chunkY + chunkSize, newHeight) && !shouldBeOutline; py++)
+                    {
+                        for (int px = chunkX; px < Math.Min(chunkX + chunkSize, newWidth) && !shouldBeOutline; px++)
+                        {
+                            bool pixelShouldBeOutline = false;
+                            
+                            for (int dy = -outlineWidth; dy <= outlineWidth && !pixelShouldBeOutline; dy++)
+                            {
+                                for (int dx = -outlineWidth; dx <= outlineWidth && !pixelShouldBeOutline; dx++)
+                                {
+                                    if (dx * dx + dy * dy > outlineWidth * outlineWidth) continue;
+                                    
+                                    int frameX = px - outlineWidth + dx;
+                                    int frameY = py - outlineWidth + dy;
+                                    
+                                    if (frameX >= 0 && frameX < sourceFrame.Width && 
+                                        frameY >= 0 && frameY < sourceFrame.Height)
+                                    {
+                                        int frameIndex = frameY * sourceFrame.Width + frameX;
+                                        
+                                        if (frameData[frameIndex].A > 0)
+                                        {
+                                            pixelShouldBeOutline = true;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            int centerX = px - outlineWidth;
+                            int centerY = py - outlineWidth;
+                            bool centerIsTransparent = true;
+                            
+                            if (centerX >= 0 && centerX < sourceFrame.Width && 
+                                centerY >= 0 && centerY < sourceFrame.Height)
+                            {
+                                int centerIndex = centerY * sourceFrame.Width + centerX;
+                                centerIsTransparent = frameData[centerIndex].A == 0;
+                            }
+                            
+                            if (pixelShouldBeOutline && centerIsTransparent)
+                            {
+                                shouldBeOutline = true;
+                            }
+                        }
+                    }
+                    
+                    Color chunkColor = shouldBeOutline ? Color.White : Color.Transparent;
+                    
+                    for (int py = chunkY; py < Math.Min(chunkY + chunkSize, newHeight); py++)
+                    {
+                        for (int px = chunkX; px < Math.Min(chunkX + chunkSize, newWidth); px++)
+                        {
+                            int outlineIndex = py * newWidth + px;
+                            outlineData[outlineIndex] = chunkColor;
+                        }
+                    }
+                }
+            }
+            
+            Texture2D outlineTexture = new Texture2D(graphics, newWidth, newHeight);
+            outlineTexture.SetData(outlineData);
+            return outlineTexture;
+        }
+        
+        public static Texture2D GetOutlineTexture(int itemType, int outlineWidth, Rectangle? sourceFrame = null)
+        {
+            if (Main.netMode == NetmodeID.Server) return null;
+            
+            try
+            {
+                int frameHash = sourceFrame?.GetHashCode() ?? 0;
+                int cacheKey = itemType * 1000000 + outlineWidth * 1000 + Math.Abs(frameHash % 1000);
+                
+                if (outlineTextureCache.TryGetValue(cacheKey, out Texture2D cachedTexture))
+                {
+                    return cachedTexture;
+                }
+                
+                Texture2D originalTexture = TextureAssets.Item[itemType].Value;
+                if (originalTexture == null)
+                {
+                    return null;
+                }
+                
+                Texture2D outlineTexture;
+                
+                if (sourceFrame.HasValue)
+                {
+                    outlineTexture = GenerateOutlineTextureFromFrame(originalTexture, outlineWidth, sourceFrame.Value);
+                }
+                else
+                {
+                    outlineTexture = GenerateOutlineTexture(originalTexture, outlineWidth);
+                }
+                
+                if (outlineTexture != null)
+                {
+                    outlineTextureCache[cacheKey] = outlineTexture;
+                }
+                
+                return outlineTexture;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
         public static void RunOnMainThread(Action action)
         {

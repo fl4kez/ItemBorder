@@ -332,15 +332,16 @@ namespace ItemBorder
             // Calculate the position to draw the outline
             Vector2 position = item.position - Main.screenPosition + new Vector2(item.width / 2, item.height - sourceRect.Height / 2);
 
+            Color clr = Lighting.GetColor(item.Center.ToTileCoordinates());
+            Color lightAffectedColor = trueSetColor.MultiplyRGBA(clr);
+            
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.GameViewMatrix.TransformationMatrix);
-            ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
+            ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(lightAffectedColor.ToVector4());
             ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
-
-            Color clr = Lighting.GetColor(item.Center.ToTileCoordinates());
             
             // Draw the outline around the item
-            DrawOutline(spriteBatch, texture, position, trueSetColor.MultiplyRGBA(clr), rotation, scale,sourceRect);
+            DrawOutline(spriteBatch, texture, position, Color.White, rotation, scale, sourceRect, item.type);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.GameViewMatrix.TransformationMatrix);
 
@@ -362,27 +363,26 @@ namespace ItemBorder
             return true;
         }
 
-        private void DrawOutline(SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color outlineColor, float rotation, float scale, Rectangle sourceRect)
+        private void DrawOutline(SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color outlineColor, float rotation, float scale, Rectangle sourceRect, int itemType)
         {
-            Vector2 origin = new Vector2((sourceRect.Width / 2), (sourceRect.Height / 2));
-
-            // Define the offset vectors for the outline
-            Vector2[] offsets = new Vector2[]
-            {
-            new Vector2(-ItemBorder.config.worldWidth, 0),  // Left
-            new Vector2(ItemBorder.config.worldWidth, 0),   // Right
-            new Vector2(0, -ItemBorder.config.worldWidth),  // Up
-            new Vector2(0, ItemBorder.config.worldWidth),   // Down
-            };
+            bool itemHaveAnim = Main.itemAnimations[itemType] != null;
+            Rectangle? currentFrame = itemHaveAnim ? sourceRect : null;
+            Texture2D outlineTexture = ItemBorder.GetOutlineTexture(itemType, ItemBorder.config.worldWidth, currentFrame);
             
-            // Draw the outline by drawing the sprite slightly offset in all directions
-            foreach (Vector2 offset in offsets)
+            if (outlineTexture != null)
             {
-                spriteBatch.Draw(texture, position + offset, sourceRect, outlineColor, rotation, origin, scale, SpriteEffects.None, 0f);
+                Vector2 outlineOrigin = new Vector2(outlineTexture.Width / 2, outlineTexture.Height / 2);
+                
+                spriteBatch.Draw(outlineTexture, 
+                    position, 
+                    null, 
+                    Color.White, 
+                    rotation, 
+                    outlineOrigin, 
+                    scale, 
+                    SpriteEffects.None, 
+                    0f);
             }
-
-            // Draw the actual item sprite
-            //spriteBatch.Draw(texture, position, null, Color.White, rotation, origin, scale, SpriteEffects.None, 0f);
         }
     }
 }
