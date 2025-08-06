@@ -32,12 +32,12 @@ Has some configurations for:
  - types of borders
  - setting items as special to have their background changed
 
----Still trying to implement borders for items laying around!
-
 [url=https://github.com/fl4kez/ItemBorder]Github-Repo[/url]
 
 Thank you guys:
 -GabeHasWon
 -Glasses-san
 -jopojelly
+-Dice (legend)
+
 [quote=tModLoader]Developed By hems[/quote]
