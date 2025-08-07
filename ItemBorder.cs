@@ -51,6 +51,8 @@ namespace ItemBorder
         internal static TableRowConfig mannequinArmor => CustomTableUI.rows["mannequinArmor"];
         internal static TableRowConfig mannequinAccessory => CustomTableUI.rows["mannequinAccessory"];
         internal static TableRowConfig mannequinDye => CustomTableUI.rows["mannequinDye"];
+        internal static TableRowConfig crafting => CustomTableUI.rows["crafting"];
+        internal static TableRowConfig guide => CustomTableUI.rows["guide"];
 
         public static bool usingMagicalStorage;
         //ItemBorderConfig config => ModContent.GetInstance<ItemBorderConfig>();
@@ -142,6 +144,8 @@ namespace ItemBorder
             config.ConfigTable.AddCustomizationRowToList("mannequinArmor", "Use for mannequin armor slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("mannequinAccessory", "Use for mannequin accessory slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("mannequinDye", "Use for mannequin dye slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("crafting", "Use for crafting station slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("guide", "Use for guide/recipe slots", Column(true, true), Column(true, true), Column(false, false));
 
         }
         public static ItemBorderConfig config;
@@ -236,6 +240,15 @@ namespace ItemBorder
                     break;
                 case 25:
                     if (mannequinDye.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 5:
+                    if (crafting.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 14:
+                    if (crafting.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 22:
+                    if (guide.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
                     break;
                 default:
                     break;
@@ -898,6 +911,18 @@ namespace ItemBorder
                     break;
                 case 25:
                     if (mannequinDye.BorderValue() == false)
+                        return;
+                    break;
+                case 5:
+                    if (crafting.BorderValue() == false)
+                        return;
+                    break;
+                case 14:
+                    if (crafting.BorderValue() == false)
+                        return;
+                    break;
+                case 22:
+                    if (guide.BorderValue() == false)
                         return;
                     break;
                 default:
