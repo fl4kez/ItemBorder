@@ -51,6 +51,8 @@ namespace ItemBorder
         internal static TableRowConfig mannequinArmor => CustomTableUI.rows["mannequinArmor"];
         internal static TableRowConfig mannequinAccessory => CustomTableUI.rows["mannequinAccessory"];
         internal static TableRowConfig mannequinDye => CustomTableUI.rows["mannequinDye"];
+        internal static TableRowConfig crafting => CustomTableUI.rows["crafting"];
+        internal static TableRowConfig guide => CustomTableUI.rows["guide"];
 
         public static bool usingMagicalStorage;
         //ItemBorderConfig config => ModContent.GetInstance<ItemBorderConfig>();
@@ -108,6 +110,8 @@ namespace ItemBorder
                 }
             }
 
+            toggleItemBorderKey = KeybindLoader.RegisterKeybind(this, "ToggleItemBorder", "Delete");
+            
             config = ModContent.GetInstance<ItemBorderConfig>();
             config.ConfigTable = new CustomTableUI();
             config.ConfigTable.AddCustomizationRowToList("mouseItem", "Use for item in cursor", Column(false, false), Column(true, true), Column(false, false));
@@ -116,12 +120,13 @@ namespace ItemBorder
             config.ConfigTable.AddCustomizationRowToList("tile", "Use for tiles", Column(true,true), Column(true, true), Column(true, true));
             config.ConfigTable.AddCustomizationRowToList("wall", "Use for walls", Column(true,true), Column(true, true), Column(true, true));
             config.ConfigTable.AddCustomizationRowToList("material", "Use for materials", Column(true,true), Column(true, true), Column(true, true));
+            //reminder: set default to on when we have a fix (outline not animating for coins, probably because they only animate on world)
+            config.ConfigTable.AddCustomizationRowToList("coin", "Use for coin slots", Column(true, false), Column(true, false), Column(true, false));
 
             config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar slots", Column(true,true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("chest", "Use for chest slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("inventory", "Use for inventory slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("ammo", "Use for ammo slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("coin", "Use for coin slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("trash", "Use for trash slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("armor", "Use for armor slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("vanityArmor", "Use for vanity armor slots", Column(true, true), Column(true, true), Column(false, false));
@@ -140,9 +145,12 @@ namespace ItemBorder
             config.ConfigTable.AddCustomizationRowToList("mannequinArmor", "Use for mannequin armor slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("mannequinAccessory", "Use for mannequin accessory slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("mannequinDye", "Use for mannequin dye slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("crafting", "Use for crafting station slots", Column(true, true), Column(true, true), Column(false, false));
+            config.ConfigTable.AddCustomizationRowToList("guide", "Use for guide/recipe slots", Column(true, true), Column(true, true), Column(false, false));
 
         }
         public static ItemBorderConfig config;
+        public static ModKeybind toggleItemBorderKey;
 
         public TableRowConfig.BoolColumn Column(bool use, bool defaultVal)
         {
@@ -234,10 +242,19 @@ namespace ItemBorder
                 case 25:
                     if (mannequinDye.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
                     break;
+                case 5:
+                    if (crafting.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 14:
+                    if (crafting.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
+                case 22:
+                    if (guide.OutlineValue() == false){orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);return scale;}
+                    break;
                 default:
                     break;
             }
-            if(config.useOutline == false)
+            if(config.useOutline == false || IsExcluded(item))
             {
                 orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
                 return scale;
@@ -726,7 +743,7 @@ namespace ItemBorder
         {
             Item item = inv[slot];
             ItemDefinition definedAsSpecial = IsSpecial(item);
-            if (definedAsSpecial != null && Main.mouseItem.type != item.type)
+            if (definedAsSpecial != null && Main.mouseItem.type != item.type && !IsExcluded(item))
             {
                 
                 if (item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
@@ -789,6 +806,11 @@ namespace ItemBorder
         public static ItemDefinition IsSpecial(Item item)
         {
             return config.specialItems.FirstOrDefault(x => x.Type == item.type, null);
+        }
+
+        public static bool IsExcluded(Item item)
+        {
+            return config.excludedItems.Any(x => x.Type == item.type);
         }
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
@@ -892,6 +914,18 @@ namespace ItemBorder
                     if (mannequinDye.BorderValue() == false)
                         return;
                     break;
+                case 5:
+                    if (crafting.BorderValue() == false)
+                        return;
+                    break;
+                case 14:
+                    if (crafting.BorderValue() == false)
+                        return;
+                    break;
+                case 22:
+                    if (guide.BorderValue() == false)
+                        return;
+                    break;
                 default:
                     break;
             }
@@ -933,7 +967,7 @@ namespace ItemBorder
                     return;
             }
                 
-            if (item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem)
+            if (item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem && !IsExcluded(item))
             {
                 bool normalRarity = true;
                 Color abnormalColor = new Color(0,0,0);

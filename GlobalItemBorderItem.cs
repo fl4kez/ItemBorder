@@ -216,7 +216,7 @@ namespace ItemBorder
             //    Main.NewText($"{CustomTableUI.rows["wall"].WorldValue()} {ItemBorder.IsWall(item)}");
             //}
 
-            if(ItemBorder.config.useWorld == false)
+            if(ItemBorder.config.useWorld == false || ItemBorder.IsExcluded(item))
             {
                 return true;
             }
@@ -246,6 +246,13 @@ namespace ItemBorder
             if (ItemBorder.material.WorldValue() == false)
             {
                 if (ItemBorder.IsMaterial(item))
+                    return true;
+            }
+
+            //COIN
+            if (ItemBorder.coin.WorldValue() == false)
+            {
+                if (item.IsACoin)
                     return true;
             }
             var originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;
