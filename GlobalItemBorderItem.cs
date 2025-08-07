@@ -216,7 +216,7 @@ namespace ItemBorder
             //    Main.NewText($"{CustomTableUI.rows["wall"].WorldValue()} {ItemBorder.IsWall(item)}");
             //}
 
-            if(ItemBorder.config.useWorld == false)
+            if(ItemBorder.config.useWorld == false || ItemBorder.IsExcluded(item))
             {
                 return true;
             }

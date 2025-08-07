@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria.ModLoader;
 
-namespace YourModNamespace
+namespace ItemBorder
 {
     public class GlobalUIHandler : ModSystem
     {

@@ -136,6 +136,10 @@ namespace ItemBorder
         //// List of all table entries with labels and border/outline booleans
         public CustomTableUI ConfigTable;
 
+        //ITEM TOGGLE
+        [Header("ItemToggle")]
+        public List<ItemDefinition> excludedItems = new List<ItemDefinition>();
+
         //EXTRA
         [Header("Extra")]
         [DefaultValue(false)]

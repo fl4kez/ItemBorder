@@ -108,6 +108,8 @@ namespace ItemBorder
                 }
             }
 
+            toggleItemBorderKey = KeybindLoader.RegisterKeybind(this, "ToggleItemBorder", "Delete");
+            
             config = ModContent.GetInstance<ItemBorderConfig>();
             config.ConfigTable = new CustomTableUI();
             config.ConfigTable.AddCustomizationRowToList("mouseItem", "Use for item in cursor", Column(false, false), Column(true, true), Column(false, false));
@@ -143,6 +145,7 @@ namespace ItemBorder
 
         }
         public static ItemBorderConfig config;
+        public static ModKeybind toggleItemBorderKey;
 
         public TableRowConfig.BoolColumn Column(bool use, bool defaultVal)
         {
@@ -237,7 +240,7 @@ namespace ItemBorder
                 default:
                     break;
             }
-            if(config.useOutline == false)
+            if(config.useOutline == false || IsExcluded(item))
             {
                 orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
                 return scale;
@@ -726,7 +729,7 @@ namespace ItemBorder
         {
             Item item = inv[slot];
             ItemDefinition definedAsSpecial = IsSpecial(item);
-            if (definedAsSpecial != null && Main.mouseItem.type != item.type)
+            if (definedAsSpecial != null && Main.mouseItem.type != item.type && !IsExcluded(item))
             {
                 
                 if (item.GetGlobalItem<GlobalItemBorderItem>().pickedUpBefore == GlobalItemBorderItem.PickupState.PickedUpFirstTime)
@@ -789,6 +792,11 @@ namespace ItemBorder
         public static ItemDefinition IsSpecial(Item item)
         {
             return config.specialItems.FirstOrDefault(x => x.Type == item.type, null);
+        }
+
+        public static bool IsExcluded(Item item)
+        {
+            return config.excludedItems.Any(x => x.Type == item.type);
         }
 
         private void ItemSlot_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color(Terraria.UI.On_ItemSlot.orig_Draw_SpriteBatch_ItemArray_int_int_Vector2_Color orig, SpriteBatch spriteBatch, Item[] inv, int context, int slot, Vector2 position, Color lightColor)
@@ -933,7 +941,7 @@ namespace ItemBorder
                     return;
             }
                 
-            if (item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem)
+            if (item.Name != "" && Main.mouseItem != item && context != ItemSlot.Context.ChatItem && !IsExcluded(item))
             {
                 bool normalRarity = true;
                 Color abnormalColor = new Color(0,0,0);

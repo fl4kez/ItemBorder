@@ -11,6 +11,7 @@ Configs: {
 			Customization: Customization Header
 			Outline: Outline Header
 			World: World Header
+			ItemToggle: Item Toggle
 		}
 
 		borderType: {
@@ -232,6 +233,16 @@ Configs: {
 			Label: world Opacity
 			Tooltip: ""
 		}
+
+		toggleHotkey: {
+			Tooltip: ""
+			Label: toggle Hotkey
+		}
+
+		excludedItems: {
+			Label: excluded Items
+			Tooltip: ""
+		}
 	}
 
 	TableRowConfig: {
@@ -291,3 +302,5 @@ Configs: {
 		}
 	}
 }
+
+Keybinds.ToggleItemBorder.DisplayName: Toggle Item Border
