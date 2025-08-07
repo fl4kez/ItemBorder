@@ -248,6 +248,13 @@ namespace ItemBorder
                 if (ItemBorder.IsMaterial(item))
                     return true;
             }
+
+            //COIN
+            if (ItemBorder.coin.WorldValue() == false)
+            {
+                if (item.IsACoin)
+                    return true;
+            }
             var originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;
             var originalSamplerState = Main.spriteBatch.GraphicsDevice.SamplerStates[0];
             var originalDepthStencilState = Main.spriteBatch.GraphicsDevice.DepthStencilState;

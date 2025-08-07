@@ -120,12 +120,13 @@ namespace ItemBorder
             config.ConfigTable.AddCustomizationRowToList("tile", "Use for tiles", Column(true,true), Column(true, true), Column(true, true));
             config.ConfigTable.AddCustomizationRowToList("wall", "Use for walls", Column(true,true), Column(true, true), Column(true, true));
             config.ConfigTable.AddCustomizationRowToList("material", "Use for materials", Column(true,true), Column(true, true), Column(true, true));
+            //reminder: set default to on when we have a fix (outline not animating for coins, probably because they only animate on world)
+            config.ConfigTable.AddCustomizationRowToList("coin", "Use for coin slots", Column(true, false), Column(true, false), Column(true, false));
 
             config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar slots", Column(true,true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("chest", "Use for chest slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("inventory", "Use for inventory slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("ammo", "Use for ammo slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("coin", "Use for coin slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("trash", "Use for trash slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("armor", "Use for armor slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("vanityArmor", "Use for vanity armor slots", Column(true, true), Column(true, true), Column(false, false));
