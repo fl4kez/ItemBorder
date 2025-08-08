@@ -318,6 +318,8 @@ namespace ItemBorder
             Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.config.worldBaseRarity ? item.OriginalRarity : item.rare);
             trueSetColor *= (float)ItemBorder.config.worldOpacity/100f;
 
+            trueSetColor = PoTHelper.GetPoTColor(trueSetColor, item);
+
             // Get the rarity color based on the item's rarity
             //Color outlineColor = GetRarityColor(item.rare);
 

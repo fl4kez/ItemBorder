@@ -55,8 +55,10 @@ namespace ItemBorder
         internal static TableRowConfig guide => CustomTableUI.rows["guide"];
 
         public static bool usingMagicalStorage;
+        public static bool usingPathOfTerraria;
         //ItemBorderConfig config => ModContent.GetInstance<ItemBorderConfig>();
         Mod magicalStorage;
+        Mod pathOfTerraria;
 
         string customAssetsPath = "\\customAssets";
 
@@ -66,9 +68,6 @@ namespace ItemBorder
         
         public override void Load()
         {
-
-            //Mod calamity = ModLoader.GetMod("Calamity");
-            //Mod magicalStorage;
             if (ModLoader.TryGetMod("MagicStorage",out magicalStorage))
             {
                 usingMagicalStorage = true;
@@ -77,8 +76,16 @@ namespace ItemBorder
             {
                 usingMagicalStorage = false;
             }
+            //if (ModLoader.TryGetMod("PathOfTerraria", out pathOfTerraria))
+            //{
+            //    usingPathOfTerraria = true;
+            //}
+            //else
+            //{
+            //    usingPathOfTerraria = false;
+            //}
 
-            if(Main.netMode != NetmodeID.Server)
+            if (Main.netMode != NetmodeID.Server)
             {
                 whiteEffect = ModContent.Request<Effect>("ItemBorder/effects/whiteShader", AssetRequestMode.ImmediateLoad).Value;
             }
@@ -396,7 +403,9 @@ namespace ItemBorder
                     Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.config.outlineBaseRarity ? item.OriginalRarity : item.rare);
                     trueSetColor *= (float)ItemBorder.config.outlineOpacity / 100f;
 
-                    Vector2[] offsets = new Vector2[]
+                    trueSetColor = PoTHelper.GetPoTColor(trueSetColor, item);
+
+                Vector2[] offsets = new Vector2[]
                     {
                 new Vector2(-outlineWidth,0),//LEFT
                 new Vector2(outlineWidth,0),//RIGHT
@@ -1029,6 +1038,8 @@ namespace ItemBorder
 
                 Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(config.borderBaseRarity ? item.OriginalRarity:item.rare);
                 trueSetColor *= (float)config.borderOpacity/100f;
+
+                trueSetColor = PoTHelper.GetPoTColor(trueSetColor, item);
 
 
                 float correctScale = 1 * Main.inventoryScale;
