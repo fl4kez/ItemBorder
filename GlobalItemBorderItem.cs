@@ -340,7 +340,16 @@ namespace ItemBorder
             Vector2 position = item.position - Main.screenPosition + new Vector2(item.width / 2, item.height - sourceRect.Height / 2);
 
             Color clr = Lighting.GetColor(item.Center.ToTileCoordinates());
-            Color lightAffectedColor = trueSetColor.MultiplyRGBA(clr);
+            //Main.NewText($"LIGHT{clr.R}|{clr.G}|{clr.B}");
+
+            HSLColor hslClr = HSLColor.FromRGB(clr);
+            hslClr.Hue = 0;
+            hslClr.Saturation = 0;
+            Color onlyLuminosity = hslClr.ToRGB();
+            Color lightAffectedColor = trueSetColor.MultiplyRGBA(onlyLuminosity);
+            lightAffectedColor.A = 255;
+            //Main.NewText($"{lightAffectedColor.R}|{lightAffectedColor.G}|{lightAffectedColor.B}");
+            HSLColor hslLightAffected = HSLColor.FromRGB(clr);
             
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.GameViewMatrix.TransformationMatrix);

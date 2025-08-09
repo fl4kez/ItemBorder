@@ -17,8 +17,11 @@
     <AdditionalFiles Include="Localization\en-US_Mods.ItemBorder.hjson.ORG" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="assets\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="assets\" />
+    <Reference Include="PathOfTerraria">
+      <HintPath>..\..\ModReader\PathOfTerraria\PathOfTerraria.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
