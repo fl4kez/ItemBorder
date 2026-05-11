@@ -415,29 +415,14 @@ namespace ItemBorder
                     Matrix currentMatrix = Main.spriteBatch.transformMatrix;
                     
                     Main.spriteBatch.End();
-                    //bool isUI = Main.gameMenu || Main.player[Main.myPlayer].mouseInterface;
-                    //if (item.type == ItemID.DirtBlock)
-                    //{
-                    //    //Main.NewText($"C:{context}/{isUI}");
-                    //    if (currentMatrix == Main.UIScaleMatrix)
-                    //        Main.NewText("UISCALE");
-                    //    if (currentMatrix == Main.GameViewMatrix.TransformationMatrix)
-                    //        Main.NewText("GAMEVIEW");
-                    //}
+                    
                     if(currentMatrix != Main.UIScaleMatrix)
                     {
-                        Main.NewText($"FRAME ITEM " + item.Name);
+                        
                         Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, currentMatrix);
                     }
                     else
                         Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
-
-                //if (context == ItemSlot.Context.InWorld && Main.player[Main.myPlayer].HeldItem.netID != item.netID)
-                //{
-                //    Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.GameViewMatrix.TransformationMatrix);
-                //}
-                //else
-
 
                 ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
                     ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
@@ -476,22 +461,12 @@ namespace ItemBorder
                     Main.spriteBatch.End();
                     if (currentMatrix != Main.UIScaleMatrix)
                     {
-                        //Main.NewText($"FRAME ITEM " + item.Name);
+                        
                         Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, currentMatrix);
                     }
                     else
                         Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
-                //Main.NewText($"{Main.HoverItem.Name}");
-                //if(item.type == ItemID.DirtBlock)
-                //{
-                //    Main.NewText($"{context}");
-                //}
-                //if (context == ItemSlot.Context.InWorld && Main.player[Main.myPlayer].HeldItem.netID != item.netID)
-                //{
-                //    Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.GameViewMatrix.TransformationMatrix);
-                //}
-                //else
-                //}
+                
             }
             //Sets Draw color ALPHA to 255 (full) to not overlay with outline color
             environmentColor.A = 255;
