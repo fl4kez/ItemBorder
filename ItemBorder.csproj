@@ -24,4 +24,7 @@
       <HintPath>..\..\ModReader\PathOfTerraria\PathOfTerraria.dll</HintPath>
     </Reference>
   </ItemGroup>
+	<ItemGroup>
+		<Publicize Include="Terraria" />
+	</ItemGroup>
 </Project>

@@ -17,6 +17,7 @@ using System.Threading;
 using ReLogic.Content;
 using Terraria.ModLoader.Config;
 using Microsoft.CodeAnalysis.Text;
+using Terraria.Graphics;
 
 namespace ItemBorder
 {
@@ -159,6 +160,10 @@ namespace ItemBorder
 
         private float CorrectlyDrawOutline(On_ItemSlot.orig_DrawItemIcon orig, Item item, int context, SpriteBatch spriteBatch, Vector2 screenPositionForItemCenter, float scale, float sizeLimit, Color environmentColor)
         {
+            //if(item.type == ItemID.DirtBlock && context != ItemSlot.Context.HotbarItem && context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.MouseItem)
+            //{
+            //    Main.NewText($"{item.position}/{item.VisualPosition}/{screenPositionForItemCenter}");
+            //}
             switch (context)
             {
                 case ItemSlot.Context.MouseItem:
@@ -259,7 +264,7 @@ namespace ItemBorder
                 orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
                 return scale;
             }
-
+            
             //AMMO
             if (ItemBorder.ammo.OutlineValue() == false)
             {
@@ -407,9 +412,21 @@ namespace ItemBorder
                                             //new Vector2(outlineWidth,-outlineWidth),//TOPRIGHT
                                             //new Vector2(-outlineWidth,outlineWidth),//BOTTOMLEFT
                     };
+                    Matrix currentMatrix = Matrix.Identity;
                     Main.spriteBatch.End();
-                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
-
+                    bool isUI = Main.gameMenu || Main.player[Main.myPlayer].mouseInterface;
+                    if (item.type == ItemID.DirtBlock)
+                    {
+                        Main.NewText($"C:{context}/{isUI}");
+                    }
+ 
+                    if (context == ItemSlot.Context.InWorld && Main.player[Main.myPlayer].HeldItem.netID != item.netID)
+                    {
+                        Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.GameViewMatrix.TransformationMatrix);
+                    }
+                    else
+                        Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, originalSamplerState, originalDepthStencilState, originalRasterizerState, ItemBorder.whiteEffect, Main.UIScaleMatrix);
+                    
                     ItemBorder.whiteEffect.Parameters["CustomColor"].SetValue(trueSetColor.ToVector4());
                     ItemBorder.whiteEffect.CurrentTechnique.Passes[0].Apply();
 
@@ -426,7 +443,13 @@ namespace ItemBorder
                     if (outlineTexture != null)
                     {
                         Vector2 outlineOrigin = new Vector2(outlineTexture.Width / 2, outlineTexture.Height / 2);
-                        
+
+                        //if (item.type == ItemID.DirtBlock && context != ItemSlot.Context.HotbarItem && context != ItemSlot.Context.InventoryItem && context != ItemSlot.Context.MouseItem)
+                        //{
+                        //    Main.NewText($"M: {outlineOrigin}");
+                        //}
+                    
+
                         spriteBatch.Draw(outlineTexture, 
                             screenPositionForItemCenter, 
                             null, 
@@ -437,7 +460,18 @@ namespace ItemBorder
                             SpriteEffects.None, 
                             0f);
                     }
+                    Matrix currMatrix = Matrix.Identity;
                     Main.spriteBatch.End();
+                //Main.NewText($"{Main.HoverItem.Name}");
+                if(item.type == ItemID.DirtBlock)
+                {
+                    Main.NewText($"{context}");
+                }
+                if (context == ItemSlot.Context.InWorld && Main.player[Main.myPlayer].HeldItem.netID != item.netID)
+                {
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.GameViewMatrix.TransformationMatrix);
+                }
+                else
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, originalBlendState, originalSamplerState, originalDepthStencilState, originalRasterizerState, null, Main.UIScaleMatrix);
                 //}
             }
