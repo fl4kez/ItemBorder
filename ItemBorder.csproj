@@ -1,4 +1,4 @@
-
+﻿
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\tModLoader.targets" />
   <PropertyGroup>
@@ -20,11 +20,18 @@
     <Folder Include="assets\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="PathOfTerraria">
       <HintPath>..\..\ModReader\PathOfTerraria\PathOfTerraria.dll</HintPath>
     </Reference>
   </ItemGroup>
 	<ItemGroup>
-		<Publicize Include="Terraria" />
+	<!-- Property -->
+	    <Publicize Include="FNA:Microsoft.Xna.Framework.Graphics.SpriteBatch.transformMatrix" />
 	</ItemGroup>
 </Project>
