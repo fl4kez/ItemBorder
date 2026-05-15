@@ -42,13 +42,13 @@ namespace ItemBorder
         }
         public override void SaveData(Item item, TagCompound tag)
         {
-            tag.Add("pickup", (int)pickedUpBefore);
+            tag.Add("itemBorderPickup", (int)pickedUpBefore);
         }
         public override void LoadData(Item item, TagCompound tag)
         {
-            if(tag.ContainsKey("pickup"))
+            if(tag.ContainsKey("itemBorderPickup"))
             {
-                pickedUpBefore = (PickupState)tag.GetInt("pickup");
+                pickedUpBefore = (PickupState)tag.GetInt("itemBorderPickup");
             }
         }
         //public override bool PreDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
