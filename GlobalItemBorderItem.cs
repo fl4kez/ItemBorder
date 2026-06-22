@@ -221,27 +221,27 @@ namespace ItemBorder
                 return true;
             }
 
-            foreach (var rarity in ItemBorder.vanillaRarities)
+
+            TableRowConfig val;
+            if (CustomTableUI.rows.TryGetValue("r" + item.rare.ToString(), out val) == true)
             {
-                if (CustomTableUI.rows["r" + item.rare.ToString()].WorldValue() == false)
+                if (val.WorldValue() == false)
                 {
                     return true;
                 }
             }
-            foreach (var rarity in ItemBorder.modRarities)
+
+            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.type}", out val) == true)
             {
-                if(item.type == rarity.Type)
+                if (val.WorldValue() == false)
                 {
-                    if (CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"] != null && CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"].OutlineValue() == false)
-                    {
-                        //if(item.rare == rarity.Type)
-                        //{
-                        return true;
-                        //}
-                    }
+                    //if(item.rare == rarity.Type)
+                    //{
+                    return true;
+                    //}
                 }
-                
             }
+
 
             //POTION
             if (ItemBorder.potion.WorldValue() == false)
@@ -339,6 +339,8 @@ namespace ItemBorder
 
             Color trueSetColor = (normalRarity != true) ? abnormalColor : ItemRarity.GetColor(ItemBorder.config.worldBaseRarity ? item.OriginalRarity : item.rare);
             trueSetColor *= (float)ItemBorder.config.worldOpacity/100f;
+
+            
 
             // Get the rarity color based on the item's rarity
             //Color outlineColor = GetRarityColor(item.rare);

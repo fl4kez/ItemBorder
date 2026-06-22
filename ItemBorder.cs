@@ -319,30 +319,30 @@ namespace ItemBorder
                 return scale;
             }
             
-            foreach (var rarity in vanillaRarities)
-            {
-                if (CustomTableUI.rows["r" + item.rare.ToString()].OutlineValue() == false)
+            TableRowConfig val;
+            if(CustomTableUI.rows.TryGetValue("r" + item.rare.ToString(), out val) == true)
+            { 
+                if (val.OutlineValue() == false)
                 {
 
                     orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
                     return scale;
                 }
             }
-            foreach(var rarity in modRarities)
+
+            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.type}",out val) == true)
             {
-                if(item.rare == rarity.Type)
+                if (val.OutlineValue() == false)
                 {
-                    if (CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"] != null && CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"].OutlineValue() == false)
-                    {
-                        //if(item.rare == rarity.Type)
-                        //{
-                        orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
-                        return scale;
-                        //}
-                    }
+                    //if(item.rare == rarity.Type)
+                    //{
+                    orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                    return scale;
+                    //}
                 }
-                
             }
+
+
 
             //AMMO
             if (ItemBorder.ammo.OutlineValue() == false)
@@ -1048,28 +1048,29 @@ namespace ItemBorder
 
             Item item = inv[slot];
 
-            foreach (var rarity in vanillaRarities)
+
+            TableRowConfig val;
+            if (CustomTableUI.rows.TryGetValue("r" + item.rare.ToString(), out val) == true)
             {
-                if (CustomTableUI.rows["r" + item.rare.ToString()].BorderValue() == false)
+                if (val.BorderValue() == false)
                 {
+
                     return;
                 }
             }
-            foreach (var rarity in modRarities)
-            {
-                if(item.rare == rarity.Type)
-                {
-                    if (CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"] != null && CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"].BorderValue() == false)
-                    {
-                        //if (item.rare == rarity.Type)
-                        //{
 
-                        return;
-                        //}
-                    }
+            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.type}", out val) == true)
+            {
+                if (val.BorderValue() == false)
+                {
+                    //if(item.rare == rarity.Type)
+                    //{
+                   
+                    return;
+                    //}
                 }
-                
             }
+
 
             //AMMO
             if (ItemBorder.ammo.BorderValue() == false)
