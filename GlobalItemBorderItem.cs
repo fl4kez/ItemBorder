@@ -221,6 +221,28 @@ namespace ItemBorder
                 return true;
             }
 
+            foreach (var rarity in ItemBorder.vanillaRarities)
+            {
+                if (CustomTableUI.rows["r" + item.rare.ToString()].WorldValue() == false)
+                {
+                    return true;
+                }
+            }
+            foreach (var rarity in ItemBorder.modRarities)
+            {
+                if(item.type == rarity.Type)
+                {
+                    if (CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"] != null && CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"].OutlineValue() == false)
+                    {
+                        //if(item.rare == rarity.Type)
+                        //{
+                        return true;
+                        //}
+                    }
+                }
+                
+            }
+
             //POTION
             if (ItemBorder.potion.WorldValue() == false)
             {

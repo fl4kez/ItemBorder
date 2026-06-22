@@ -55,6 +55,9 @@ namespace ItemBorder
         internal static TableRowConfig crafting => CustomTableUI.rows["crafting"];
         internal static TableRowConfig guide => CustomTableUI.rows["guide"];
 
+        public static ModRarity[] modRarities = new ModRarity[0];
+        public static TableRowConfig[] vanillaRarities = new TableRowConfig[0];
+
         public static bool usingMagicalStorage;
         //ItemBorderConfig config => ModContent.GetInstance<ItemBorderConfig>();
         Mod magicalStorage;
@@ -87,8 +90,11 @@ namespace ItemBorder
             Terraria.UI.On_ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += DrawHandle;
             Terraria.UI.On_ItemSlot.DrawItemIcon += CorrectlyDrawOutline;
 
+            modRarities = ModContent.GetContent<ModRarity>().ToArray();
+
+
             //CUSTOM BORDERS
-            if(!Directory.Exists($"{Main.SavePath}{customAssetsPath}"))
+            if (!Directory.Exists($"{Main.SavePath}{customAssetsPath}"))
             {
                 Directory.CreateDirectory($"{Main.SavePath}{customAssetsPath}");
             }
@@ -148,6 +154,54 @@ namespace ItemBorder
             config.ConfigTable.AddCustomizationRowToList("mannequinDye", "Use for mannequin dye slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("crafting", "Use for crafting station slots", Column(true, true), Column(true, true), Column(false, false));
             config.ConfigTable.AddCustomizationRowToList("guide", "Use for guide/recipe slots", Column(true, true), Column(true, true), Column(false, false));
+
+            Dictionary<int, string> rarityIdArr = new Dictionary<int, string>
+            {
+                { -1, "Gray" },
+                { 0, "White" },
+                { 1, "Blue" },
+                { 2, "Green" },
+                { 3, "Orange" },
+                { 4, "LightRed" },
+                { 5, "Pink" },
+                { 6, "LightPurple" },
+                { 7, "Lime" },
+                { 8, "Yellow" },
+                { 9, "Cyan" },
+                { 10, "Red" },
+                { 11, "Purple" },
+                { -11, "Quest" },
+                { -12, "Expert" },
+                { -13, "Master" }
+            };
+            vanillaRarities = new TableRowConfig[16];
+            int cnt = 0;
+            foreach (var kvp in rarityIdArr)
+            {
+                int rarityId = kvp.Key;
+                string rarityName = kvp.Value;
+
+                string key = $"r{rarityId}";
+                string label = $"Use for {rarityName} rarity";
+
+                bool defaultBorder = true;
+                bool defaultOutline = true;
+                bool defaultWorld = true;
+                if(key == "r"+ItemRarityID.Gray.ToString() || key == "r" + ItemRarityID.White.ToString())
+                {
+                    defaultOutline = false;
+                    defaultBorder = false;
+                    defaultWorld = false;
+                }
+                config.ConfigTable.AddCustomizationRowToList(key, label, Column(true, defaultBorder), Column(true, defaultOutline), Column(true, defaultWorld));
+                vanillaRarities[cnt] = CustomTableUI.rows[key];
+            }
+            foreach(var rarity in modRarities)
+            {
+                string key = $"modRarity_{rarity.Mod.Name}_{rarity.Type}";
+                string label = $"Use for {rarity.Name} rarity";
+                config.ConfigTable.AddCustomizationRowToList(key, label, Column(true, true), Column(true, true), Column(true, true));
+            }
 
         }
         public static ItemBorderConfig config;
@@ -265,6 +319,31 @@ namespace ItemBorder
                 return scale;
             }
             
+            foreach (var rarity in vanillaRarities)
+            {
+                if (CustomTableUI.rows["r" + item.rare.ToString()].OutlineValue() == false)
+                {
+
+                    orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                    return scale;
+                }
+            }
+            foreach(var rarity in modRarities)
+            {
+                if(item.rare == rarity.Type)
+                {
+                    if (CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"] != null && CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"].OutlineValue() == false)
+                    {
+                        //if(item.rare == rarity.Type)
+                        //{
+                        orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+                        return scale;
+                        //}
+                    }
+                }
+                
+            }
+
             //AMMO
             if (ItemBorder.ammo.OutlineValue() == false)
             {
@@ -469,6 +548,16 @@ namespace ItemBorder
                 
             }
             //Sets Draw color ALPHA to 255 (full) to not overlay with outline color
+
+            //if (item.type == ItemID.DirtBlock)
+            //{
+            //    foreach(ModRarity rar in modRarities)
+            //    {
+            //        Main.NewText($"ModRarity: " + rar.Name + "|" + rar.Type + "|" + rar.Mod);
+                    
+            //    }
+            //}
+
             environmentColor.A = 255;
             orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
             return scale;
@@ -958,7 +1047,30 @@ namespace ItemBorder
             }
 
             Item item = inv[slot];
-            
+
+            foreach (var rarity in vanillaRarities)
+            {
+                if (CustomTableUI.rows["r" + item.rare.ToString()].BorderValue() == false)
+                {
+                    return;
+                }
+            }
+            foreach (var rarity in modRarities)
+            {
+                if(item.rare == rarity.Type)
+                {
+                    if (CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"] != null && CustomTableUI.rows[$"modRarity_{rarity.Mod.Name}_{rarity.Type}"].BorderValue() == false)
+                    {
+                        //if (item.rare == rarity.Type)
+                        //{
+
+                        return;
+                        //}
+                    }
+                }
+                
+            }
+
             //AMMO
             if (ItemBorder.ammo.BorderValue() == false)
             {
