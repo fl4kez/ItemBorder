@@ -243,6 +243,11 @@ Configs: {
 			Label: excluded Items
 			Tooltip: ""
 		}
+
+		TableSettings: {
+			Label: Table Settings
+			Tooltip: ""
+		}
 	}
 
 	TableRowConfig: {
@@ -298,6 +303,40 @@ Configs: {
 
 		Selected: {
 			Label: Selected
+			Tooltip: ""
+		}
+	}
+
+	RowState: {
+		Tooltip: ""
+
+		BorderUse: {
+			Label: Border Use
+			Tooltip: ""
+		}
+
+		BorderVal: {
+			Label: Border Val
+			Tooltip: ""
+		}
+
+		OutlineUse: {
+			Label: Outline Use
+			Tooltip: ""
+		}
+
+		OutlineVal: {
+			Label: Outline Val
+			Tooltip: ""
+		}
+
+		WorldUse: {
+			Label: World Use
+			Tooltip: ""
+		}
+
+		WorldVal: {
+			Label: World Val
 			Tooltip: ""
 		}
 	}

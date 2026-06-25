@@ -1,23 +1,25 @@
+using Hjson;
+using log4net.Repository.Hierarchy;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.UI;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.UI;
-using System.Linq;
-using System.Diagnostics;
-using Terraria.GameContent;
-using System.IO;
-using System.Collections.Generic;
-using System.Threading;
-using ReLogic.Content;
 using Terraria.ModLoader.Config;
-using Microsoft.CodeAnalysis.Text;
-using Terraria.Graphics;
+using Terraria.UI;
 
 namespace ItemBorder
 {
@@ -67,7 +69,65 @@ namespace ItemBorder
         public static Effect whiteEffect;
         
         private static Dictionary<int, Texture2D> outlineTextureCache = new Dictionary<int, Texture2D>();
-        
+
+        public void LOG(string msg)
+        {
+            Logger.Debug(msg);
+        }
+
+        private void EnsureRowExists(
+        string key,
+        bool borderUse, bool borderDefault,
+        bool outlineUse, bool outlineDefault,
+        bool worldUse, bool worldDefault)
+        {
+            if (!ItemBorderConfig.TableSettings.ContainsKey(key))
+            {
+                ItemBorderConfig.TableSettings[key] = new ItemBorderConfig.RowState
+                {
+                    BorderVal = borderDefault,
+                    BorderUse = borderUse,
+                    OutlineVal = outlineDefault,
+                    OutlineUse = outlineUse,
+                    WorldVal = worldDefault,
+                    WorldUse = worldUse
+                };
+            }
+            else
+            {
+                Logger.Debug($"LOADED {key} INTO TABLE SETTINGS");
+            }
+        }
+
+
+
+        void AddRow(string key, string label,
+        bool borderUse, bool borderVal,
+        bool outlineUse, bool outlineVal,
+        bool worldUse, bool worldVal)
+        {
+            EnsureRowExists(key, borderUse, borderVal, outlineUse, outlineVal, worldUse, worldVal);
+            Logger.Debug($"{ItemBorderConfig.TableSettings.ContainsKey(key)} Adding row for {key} with label {label}, {borderUse}/{borderVal} - {outlineUse}/{outlineVal} - {worldUse}/{worldVal}");
+            if (!ItemBorderConfig.TableSettings.ContainsKey(key))
+                return;
+
+            var state = ItemBorderConfig.TableSettings[key];
+            config.ConfigTable.AddCustomizationRowToList(
+                key,
+                label,
+                Column(state.BorderUse, state.BorderVal),
+                Column(state.OutlineUse, state.OutlineVal),
+                Column(state.WorldUse, state.WorldVal)
+            );
+            Logger.Debug($"UI row {key}: " +
+                        $"Border={CustomTableUI.rows[key].Border.Use}/{CustomTableUI.rows[key].Border.DefaultValue}, " +
+                        $"Outline={CustomTableUI.rows[key].Outline.Use}/{CustomTableUI.rows[key].Outline.DefaultValue}, " +
+                        $"World={CustomTableUI.rows[key].World.Use}/{CustomTableUI.rows[key].World.DefaultValue}");
+            //foreach (var entry in CustomTableUI.rows)
+            //{
+            //    Logger.Debug($"Key: {entry.Key} {entry.Value.BorderValue()}/{entry.Value.OutlineValue()}/{entry.Value.WorldValue()}");
+            //}
+        }
         public override void Load()
         {
 
@@ -120,40 +180,45 @@ namespace ItemBorder
             toggleItemBorderKey = KeybindLoader.RegisterKeybind(this, "ToggleItemBorder", "Delete");
             
             config = ModContent.GetInstance<ItemBorderConfig>();
+
             config.ConfigTable = new CustomTableUI();
-            config.ConfigTable.AddCustomizationRowToList("mouseItem", "Use for item in cursor", Column(false, false), Column(true, true), Column(false, false));
+            ItemBorderConfig.TableSettings = new Dictionary<string, ItemBorderConfig.RowState>();
 
-            config.ConfigTable.AddCustomizationRowToList("potion", "Use for potions", Column(true,true), Column(true, true), Column(true, true));
-            config.ConfigTable.AddCustomizationRowToList("tile", "Use for tiles", Column(true,true), Column(true, true), Column(true, true));
-            config.ConfigTable.AddCustomizationRowToList("wall", "Use for walls", Column(true,true), Column(true, true), Column(true, true));
-            config.ConfigTable.AddCustomizationRowToList("material", "Use for materials", Column(true,true), Column(true, true), Column(true, true));
-            //reminder: set default to on when we have a fix (outline not animating for coins, probably because they only animate on world)
-            config.ConfigTable.AddCustomizationRowToList("coin", "Use for coin slots", Column(true, false), Column(true, false), Column(true, false));
+            AddRow("mouseItem", "Use for item in cursor", false, false, true, true, false, false);
 
-            config.ConfigTable.AddCustomizationRowToList("hotbar", "Use for hotbar slots", Column(true,true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("chest", "Use for chest slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("inventory", "Use for inventory slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("ammo", "Use for ammo slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("trash", "Use for trash slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("armor", "Use for armor slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("vanityArmor", "Use for vanity armor slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("accessory", "Use for accessory slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("vanityAccessory", "Use for vanity accessory slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("dye", "Use for dye slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("shop", "Use for shop slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("grapple", "Use for grapple slot", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("mount", "Use for mount slot", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("minecart", "Use for minecart slot", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("pet", "Use for pet slot", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("lightPet", "Use for light pet slot", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("bank", "Use for bank slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("hatRack", "Use for hat rack slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("hatRackDye", "Use for hat rack dye slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("mannequinArmor", "Use for mannequin armor slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("mannequinAccessory", "Use for mannequin accessory slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("mannequinDye", "Use for mannequin dye slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("crafting", "Use for crafting station slots", Column(true, true), Column(true, true), Column(false, false));
-            config.ConfigTable.AddCustomizationRowToList("guide", "Use for guide/recipe slots", Column(true, true), Column(true, true), Column(false, false));
+            AddRow("potion", "Use for potions", false, false, true, true, false, false);
+
+            AddRow("tile", "Use for tiles", true, true, true, true, true, true);
+            AddRow("wall", "Use for walls", true, true, true, true, true, true);
+            AddRow("material", "Use for materials", true, true, true, true, true, true);
+
+            // reminder: set default to on when we have a fix (outline not animating for coins, probably because they only animate on world)
+            AddRow("coin", "Use for coin slots", true, false, true, false, true, false);
+
+            AddRow("hotbar", "Use for hotbar slots", true, true, true, true, false, false);
+            AddRow("chest", "Use for chest slots", true, true, true, true, false, false);
+            AddRow("inventory", "Use for inventory slots", true, true, true, true, false, false);
+            AddRow("ammo", "Use for ammo slots", true, true, true, true, false, false);
+            AddRow("trash", "Use for trash slots", true, true, true, true, false, false);
+            AddRow("armor", "Use for armor slots", true, true, true, true, false, false);
+            AddRow("vanityArmor", "Use for vanity armor slots", true, true, true, true, false, false);
+            AddRow("accessory", "Use for accessory slots", true, true, true, true, false, false);
+            AddRow("vanityAccessory", "Use for vanity accessory slots", true, true, true, true, false, false);
+            AddRow("dye", "Use for dye slots", true, true, true, true, false, false);
+            AddRow("shop", "Use for shop slots", true, true, true, true, false, false);
+            AddRow("grapple", "Use for grapple slot", true, true, true, true, false, false);
+            AddRow("mount", "Use for mount slot", true, true, true, true, false, false);
+            AddRow("minecart", "Use for minecart slot", true, true, true, true, false, false);
+            AddRow("pet", "Use for pet slot", true, true, true, true, false, false);
+            AddRow("lightPet", "Use for light pet slot", true, true, true, true, false, false);
+            AddRow("bank", "Use for bank slots", true, true, true, true, false, false);
+            AddRow("hatRack", "Use for hat rack slots", true, true, true, true, false, false);
+            AddRow("hatRackDye", "Use for hat rack dye slots", true, true, true, true, false, false);
+            AddRow("mannequinArmor", "Use for mannequin armor slots", true, true, true, true, false, false);
+            AddRow("mannequinAccessory", "Use for mannequin accessory slots", true, true, true, true, false, false);
+            AddRow("mannequinDye", "Use for mannequin dye slots", true, true, true, true, false, false);
+            AddRow("crafting", "Use for crafting station slots", true, true, true, true, false, false);
+            AddRow("guide", "Use for guide/recipe slots", true, true, true, true, false, false);
 
             Dictionary<int, string> rarityIdArr = new Dictionary<int, string>
             {
@@ -187,22 +252,25 @@ namespace ItemBorder
                 bool defaultBorder = true;
                 bool defaultOutline = true;
                 bool defaultWorld = true;
-                if(key == "r"+ItemRarityID.Gray.ToString() || key == "r" + ItemRarityID.White.ToString())
+                if (key == "r" + ItemRarityID.Gray.ToString() || key == "r" + ItemRarityID.White.ToString())
                 {
                     defaultOutline = false;
                     defaultBorder = false;
                     defaultWorld = false;
                 }
-                config.ConfigTable.AddCustomizationRowToList(key, label, Column(true, defaultBorder), Column(true, defaultOutline), Column(true, defaultWorld));
-                vanillaRarities[cnt] = CustomTableUI.rows[key];
+                AddRow(key, label, true, defaultBorder, true, defaultOutline, true, defaultWorld);
+                //config.ConfigTable.AddCustomizationRowToList(key, label, Column(true, defaultBorder), Column(true, defaultOutline), Column(true, defaultWorld));
+                //vanillaRarities[cnt] = CustomTableUI.rows[key];
             }
-            foreach(var rarity in modRarities)
+            foreach (var rarity in modRarities)
             {
-                string key = $"modRarity_{rarity.Mod.Name}_{rarity.Type}";
+                string key = $"modRarity_{rarity.Type}";
                 string label = $"Use for {rarity.Name} rarity";
-                config.ConfigTable.AddCustomizationRowToList(key, label, Column(true, true), Column(true, true), Column(true, true));
-            }
+                //if(CustomTableUI.rows.ContainsKey(key) == false)
+                //    config.ConfigTable.AddCustomizationRowToList(key, label, Column(true, true), Column(true, true), Column(true, true));
+                AddRow(key, label, true, true, true, true, true, true);
 
+            }
         }
         public static ItemBorderConfig config;
         public static ModKeybind toggleItemBorderKey;
@@ -330,7 +398,7 @@ namespace ItemBorder
                 }
             }
 
-            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.type}",out val) == true)
+            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.rare.ToString()}",out val) == true)
             {
                 if (val.OutlineValue() == false)
                 {
@@ -1059,7 +1127,7 @@ namespace ItemBorder
                 }
             }
 
-            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.type}", out val) == true)
+            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.rare.ToString()}", out val) == true)
             {
                 if (val.BorderValue() == false)
                 {

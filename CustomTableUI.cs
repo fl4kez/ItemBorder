@@ -10,6 +10,7 @@ using ReLogic.Content;
 using System.Linq;
 using System.Collections.Generic;
 using ItemBorder;
+using log4net.Repository.Hierarchy;
 
 namespace ItemBorder
 {
@@ -209,6 +210,11 @@ namespace ItemBorder
 
             // Checkbox for "Border"
             UICheckbox borderCheckbox = new UICheckbox(border.DefaultValue);
+            borderCheckbox.OnStateChanged += state =>
+            {
+                //border.Selected = state;
+                ItemBorderConfig.TableSettings[KEY].BorderVal = state;
+            };
             borderCheckbox.Left.Set(325f, 0f);
             borderCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
             if (border.Use)
@@ -218,6 +224,16 @@ namespace ItemBorder
 
             // Checkbox for "Outline"
             UICheckbox outlineCheckbox = new UICheckbox(outline.DefaultValue);
+            outlineCheckbox.OnStateChanged += state =>
+            {
+                //outline.Selected = state;
+                //Main.NewText($"Outline Checkbox State Changed for {KEY}: {state} SETTINGS:{ItemBorder.config.TableSettings.ContainsKey(KEY)} ROWS:{rows.ContainsKey(KEY)}");
+                ModContent.GetInstance<ItemBorder>().LOG($"Outline Checkbox State Changed for {KEY}: {state} SETTINGS:{ItemBorderConfig.TableSettings[KEY].OutlineUse}/{ItemBorderConfig.TableSettings[KEY].OutlineVal} ROWS:{rows[KEY].OutlineValue()}");
+                ItemBorderConfig.TableSettings[KEY].OutlineVal = state;
+                //rows[KEY].Outline.Value.SetState(state);
+                ModContent.GetInstance<ItemBorder>().LOG($"AFTER STATE CHANGED for {KEY}: {state} SETTINGS:{ItemBorderConfig.TableSettings[KEY].OutlineUse}/{ItemBorderConfig.TableSettings[KEY].OutlineVal} ROWS:{rows[KEY].OutlineValue()}");
+
+            };
             outlineCheckbox.Left.Set(425f, 0f);
             outlineCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
             if (outline.Use)
@@ -226,6 +242,11 @@ namespace ItemBorder
             }
 
             UICheckbox worldCheckbox = new UICheckbox(world.DefaultValue);
+            worldCheckbox.OnStateChanged += state =>
+            {
+                //world.Selected = state;
+                ItemBorderConfig.TableSettings[KEY].WorldVal = state;
+            };
             worldCheckbox.Left.Set(525f, 0f);
             worldCheckbox.Top.Set(15f + offsetValue * rowIndex, 0f);
             if (world.Use)

@@ -33,5 +33,8 @@
 	<ItemGroup>
 	<!-- Property -->
 	    <Publicize Include="FNA:Microsoft.Xna.Framework.Graphics.SpriteBatch.transformMatrix" />
+	    <Publicize Include="tModLoader:Terraria.ModLoader.UI.Interface" />
+	    <Publicize Include="tModLoader:Terraria.ModLoader.UI.Interface.modConfig" />
+	    <Publicize Include="tModLoader:Terraria.ModLoader.Config.UI.UIModConfig;" />
 	</ItemGroup>
 </Project>

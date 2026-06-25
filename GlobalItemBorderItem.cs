@@ -231,7 +231,7 @@ namespace ItemBorder
                 }
             }
 
-            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.type}", out val) == true)
+            if (CustomTableUI.rows.TryGetValue($"modRarity_{item.rare.ToString()}", out val) == true)
             {
                 if (val.WorldValue() == false)
                 {

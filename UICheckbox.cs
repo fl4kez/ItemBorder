@@ -1,10 +1,12 @@
-﻿using Terraria.GameContent.UI.Elements;
-using Terraria.UI;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
 using ReLogic.Content;
+using System;
+using Terraria;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
+using Terraria.UI;
+using Terraria.ModLoader.UI;
 
 namespace ItemBorder
 {
@@ -16,6 +18,7 @@ namespace ItemBorder
         private Asset<Texture2D> uncheckedTexture;
         private UIText labelText;
 
+        public Action<bool> OnStateChanged;
         public bool Selected => isChecked; // Property to get the checkbox state
 
         public UICheckbox(bool defaultState = false)
@@ -58,12 +61,17 @@ namespace ItemBorder
         public void ToggleCheck()
         {
             isChecked = !isChecked;
-            checkbox.SetImage(isChecked ? checkedTexture : uncheckedTexture);
-            //Main.NewText($"Changed outline to {isChecked}");
-            //Main.NewText($"{CustomTableUI.rows[0].Label.Text} {CustomTableUI.rows[0].Outline.Selected} {CustomTableUI.rows[0].Border.Selected}");
-            //Main.NewText($"{ReferenceEquals(CustomTableUI.rows[0].Outline,this)}");
+
+            checkbox.SetImage(
+                isChecked ? checkedTexture : uncheckedTexture
+            );
+
             SetOnOffText();
-            
+
+            OnStateChanged?.Invoke(isChecked);
+
+            Interface.modConfig.SetPendingChanges();
+            //ItemBorder.config.Sa();
         }
 
         public void SetState(bool state)

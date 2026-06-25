@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using log4net.Repository.Hierarchy;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using System;
@@ -34,7 +35,7 @@ namespace ItemBorder
 
         public bool BorderValue()
         {
-            if(Border.Value != null)
+            if (Border.Value != null)
                 return this.Border.Value.Selected;
             return false;
         }
@@ -54,8 +55,12 @@ namespace ItemBorder
         {
             public bool Use;
             public bool DefaultValue;
+
+            [JsonIgnore]
             public UICheckbox Value;
-            public BoolColumn(bool use,bool defaultValue)
+            public BoolColumn() { }
+
+            public BoolColumn(bool use, bool defaultValue)
             {
                 Use = use;
                 DefaultValue = defaultValue;
@@ -146,5 +151,23 @@ namespace ItemBorder
         public bool specialPickup;
 
         public List<ItemDefinition> specialItems = new List<ItemDefinition>();
+
+
+
+
+
+
+        public static Dictionary<string, RowState> TableSettings = new Dictionary<string, RowState>();
+        public class RowState
+        {
+            public bool BorderUse;
+            public bool BorderVal;
+
+            public bool OutlineUse;
+            public bool OutlineVal;
+
+            public bool WorldUse;
+            public bool WorldVal;
+        }
     }
 }
